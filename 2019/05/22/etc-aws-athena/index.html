@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="Athena란?AWS S3에 보관된 데이터를 SQL을 사용하여 분석할 수 있는 서비스 사용하게 된 계기처음 프로젝트에서 분석할 데이터를 DynamoDB에 보관을 하는데 집계를 하기가 너무 불편해서 우울하던 중에 AWS 페북 그룹에서 Vingle이라는 회사에서 당시 세션 제목은 잘 기억 안 나는데 로그 였나.. 사용자 패턴이였나.. 아무튼 나에게 필요한 정보">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AWS Athena 사용해보기">
+<meta property="og:url" content="https://hidelryn.github.io/2019/05/22/etc-aws-athena/index.html">
+<meta property="og:site_name" content="delryn&#39;s blog">
+<meta property="og:description" content="Athena란?AWS S3에 보관된 데이터를 SQL을 사용하여 분석할 수 있는 서비스 사용하게 된 계기처음 프로젝트에서 분석할 데이터를 DynamoDB에 보관을 하는데 집계를 하기가 너무 불편해서 우울하던 중에 AWS 페북 그룹에서 Vingle이라는 회사에서 당시 세션 제목은 잘 기억 안 나는데 로그 였나.. 사용자 패턴이였나.. 아무튼 나에게 필요한 정보">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://res.cloudinary.com/dwmywmqv6/image/upload/v1590140610/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-05-22_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_6.43.18_oljukh.png">
+<meta property="og:image" content="https://res.cloudinary.com/dwmywmqv6/image/upload/v1590140287/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-05-22_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_6.37.41_pk5mjq.png">
+<meta property="og:image" content="https://res.cloudinary.com/dwmywmqv6/image/upload/v1590048696/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-05-21_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_5.11.13_c9r2n6.png">
+<meta property="og:image" content="https://res.cloudinary.com/dwmywmqv6/image/upload/v1590141952/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-05-22_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_7.05.37_b6ukic.png">
+<meta property="og:image" content="https://res.cloudinary.com/dwmywmqv6/image/upload/v1590142863/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-05-22_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_7.20.18_dherd6.png">
+<meta property="article:published_time" content="2019-05-22T07:32:24.000Z">
+<meta property="article:modified_time" content="2020-09-01T09:33:49.000Z">
+<meta property="article:author" content="delryn">
+<meta property="article:tag" content="AWS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://res.cloudinary.com/dwmywmqv6/image/upload/v1590140610/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-05-22_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_6.43.18_oljukh.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>AWS Athena 사용해보기</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/css/rtl.css">
+
+    
+    <!-- rss -->
+    
+    
+    <link rel="canonical" href="https://hidelryn.github.io/2019/05/22/etc-aws-athena/">
+<meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="delryn's blog" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/06/02/nodejs-instagram-signup/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/05/12/etc-aws-ec2-timezone/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2019/05/22/etc-aws-athena/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2019/05/22/etc-aws-athena/&text=AWS Athena 사용해보기"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2019/05/22/etc-aws-athena/&title=AWS Athena 사용해보기"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2019/05/22/etc-aws-athena/&is_video=false&description=AWS Athena 사용해보기"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=AWS Athena 사용해보기&body=Check out this article: https://hidelryn.github.io/2019/05/22/etc-aws-athena/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2019/05/22/etc-aws-athena/&title=AWS Athena 사용해보기"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2019/05/22/etc-aws-athena/&title=AWS Athena 사용해보기"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2019/05/22/etc-aws-athena/&title=AWS Athena 사용해보기"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2019/05/22/etc-aws-athena/&title=AWS Athena 사용해보기"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2019/05/22/etc-aws-athena/&name=AWS Athena 사용해보기&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2019/05/22/etc-aws-athena/&t=AWS Athena 사용해보기"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Athena%EB%9E%80"><span class="toc-number">1.</span> <span class="toc-text">Athena란?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%82%AC%EC%9A%A9%ED%95%98%EA%B2%8C-%EB%90%9C-%EA%B3%84%EA%B8%B0"><span class="toc-number">2.</span> <span class="toc-text">사용하게 된 계기</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4%EC%84%9C-%EB%8A%90%EA%BC%88%EB%8D%98-%EC%9E%A5%EC%A0%90"><span class="toc-number">3.</span> <span class="toc-text">사용하면서 느꼈던 장점</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4%EC%84%9C-%EB%8A%90%EA%BC%88%EB%8D%98-%EB%8B%A8%EC%A0%90"><span class="toc-number">4.</span> <span class="toc-text">사용하면서 느꼈던 단점</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Athena-%EC%8B%A4%EC%8A%B5-%ED%95%B4%EB%B3%B4%EA%B8%B0"><span class="toc-number">5.</span> <span class="toc-text">Athena 실습 해보기</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%9E%84%EC%8B%9C-%EB%8D%B0%EC%9D%B4%ED%84%B0"><span class="toc-number">5.1.</span> <span class="toc-text">임시 데이터</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Workgroup-%EC%83%9D%EC%84%B1"><span class="toc-number">5.2.</span> <span class="toc-text">Workgroup 생성</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4-%EC%83%9D%EC%84%B1"><span class="toc-number">5.3.</span> <span class="toc-text">데이터베이스 생성</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%85%8C%EC%9D%B4%EB%B8%94-%EC%83%9D%EC%84%B1"><span class="toc-number">5.4.</span> <span class="toc-text">테이블 생성</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%8C%8C%ED%8B%B0%EC%85%98-%EB%A1%9C%EB%93%9C"><span class="toc-number">5.5.</span> <span class="toc-text">파티션 로드</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%BF%BC%EB%A6%AC-%EC%8B%A4%ED%96%89"><span class="toc-number">5.6.</span> <span class="toc-text">쿼리 실행</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%B0%B8%EA%B3%A0"><span class="toc-number">6.</span> <span class="toc-text">참고</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        AWS Athena 사용해보기
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">delryn's blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-05-22T07:32:24.000Z" itemprop="datePublished">2019-05-22</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/AWS/" rel="tag">AWS</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="Athena란"><a href="#Athena란" class="headerlink" title="Athena란?"></a>Athena란?</h2><p>AWS S3에 보관된 데이터를 SQL을 사용하여 분석할 수 있는 서비스</p>
+<h2 id="사용하게-된-계기"><a href="#사용하게-된-계기" class="headerlink" title="사용하게 된 계기"></a>사용하게 된 계기</h2><p>처음 프로젝트에서 분석할 데이터를 DynamoDB에 보관을 하는데 집계를 하기가 너무 불편해서</p>
+<p>우울하던 중에 AWS 페북 그룹에서 Vingle이라는 회사에서 당시 세션 제목은 잘 기억 안 나는데</p>
+<p>로그 였나.. 사용자 패턴이였나.. 아무튼 나에게 필요한 정보를 배울 수 있을 거 같아서 퇴근하고</p>
+<p>참가 했었다 설명을 듣고 다음 프로젝트에는 꼭 써보기로 마음을 먹었었다 ☺️</p>
+<h2 id="사용하면서-느꼈던-장점"><a href="#사용하면서-느꼈던-장점" class="headerlink" title="사용하면서 느꼈던 장점"></a>사용하면서 느꼈던 장점</h2><ul>
+<li>별도로 설치나 버전 관리 등을 할 일이 없어서 편리 했었다.</li>
+<li>쿼리 사용 회수량에 따른 요금 부과</li>
+</ul>
+<h2 id="사용하면서-느꼈던-단점"><a href="#사용하면서-느꼈던-단점" class="headerlink" title="사용하면서 느꼈던 단점"></a>사용하면서 느꼈던 단점</h2><ul>
+<li>아래에 기술하겠지만 파티션을 불러와야 하는데 일일 기준으로 파티셔닝을 하면 하루에 한번씩 로드를 해줘야 한다. 자동 지원이 아니였음 (혹시 자동 지원 하는 방법을 내가 몰랐을지도 모른다)</li>
+<li>데이터를 분석하는 사람이 SQL을 모르면 음..</li>
+</ul>
+<h2 id="Athena-실습-해보기"><a href="#Athena-실습-해보기" class="headerlink" title="Athena 실습 해보기"></a>Athena 실습 해보기</h2><h3 id="임시-데이터"><a href="#임시-데이터" class="headerlink" title="임시 데이터"></a>임시 데이터</h3><p>Athena의 비용을 절감하기 위해서는 gzip 압축 하는 게 좋다고 한다.</p>
+<p>데이터가 적은 json은 상관없지만 json이 규모가 큰 경우에는 고려해야 한다.</p>
+<p>지금은 json 데이터를 압축해서 S3에 업로드 해 본다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123;</span><br><span class="line">  userId: <span class="string">&quot;hidelryn&quot;</span>,</span><br><span class="line">  password: <span class="string">&quot;12345q&quot;</span>,</span><br><span class="line">  gameData: &#123;</span><br><span class="line">    gameId: <span class="string">&quot;a1&quot;</span>,</span><br><span class="line">    sessionKey: <span class="string">&quot;qrkqkej2l31qeqk&quot;</span>,</span><br><span class="line">    userLocale: &#123;</span><br><span class="line">      locale: <span class="string">&quot;ko_KR&quot;</span>,</span><br><span class="line">      createAt: <span class="string">&quot;2020-05-21 11:15:58&quot;</span>,</span><br><span class="line">      unix: <span class="number">1590027358</span></span><br><span class="line">    &#125;,</span><br><span class="line">    name: <span class="string">&quot;delryn&quot;</span>,</span><br><span class="line">    scores: [</span><br><span class="line">      <span class="number">100</span>,</span><br><span class="line">      <span class="number">30</span>,</span><br><span class="line">      <span class="number">60</span></span><br><span class="line">    ],</span><br><span class="line">    item: [</span><br><span class="line">      &#123;</span><br><span class="line">        itemId: <span class="string">&quot;0_id&quot;</span>,</span><br><span class="line">        itemAmount: <span class="number">0</span></span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        itemId: <span class="string">&quot;1_id&quot;</span>,</span><br><span class="line">        itemAmount: <span class="number">1</span></span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        itemId: <span class="string">&quot;2_id&quot;</span>,</span><br><span class="line">        itemAmount: <span class="number">2</span></span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        itemId: <span class="string">&quot;3_id&quot;</span>,</span><br><span class="line">        itemAmount: <span class="number">3</span></span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        itemId: <span class="string">&quot;4_id&quot;</span>,</span><br><span class="line">        itemAmount: <span class="number">4</span></span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        itemId: <span class="string">&quot;5_id&quot;</span>,</span><br><span class="line">        itemAmount: <span class="number">5</span></span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = obj;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> zlib = <span class="built_in">require</span>(<span class="string">&#x27;zlib&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> json = <span class="built_in">require</span>(<span class="string">&#x27;./sample&#x27;</span>); <span class="comment">// 위에 작성한 Object</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> output = fs.createWriteStream(<span class="string">&#x27;log_1.json.gz&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> compress = zlib.createGzip();</span><br><span class="line">compress.pipe(output);</span><br><span class="line">compress.write(<span class="built_in">JSON</span>.stringify(json));</span><br><span class="line">compress.end();</span><br></pre></td></tr></table></figure>
+
+<p><strong>NOTE</strong></p>
+<ul>
+<li>s3에 json pretty 파일을 업로드를 하게 되는 경우 나중에 쿼리할 때 json 파싱 쪽 오류가 난다.</li>
+<li>s3 prefix를 확인해 둘 것. (이후 파티셔닝 때문에)</li>
+</ul>
+<p><img src="https://res.cloudinary.com/dwmywmqv6/image/upload/v1590140610/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-05-22_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_6.43.18_oljukh.png" alt="s3"></p>
+<h3 id="Workgroup-생성"><a href="#Workgroup-생성" class="headerlink" title="Workgroup 생성"></a>Workgroup 생성</h3><p>이제 athena 메뉴로 가서 Workgroup을 생성 하고 내용은 상황에 맞게 적어주자.</p>
+<p>Workgroup을 만드는 이유는 분류별로 쿼리의 결과를 저장할 s3를 지정 해주는 것</p>
+<p><img src="https://res.cloudinary.com/dwmywmqv6/image/upload/v1590140287/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-05-22_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_6.37.41_pk5mjq.png" alt="athena-1"></p>
+<p>생성 하면 default로 primary가 되어 있기 때문에 이번에 생성한 걸로 바꿔 준다.</p>
+<h3 id="데이터베이스-생성"><a href="#데이터베이스-생성" class="headerlink" title="데이터베이스 생성"></a>데이터베이스 생성</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> log_db</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/dwmywmqv6/image/upload/v1590048696/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-05-21_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_5.11.13_c9r2n6.png" alt="athena-3"></p>
+<h3 id="테이블-생성"><a href="#테이블-생성" class="headerlink" title="테이블 생성"></a>테이블 생성</h3><p>내가 만든 데이터베이스를 선택 하고 테이블을 생성 한다.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">EXTERNAL</span> <span class="keyword">TABLE</span> user_log (</span><br><span class="line">  userId <span class="keyword">string</span>,</span><br><span class="line">  <span class="keyword">password</span> <span class="keyword">string</span>,</span><br><span class="line">  gameData <span class="keyword">struct</span>&lt;</span><br><span class="line">    gameId:<span class="keyword">string</span>,</span><br><span class="line">    sessionKey:<span class="keyword">string</span>,</span><br><span class="line">    userLocale:<span class="keyword">struct</span>&lt;</span><br><span class="line">      locale:<span class="keyword">string</span>,</span><br><span class="line">      createAt:<span class="built_in">timestamp</span>,</span><br><span class="line">      unix:<span class="built_in">bigint</span></span><br><span class="line">    &gt;,</span><br><span class="line">    <span class="keyword">name</span>:<span class="keyword">string</span>,</span><br><span class="line">    scores:<span class="built_in">array</span>&lt;<span class="built_in">int</span>&gt;,</span><br><span class="line">    item:<span class="built_in">array</span>&lt;<span class="keyword">struct</span>&lt;</span><br><span class="line">      itemId:<span class="keyword">string</span>,</span><br><span class="line">      itemAmount:<span class="built_in">int</span></span><br><span class="line">    &gt;&gt;</span><br><span class="line">  &gt;</span><br><span class="line">) PARTITIONED <span class="keyword">BY</span> (<span class="keyword">year</span> <span class="built_in">int</span>, <span class="keyword">month</span> <span class="built_in">int</span>, <span class="keyword">day</span> <span class="built_in">int</span>)</span><br><span class="line"><span class="keyword">ROW</span> <span class="keyword">FORMAT</span> SERDE <span class="string">&#x27;org.apache.hive.hcatalog.data.JsonSerDe&#x27;</span></span><br><span class="line">LOCATION <span class="string">&#x27;s3://athena-delryn-test/logs/users/&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>테이블의 필드는 json의 키, 데이터 타입은 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.aws.amazon.com/ko_kr/athena/latest/ug/data-types.html">링크</a>에서 확인</li>
+<li>PARTITIONED을 거는 이유는 s3에서 쿼리 시 모든 파일을 스캔 하기 떄문에 비용이 많이 들고 쿼리 응답 지연 시간이 늘어나기 때문에 지정을 해줘야 비용, 성능 상으로 모두 좋다.</li>
+<li>ROW FORMAT SERDE은 그냥 json 데이터니 json 라이브러리 추가</li>
+<li>LOCATION은 분석할 데이터가 보관되어 있는 s3 경로</li>
+</ul>
+<p><img src="https://res.cloudinary.com/dwmywmqv6/image/upload/v1590141952/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-05-22_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_7.05.37_b6ukic.png" alt="athena-4"></p>
+<h3 id="파티션-로드"><a href="#파티션-로드" class="headerlink" title="파티션 로드"></a>파티션 로드</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MSCK <span class="keyword">REPAIR</span> <span class="keyword">TABLE</span> user_log;</span><br></pre></td></tr></table></figure>
+
+<p>위에서 적은 단점이 이 부분인데 좀 더 자세하게 예로 들자면</p>
+<p>현재 일일별로 파티션을 걸어놨기 때문에 오늘(5월 22일) 파티션 로드 시 s3에 22일에 업로드된 </p>
+<p>데이터들(로드 이후에도 업로드 되는 데이터까지) 쿼리가 가능 하다.</p>
+<p>그러나 다음 날(23일)에 s3에 데이터가 업로드 되고 파티션 로드를 안한 상태에서는 </p>
+<p>22일자 데이터로만 쿼리가 가능 해서 파티션 로드를 당일 다시 해줘야 23일자 데이터도 쿼리로 </p>
+<p>읽을 수 있다 그러므로 일일별로 하루에 한번 파티션 로드를 해줘야 한다.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> user_log <span class="keyword">ADD</span> <span class="keyword">PARTITION</span> (<span class="keyword">year</span> = 년, <span class="keyword">month</span> = 월, <span class="keyword">day</span> = 일) LOCATION <span class="string">&#x27;s3://athena-delryn-test/logs/users/&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>나는 일일 00시 지나가고 나서 Lambda CloudWatchEvent로 cron을 돌렸었다.</p>
+<h3 id="쿼리-실행"><a href="#쿼리-실행" class="headerlink" title="쿼리 실행"></a>쿼리 실행</h3><p>결과를 볼 수 있게 쿼리를 실행 해 본다.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="string">&quot;log_db&quot;</span>.<span class="string">&quot;user_log&quot;</span> <span class="keyword">where</span> gamedata.userlocale.locale = <span class="string">&#x27;ko_KR&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/dwmywmqv6/image/upload/v1590142863/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-05-22_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_7.20.18_dherd6.png" alt="쿼리 결과"></p>
+<h2 id="참고"><a href="#참고" class="headerlink" title="참고"></a>참고</h2><ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://bunjang.github.io/back-end/2019/03/11/bunjang-athena.html">번개장터 기술 블로그</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://blog.skeddly.com/2016/12/using-compressed-json-data-with-amazon-athena.html">Using Compressed JSON Data With Amazon Athena</a></li>
+</ul>
+
+  </div>
+</article>
+
+<script src="https://utteranc.es/client.js" repo="cheese10yun/blog-comment" issue-term="title" label="Comment" theme="github-dark-orange" crossorigin="anonymous" async>
+  </script>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Athena%EB%9E%80"><span class="toc-number">1.</span> <span class="toc-text">Athena란?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%82%AC%EC%9A%A9%ED%95%98%EA%B2%8C-%EB%90%9C-%EA%B3%84%EA%B8%B0"><span class="toc-number">2.</span> <span class="toc-text">사용하게 된 계기</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4%EC%84%9C-%EB%8A%90%EA%BC%88%EB%8D%98-%EC%9E%A5%EC%A0%90"><span class="toc-number">3.</span> <span class="toc-text">사용하면서 느꼈던 장점</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4%EC%84%9C-%EB%8A%90%EA%BC%88%EB%8D%98-%EB%8B%A8%EC%A0%90"><span class="toc-number">4.</span> <span class="toc-text">사용하면서 느꼈던 단점</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Athena-%EC%8B%A4%EC%8A%B5-%ED%95%B4%EB%B3%B4%EA%B8%B0"><span class="toc-number">5.</span> <span class="toc-text">Athena 실습 해보기</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%9E%84%EC%8B%9C-%EB%8D%B0%EC%9D%B4%ED%84%B0"><span class="toc-number">5.1.</span> <span class="toc-text">임시 데이터</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Workgroup-%EC%83%9D%EC%84%B1"><span class="toc-number">5.2.</span> <span class="toc-text">Workgroup 생성</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4-%EC%83%9D%EC%84%B1"><span class="toc-number">5.3.</span> <span class="toc-text">데이터베이스 생성</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%85%8C%EC%9D%B4%EB%B8%94-%EC%83%9D%EC%84%B1"><span class="toc-number">5.4.</span> <span class="toc-text">테이블 생성</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%8C%8C%ED%8B%B0%EC%85%98-%EB%A1%9C%EB%93%9C"><span class="toc-number">5.5.</span> <span class="toc-text">파티션 로드</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%BF%BC%EB%A6%AC-%EC%8B%A4%ED%96%89"><span class="toc-number">5.6.</span> <span class="toc-text">쿼리 실행</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%B0%B8%EA%B3%A0"><span class="toc-number">6.</span> <span class="toc-text">참고</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2019/05/22/etc-aws-athena/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2019/05/22/etc-aws-athena/&text=AWS Athena 사용해보기"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2019/05/22/etc-aws-athena/&title=AWS Athena 사용해보기"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2019/05/22/etc-aws-athena/&is_video=false&description=AWS Athena 사용해보기"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=AWS Athena 사용해보기&body=Check out this article: https://hidelryn.github.io/2019/05/22/etc-aws-athena/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2019/05/22/etc-aws-athena/&title=AWS Athena 사용해보기"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2019/05/22/etc-aws-athena/&title=AWS Athena 사용해보기"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2019/05/22/etc-aws-athena/&title=AWS Athena 사용해보기"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2019/05/22/etc-aws-athena/&title=AWS Athena 사용해보기"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2019/05/22/etc-aws-athena/&name=AWS Athena 사용해보기&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2019/05/22/etc-aws-athena/&t=AWS Athena 사용해보기"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2018-2020
+    delryn
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+<!-- clipboard -->
+
+  
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-104148803-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

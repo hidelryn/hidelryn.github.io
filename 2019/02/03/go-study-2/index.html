@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="조건문if123456789101112131415161718192021package mainimport &quot;fmt&quot;func main() &amp;#123;	a :&#x3D; 10	if a &#x3D;&#x3D; 10 &amp;#123;		fmt.Println(&quot;a is 10&quot;)	&amp;#125;	b :&#x3D; 20	if b &gt;&#x3D; 5 &amp;#123;		fmt.Println(&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go 조건문, 반복문, 콜렉션 정리">
+<meta property="og:url" content="https://hidelryn.github.io/2019/02/03/go-study-2/index.html">
+<meta property="og:site_name" content="delryn&#39;s blog">
+<meta property="og:description" content="조건문if123456789101112131415161718192021package mainimport &quot;fmt&quot;func main() &amp;#123;	a :&#x3D; 10	if a &#x3D;&#x3D; 10 &amp;#123;		fmt.Println(&quot;a is 10&quot;)	&amp;#125;	b :&#x3D; 20	if b &gt;&#x3D; 5 &amp;#123;		fmt.Println(&amp;">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-02-03T04:22:01.000Z">
+<meta property="article:modified_time" content="2020-09-01T06:30:35.000Z">
+<meta property="article:author" content="delryn">
+<meta property="article:tag" content="Go">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Go 조건문, 반복문, 콜렉션 정리</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/css/rtl.css">
+
+    
+    <!-- rss -->
+    
+    
+    <link rel="canonical" href="https://hidelryn.github.io/2019/02/03/go-study-2/">
+<meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="delryn's blog" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/02/09/go-study-3/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/01/27/go-study-1/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2019/02/03/go-study-2/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2019/02/03/go-study-2/&text=Go 조건문, 반복문, 콜렉션 정리"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2019/02/03/go-study-2/&title=Go 조건문, 반복문, 콜렉션 정리"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2019/02/03/go-study-2/&is_video=false&description=Go 조건문, 반복문, 콜렉션 정리"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Go 조건문, 반복문, 콜렉션 정리&body=Check out this article: https://hidelryn.github.io/2019/02/03/go-study-2/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2019/02/03/go-study-2/&title=Go 조건문, 반복문, 콜렉션 정리"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2019/02/03/go-study-2/&title=Go 조건문, 반복문, 콜렉션 정리"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2019/02/03/go-study-2/&title=Go 조건문, 반복문, 콜렉션 정리"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2019/02/03/go-study-2/&title=Go 조건문, 반복문, 콜렉션 정리"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2019/02/03/go-study-2/&name=Go 조건문, 반복문, 콜렉션 정리&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2019/02/03/go-study-2/&t=Go 조건문, 반복문, 콜렉션 정리"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%A1%B0%EA%B1%B4%EB%AC%B8"><span class="toc-number">1.</span> <span class="toc-text">조건문</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#if"><span class="toc-number">1.1.</span> <span class="toc-text">if</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#switch"><span class="toc-number">1.2.</span> <span class="toc-text">switch</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%B0%98%EB%B3%B5%EB%AC%B8"><span class="toc-number">2.</span> <span class="toc-text">반복문</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%BD%9C%EB%A0%89%EC%85%98"><span class="toc-number">3.</span> <span class="toc-text">콜렉션</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#array"><span class="toc-number">3.1.</span> <span class="toc-text">array</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#slice"><span class="toc-number">3.2.</span> <span class="toc-text">slice</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#map"><span class="toc-number">3.3.</span> <span class="toc-text">map</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Go 조건문, 반복문, 콜렉션 정리
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">delryn's blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-02-03T04:22:01.000Z" itemprop="datePublished">2019-02-03</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Go/" rel="tag">Go</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="조건문"><a href="#조건문" class="headerlink" title="조건문"></a>조건문</h2><h3 id="if"><a href="#if" class="headerlink" title="if"></a>if</h3><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	a := <span class="number">10</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> a == <span class="number">10</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;a is 10&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	b := <span class="number">20</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> b &gt;= <span class="number">5</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;a는 5보다 크다&quot;</span>)</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> b &gt;= <span class="number">25</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;a는 25보다 크다&quot;</span>)</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;???&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="switch"><a href="#switch" class="headerlink" title="switch"></a>switch</h3><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> name <span class="keyword">string</span></span><br><span class="line"></span><br><span class="line">	c := <span class="number">20</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">switch</span> c &#123;</span><br><span class="line">	<span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">		name = <span class="string">&quot;none1&quot;</span></span><br><span class="line">	<span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">		name = <span class="string">&quot;none2&quot;</span></span><br><span class="line">	<span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">		name = <span class="string">&quot;none3&quot;</span></span><br><span class="line">	<span class="keyword">case</span> <span class="number">4</span>, <span class="number">5</span>:</span><br><span class="line">		name = <span class="string">&quot;none4,5&quot;</span></span><br><span class="line">	<span class="keyword">case</span> <span class="number">20</span>:</span><br><span class="line">		name = <span class="string">&quot;true&quot;</span></span><br><span class="line">	<span class="keyword">default</span>:</span><br><span class="line">		name = <span class="string">&quot;false&quot;</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	fmt.Println(<span class="string">&quot;name&quot;</span>, name) <span class="comment">// name, true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>break가 업음.</p>
+<h2 id="반복문"><a href="#반복문" class="headerlink" title="반복문"></a>반복문</h2><p>심플하게 for문 하나</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span> <span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt;= <span class="number">5</span>; i++ &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;i:&quot;</span>, i)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>break, continue도 잇음.</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	sum := <span class="number">0</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> index := <span class="number">0</span>; index &lt; <span class="number">10</span>; index++ &#123;</span><br><span class="line">		<span class="keyword">if</span> index%<span class="number">2</span> != <span class="number">0</span> &#123;</span><br><span class="line">			sum = sum + index</span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> index == <span class="number">10</span> &#123;</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	fmt.Println(<span class="string">&quot;sum&quot;</span>, sum) <span class="comment">// 25</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="콜렉션"><a href="#콜렉션" class="headerlink" title="콜렉션"></a>콜렉션</h2><h3 id="array"><a href="#array" class="headerlink" title="array"></a>array</h3><p>고정 배열</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> a [<span class="number">3</span>]<span class="keyword">int</span> <span class="comment">// 배열 선언 방법. 초기값이 업는 배열의 크기를 정해줘야 한다. 그리고 자료형을 붙여준다.</span></span><br><span class="line"></span><br><span class="line">	fmt.Println(a) <span class="comment">// 타입에 따라 초기 값은 [0 0 0]</span></span><br><span class="line"></span><br><span class="line">	a[<span class="number">0</span>] = <span class="number">1</span></span><br><span class="line">	a[<span class="number">1</span>] = <span class="number">2</span></span><br><span class="line">	a[<span class="number">2</span>] = <span class="number">3</span></span><br><span class="line"></span><br><span class="line">	fmt.Println(a) <span class="comment">// [1 2 3]</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> s [<span class="number">2</span>]<span class="keyword">string</span></span><br><span class="line"></span><br><span class="line">	fmt.Println(s) <span class="comment">// 비어 있는 배열 같지만 아님  [ ]</span></span><br><span class="line"></span><br><span class="line">	s[<span class="number">0</span>] = <span class="string">&quot;aa&quot;</span></span><br><span class="line">	s[<span class="number">1</span>] = <span class="string">&quot;bb&quot;</span></span><br><span class="line"></span><br><span class="line">	fmt.Println(s) <span class="comment">// [aa bb]</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> s2 = [...]<span class="keyword">string</span>&#123;<span class="string">&quot;x&quot;</span>, <span class="string">&quot;y&quot;</span>, <span class="string">&quot;z&quot;</span>&#125; <span class="comment">// 초기 값을 줬을 시에 [...] 하면 초기 값의 크기 만큼 배열 크기 생성.</span></span><br><span class="line"></span><br><span class="line">	fmt.Println(s2) <span class="comment">// [x y z]</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// s2[3] = &quot;xy&quot; 당연히 크기를 넘어서 추가할 수가 업다.</span></span><br><span class="line"></span><br><span class="line">		<span class="comment">/*</span></span><br><span class="line"><span class="comment">		...으로 크기 자동으로 잡아줄 시 초기 값 업으면 에러임</span></span><br><span class="line"><span class="comment">		var c = [...]int</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">		c[0] = 1</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">		fmt.Println(c)</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="slice"><a href="#slice" class="headerlink" title="slice"></a>slice</h3><p>동적 배열</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> sl []<span class="keyword">int</span> <span class="comment">// 슬라이스 선언 방법 배열과 같지만 크기만 비어두면 된다.</span></span><br><span class="line"></span><br><span class="line">	fmt.Println(sl) <span class="comment">// []</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> sl == <span class="literal">nil</span> &#123; <span class="comment">// 비어 있는 슬라이스는 ==  nil</span></span><br><span class="line">		fmt.Println(<span class="string">&quot;비어 있는 슬라이스&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(sl) == <span class="number">0</span> &#123; <span class="comment">// 슬라이스나 배열의 길이는 len()함수로 알 수 있다.</span></span><br><span class="line">		fmt.Println(<span class="string">&quot;길이가 0인 비어 있는 슬라이스&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	sl = <span class="built_in">append</span>(sl, <span class="number">7</span>) <span class="comment">// 슬라이스의 요소 추가 JS에서 .push()랑 같은 기능이다.</span></span><br><span class="line"></span><br><span class="line">	fmt.Println(sl) <span class="comment">// [7]</span></span><br><span class="line"></span><br><span class="line">	sl = <span class="built_in">append</span>(sl, <span class="number">1</span>, <span class="number">3</span>) <span class="comment">// push와 마찬가지로 여러 개를 같이 추가할 수 있다.</span></span><br><span class="line"></span><br><span class="line">	fmt.Println(sl) <span class="comment">// [7 1 3]</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">		Go 에서 부분 슬라이스 하는 법.</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">		JS ex</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">		let sli2 = [0,1,2,3]</span></span><br><span class="line"><span class="comment">		sli2 = sli2.slice(0, 2)</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line"></span><br><span class="line">	sli2 := []<span class="keyword">int</span>&#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br><span class="line">	sli2 = sli2[<span class="number">0</span>:<span class="number">2</span>]</span><br><span class="line">	fmt.Println(sli2) <span class="comment">// [0 1]</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">		슬라이스 복사 c++에서 memcopy였나 그런게 있었던 같다.</span></span><br><span class="line"><span class="comment">		근데 아래처럼 그냥 직접 넣어도 별 차이는 업는데.. 뭔가 다른걸까?</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line"></span><br><span class="line">	sli3 := []<span class="keyword">int</span>&#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br><span class="line">	sli4 := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="built_in">len</span>(sli3), <span class="built_in">cap</span>(sli3))</span><br><span class="line">	<span class="built_in">copy</span>(sli4, sli3)</span><br><span class="line">	fmt.Println(sli3, sli4)</span><br><span class="line">	sli4 = sli3[<span class="number">0</span>:<span class="number">2</span>]</span><br><span class="line">	fmt.Println(sli4, sli3)</span><br><span class="line"></span><br><span class="line">	sli5 := []<span class="keyword">int</span>&#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;</span><br><span class="line">	sli6 := sli5</span><br><span class="line">	sli5 = <span class="built_in">append</span>(sli5, <span class="number">7</span>)</span><br><span class="line">	fmt.Println(sli5, sli6)</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">		JS forEach 같은 거 사용.</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> index, elem := <span class="keyword">range</span> sli5 &#123;</span><br><span class="line">		fmt.Println(index, elem) <span class="comment">// 0 0 -&gt; 1 1 -&gt; 2 2 ... 5 7</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// index 업이 데이터만.</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> _, elem := <span class="keyword">range</span> sli5 &#123;</span><br><span class="line">		fmt.Println(elem) <span class="comment">// 0 -&gt; 1 -&gt; 2 .. 7</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="map"><a href="#map" class="headerlink" title="map"></a>map</h3><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> aMap <span class="keyword">map</span>[<span class="keyword">int</span>]<span class="keyword">string</span> <span class="comment">// vqr 변수명 map[key type]value type</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> aMap == <span class="literal">nil</span> &#123; <span class="comment">// 처음 맵을 생성하면 nil 상태. 이 맵에는 아무 데이터를 쓸 수 업다.</span></span><br><span class="line">		fmt.Println(<span class="string">&quot;nil map&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	aMap = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">int</span>]<span class="keyword">string</span>) <span class="comment">// make로 초기화를 해줘야 데이터를 쓸 수 있다. 안 그러면 오류 남.</span></span><br><span class="line"></span><br><span class="line">	aMap[<span class="number">0</span>] = <span class="string">&quot;Go&quot;</span> <span class="comment">// 추가나 갱신.</span></span><br><span class="line">	aMap[<span class="number">1</span>] = <span class="string">&quot;Node.js&quot;</span></span><br><span class="line"></span><br><span class="line">	fmt.Println(aMap) <span class="comment">// map[0:Go 1:Node.js]</span></span><br><span class="line"></span><br><span class="line">	fmt.Println(aMap[<span class="number">0</span>]) <span class="comment">// Go (키 값 읽기)</span></span><br><span class="line"></span><br><span class="line">	bMap := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">string</span>)</span><br><span class="line"></span><br><span class="line">	bMap[<span class="string">&quot;a&quot;</span>] = <span class="string">&quot;PHP&quot;</span></span><br><span class="line">	bMap[<span class="string">&quot;b&quot;</span>] = <span class="string">&quot;JAVA&quot;</span></span><br><span class="line">	bMap[<span class="string">&quot;c&quot;</span>] = <span class="string">&quot;null&quot;</span></span><br><span class="line"></span><br><span class="line">	<span class="built_in">delete</span>(bMap, <span class="string">&quot;c&quot;</span>) <span class="comment">// 키 삭제.</span></span><br><span class="line"></span><br><span class="line">	fmt.Println(bMap) <span class="comment">// map[a:PHP b:JAVA]</span></span><br><span class="line"></span><br><span class="line">	val, key := bMap[<span class="string">&quot;c&quot;</span>] <span class="comment">// val에는 키에 대한 value, key는 있으면 true, 업으면 false</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> !key &#123; <span class="comment">// 키가 존재하는 지 체크하는 방법.</span></span><br><span class="line">		fmt.Println(<span class="string">&quot;c is no exist&quot;</span>)</span><br><span class="line">		fmt.Println(val) <span class="comment">// &quot;&quot;</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">		for문을 이용한 map 출력.</span></span><br><span class="line"><span class="comment">		당연히 순서는 보장되지 않는다</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">		JS</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">		for (var [key, value] of myMap) &#123;</span></span><br><span class="line"><span class="comment">			console.log(key + &quot; = &quot; + value);</span></span><br><span class="line"><span class="comment">		&#125;</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line"></span><br><span class="line">	cMap := <span class="keyword">map</span>[<span class="keyword">int</span>]<span class="keyword">string</span>&#123;</span><br><span class="line">		<span class="number">0</span>: <span class="string">&quot;Express&quot;</span>,</span><br><span class="line">		<span class="number">1</span>: <span class="string">&quot;Flask&quot;</span>,</span><br><span class="line">		<span class="number">2</span>: <span class="string">&quot;Jin&quot;</span>,</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> key, val := <span class="keyword">range</span> cMap &#123;</span><br><span class="line">		fmt.Println(key, val)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+  </div>
+</article>
+
+<script src="https://utteranc.es/client.js" repo="cheese10yun/blog-comment" issue-term="title" label="Comment" theme="github-dark-orange" crossorigin="anonymous" async>
+  </script>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%A1%B0%EA%B1%B4%EB%AC%B8"><span class="toc-number">1.</span> <span class="toc-text">조건문</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#if"><span class="toc-number">1.1.</span> <span class="toc-text">if</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#switch"><span class="toc-number">1.2.</span> <span class="toc-text">switch</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%B0%98%EB%B3%B5%EB%AC%B8"><span class="toc-number">2.</span> <span class="toc-text">반복문</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%BD%9C%EB%A0%89%EC%85%98"><span class="toc-number">3.</span> <span class="toc-text">콜렉션</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#array"><span class="toc-number">3.1.</span> <span class="toc-text">array</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#slice"><span class="toc-number">3.2.</span> <span class="toc-text">slice</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#map"><span class="toc-number">3.3.</span> <span class="toc-text">map</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2019/02/03/go-study-2/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2019/02/03/go-study-2/&text=Go 조건문, 반복문, 콜렉션 정리"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2019/02/03/go-study-2/&title=Go 조건문, 반복문, 콜렉션 정리"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2019/02/03/go-study-2/&is_video=false&description=Go 조건문, 반복문, 콜렉션 정리"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Go 조건문, 반복문, 콜렉션 정리&body=Check out this article: https://hidelryn.github.io/2019/02/03/go-study-2/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2019/02/03/go-study-2/&title=Go 조건문, 반복문, 콜렉션 정리"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2019/02/03/go-study-2/&title=Go 조건문, 반복문, 콜렉션 정리"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2019/02/03/go-study-2/&title=Go 조건문, 반복문, 콜렉션 정리"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2019/02/03/go-study-2/&title=Go 조건문, 반복문, 콜렉션 정리"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2019/02/03/go-study-2/&name=Go 조건문, 반복문, 콜렉션 정리&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2019/02/03/go-study-2/&t=Go 조건문, 반복문, 콜렉션 정리"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2018-2020
+    delryn
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+<!-- clipboard -->
+
+  
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-104148803-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

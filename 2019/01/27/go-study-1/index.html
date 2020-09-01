@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="설정설치공식 사이트에서 .dmg 받아서 설치하면 끝. GCC가 필요하다는데 MAC 기준 Xcode땜에 그런지 따로 뭐 설치할 필욘 업엇음. workspace 설정12345go-workspace└───bin└───pkg└───src│   │─── ...  원하는 경로에 workspace 폴더를 만들고 위와 같은 구조로 폴더 생성을 한다 실제 프로젝트에서 사용">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go 설치 및 설정, 주석, 출력, 변수 정리">
+<meta property="og:url" content="https://hidelryn.github.io/2019/01/27/go-study-1/index.html">
+<meta property="og:site_name" content="delryn&#39;s blog">
+<meta property="og:description" content="설정설치공식 사이트에서 .dmg 받아서 설치하면 끝. GCC가 필요하다는데 MAC 기준 Xcode땜에 그런지 따로 뭐 설치할 필욘 업엇음. workspace 설정12345go-workspace└───bin└───pkg└───src│   │─── ...  원하는 경로에 workspace 폴더를 만들고 위와 같은 구조로 폴더 생성을 한다 실제 프로젝트에서 사용">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://res.cloudinary.com/dwmywmqv6/image/upload/v1548578451/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2019-01-27_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_5.37.59_gq4nkl.png">
+<meta property="article:published_time" content="2019-01-27T04:01:03.000Z">
+<meta property="article:modified_time" content="2020-09-01T06:30:30.000Z">
+<meta property="article:author" content="delryn">
+<meta property="article:tag" content="Go">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://res.cloudinary.com/dwmywmqv6/image/upload/v1548578451/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2019-01-27_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_5.37.59_gq4nkl.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Go 설치 및 설정, 주석, 출력, 변수 정리</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/css/rtl.css">
+
+    
+    <!-- rss -->
+    
+    
+    <link rel="canonical" href="https://hidelryn.github.io/2019/01/27/go-study-1/">
+<meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="delryn's blog" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/02/03/go-study-2/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2018/12/23/nodejs-redis-queue/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2019/01/27/go-study-1/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2019/01/27/go-study-1/&text=Go 설치 및 설정, 주석, 출력, 변수 정리"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2019/01/27/go-study-1/&title=Go 설치 및 설정, 주석, 출력, 변수 정리"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2019/01/27/go-study-1/&is_video=false&description=Go 설치 및 설정, 주석, 출력, 변수 정리"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Go 설치 및 설정, 주석, 출력, 변수 정리&body=Check out this article: https://hidelryn.github.io/2019/01/27/go-study-1/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2019/01/27/go-study-1/&title=Go 설치 및 설정, 주석, 출력, 변수 정리"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2019/01/27/go-study-1/&title=Go 설치 및 설정, 주석, 출력, 변수 정리"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2019/01/27/go-study-1/&title=Go 설치 및 설정, 주석, 출력, 변수 정리"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2019/01/27/go-study-1/&title=Go 설치 및 설정, 주석, 출력, 변수 정리"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2019/01/27/go-study-1/&name=Go 설치 및 설정, 주석, 출력, 변수 정리&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2019/01/27/go-study-1/&t=Go 설치 및 설정, 주석, 출력, 변수 정리"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%84%A4%EC%A0%95"><span class="toc-number">1.</span> <span class="toc-text">설정</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%84%A4%EC%B9%98"><span class="toc-number">1.1.</span> <span class="toc-text">설치</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#workspace-%EC%84%A4%EC%A0%95"><span class="toc-number">1.2.</span> <span class="toc-text">workspace 설정</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%99%98%EA%B2%BD%EB%B3%80%EC%88%98"><span class="toc-number">1.3.</span> <span class="toc-text">환경변수</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#main-%ED%95%A8%EC%88%98-%EC%9E%91%EC%84%B1"><span class="toc-number">2.</span> <span class="toc-text">main 함수 작성</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%A3%BC%EC%84%9D"><span class="toc-number">3.</span> <span class="toc-text">주석</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%B6%9C%EB%A0%A5%EB%AC%B8"><span class="toc-number">4.</span> <span class="toc-text">출력문</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%B3%80%EC%88%98"><span class="toc-number">5.</span> <span class="toc-text">변수</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Go 설치 및 설정, 주석, 출력, 변수 정리
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">delryn's blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-01-27T04:01:03.000Z" itemprop="datePublished">2019-01-27</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Go/" rel="tag">Go</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="설정"><a href="#설정" class="headerlink" title="설정"></a>설정</h2><h3 id="설치"><a href="#설치" class="headerlink" title="설치"></a>설치</h3><p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://golang.org/">공식 사이트</a>에서 .dmg 받아서 설치하면 끝.</p>
+<p>GCC가 필요하다는데 MAC 기준 Xcode땜에 그런지 따로 뭐 설치할 필욘 업엇음.</p>
+<h3 id="workspace-설정"><a href="#workspace-설정" class="headerlink" title="workspace 설정"></a>workspace 설정</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">go-workspace</span><br><span class="line">└───bin</span><br><span class="line">└───pkg</span><br><span class="line">└───src</span><br><span class="line">│   │─── ...</span><br></pre></td></tr></table></figure>
+
+<p>원하는 경로에 workspace 폴더를 만들고 위와 같은 구조로 폴더 생성을 한다</p>
+<p>실제 프로젝트에서 사용할 폴더는 src이다.</p>
+<h3 id="환경변수"><a href="#환경변수" class="headerlink" title="환경변수"></a>환경변수</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go env</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/dwmywmqv6/image/upload/v1548578451/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2019-01-27_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_5.37.59_gq4nkl.png" alt="env"></p>
+<ul>
+<li>GOROOT = Go가 설치된 디렉토리 + /pkg로 (Go 설치 시 자동) 여기에 표준 패키지가 있다.</li>
+<li>GOPATH = 3rd party나 사용자 정의 패키지는 여기에서 찾는다.</li>
+</ul>
+<p>내가 해야할 건 GOPATH라는 부분을 사용할 workspace로 바꿔줘야 함.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vi ~/.bash_profile</span><br><span class="line"><span class="built_in">export</span> GOPATH=/Volumes/Seagate\ Slim\ Drive/project/golang <span class="comment"># 본인이 정한 workspace</span></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$GOPATH</span>/bin:<span class="variable">$PATH</span></span><br><span class="line"><span class="built_in">source</span> ~/.bash_profile</span><br><span class="line">go env</span><br></pre></td></tr></table></figure>
+
+<p>그럼 GOPATH가 본인의 workspace로 바뀌엇을 것.</p>
+<h2 id="main-함수-작성"><a href="#main-함수-작성" class="headerlink" title="main 함수 작성"></a>main 함수 작성</h2><p>하나의 프로젝트엔 메인 패키지와 메인 함수가 팔수다. main.go</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="주석"><a href="#주석" class="headerlink" title="주석"></a>주석</h2><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// 한줄 주석</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	111111</span></span><br><span class="line"><span class="comment">	222222</span></span><br><span class="line"><span class="comment">	333333</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="출력문"><a href="#출력문" class="headerlink" title="출력문"></a>출력문</h2><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span> <span class="comment">// fmt라는 표준 패키지 import</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;hi! golang :)&quot;</span>)        <span class="comment">// JS: console.log(&quot;hi! golang :)&quot;);</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;hi!&quot;</span>, <span class="string">&quot;golang&quot;</span>, <span class="string">&quot;:)&quot;</span>)  <span class="comment">// JS: console.log(&quot;hi&quot;, &quot;golang :)&quot;)</span></span><br><span class="line">	fmt.Printf(<span class="string">&quot;hi! %s\n&quot;</span>, <span class="string">&quot;golang :)&quot;</span>) <span class="comment">// JS: console.log(&quot;hi&quot;, &quot;golang :)&quot;)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="변수"><a href="#변수" class="headerlink" title="변수"></a>변수</h2><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;reflect&quot;</span></span><br><span class="line">	<span class="string">&quot;strconv&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">		변수 선언</span></span><br><span class="line"><span class="comment">		기본으로 변수만 선언하면 자료형에 따라 default 값 생김 숫자형은 0, 문자형은 &quot;&quot; bool은 false</span></span><br><span class="line"><span class="comment">		자료형 붙이는건 필수 아님.</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">		기본 알아둬야 할 자료형만 적어둔다.</span></span><br><span class="line"><span class="comment">		int: 32bit 시스템에선 int32, 64bit 시스템에선 int64로 자동 설정</span></span><br><span class="line"><span class="comment">		int32: ~2,147,483,648 ~ 2,147,483,647,</span></span><br><span class="line"><span class="comment">		int64: ~9,233,372,036,854,775,808 ~ 9,223,372,036,854,775,807</span></span><br><span class="line"><span class="comment">		float32: 32bit</span></span><br><span class="line"><span class="comment">		float64: 64bit</span></span><br><span class="line"><span class="comment">		bool: 참, 거짓</span></span><br><span class="line"><span class="comment">		string: 문자열</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> i <span class="keyword">int</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> f <span class="keyword">float64</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> tf <span class="keyword">bool</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> str = <span class="string">&quot;foo&quot;</span> <span class="comment">// JS: var str = &#x27;foo&#x27;</span></span><br><span class="line"></span><br><span class="line">	str2 := <span class="string">&quot;bar&quot;</span> <span class="comment">// 함수 내에서만 축약 가능.</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> bigInt <span class="keyword">int64</span> = <span class="number">923372036854775899</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">const</span> cs = <span class="string">&quot;상수&quot;</span> <span class="comment">// JS: const cs = &quot;상수&quot;</span></span><br><span class="line"></span><br><span class="line">	fmt.Println(<span class="string">&quot;i:&quot;</span>, i, <span class="string">&quot;f:&quot;</span>, f, <span class="string">&quot;tf:&quot;</span>, tf, <span class="string">&quot;str:&quot;</span>, str, <span class="string">&quot;str2:&quot;</span>, str2, <span class="string">&quot;cs:&quot;</span>, cs, <span class="string">&quot;bigInt:&quot;</span>, bigInt)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// i: 0 f: 0 tf: false str: foo str2: bar cs: 상수 bigInt: 923372036854775899</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">		JS에서 ``로 출력하는 거 GO에서 하는 법.</span></span><br><span class="line"><span class="comment">		const name = &quot;delryn&quot;;</span></span><br><span class="line"><span class="comment">		const age = 32;</span></span><br><span class="line"><span class="comment">		const message `$&#123;name&#125; is $&#123;age&#125; years old`;</span></span><br><span class="line"><span class="comment">		console.log(message);</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">		포멧 서식자 </span></span><br><span class="line"><span class="comment">		%s: 문자열</span></span><br><span class="line"><span class="comment">		%d: 정수</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line"></span><br><span class="line">	name := <span class="string">&quot;delryn&quot;</span></span><br><span class="line">	age := <span class="number">32</span></span><br><span class="line">	message := fmt.Sprintf(<span class="string">&quot;%s is %d years old&quot;</span>, name, age)</span><br><span class="line"></span><br><span class="line">	fmt.Println(message) <span class="comment">// delryn is 32 years old</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">		Go 타입 체크하는 법 reflect package를 import를 해야 됨.</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line"></span><br><span class="line">	fmt.Println(<span class="string">&quot;i:&quot;</span>, reflect.TypeOf(i), <span class="string">&quot;f:&quot;</span>, reflect.TypeOf(f), <span class="string">&quot;tf:&quot;</span>, reflect.TypeOf(tf),</span><br><span class="line">		<span class="string">&quot;str:&quot;</span>, reflect.TypeOf(str), <span class="string">&quot;str2:&quot;</span>, reflect.TypeOf(str2), <span class="string">&quot;cs:&quot;</span>, reflect.TypeOf(cs), <span class="string">&quot;bigInt:&quot;</span>, reflect.TypeOf(bigInt))</span><br><span class="line"></span><br><span class="line">	<span class="comment">// i: int f: float64 tf: bool str: string str2: string cs: string bigInt: int64</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">		go 형변환</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">	<span class="keyword">var</span> thisInt = <span class="number">3</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> intToStr <span class="keyword">string</span></span><br><span class="line"></span><br><span class="line">	intToStr = strconv.Itoa(thisInt) <span class="comment">// int -&gt; string</span></span><br><span class="line"></span><br><span class="line">	fmt.Println(<span class="string">&quot;int to str&quot;</span>, intToStr, reflect.TypeOf(intToStr)) <span class="comment">// int to str 3 string</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> thisStr = <span class="string">&quot;33&quot;</span></span><br><span class="line"></span><br><span class="line">	strToInt, err := strconv.Atoi(thisStr) <span class="comment">// string -&gt; int 이거는 2가지 리턴을 받더라. 문법임 내가 추가한게 아니고.</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(err)</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;str to int&quot;</span>, strToInt, reflect.TypeOf(strToInt)) <span class="comment">// str to int 33 int</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+</article>
+
+<script src="https://utteranc.es/client.js" repo="cheese10yun/blog-comment" issue-term="title" label="Comment" theme="github-dark-orange" crossorigin="anonymous" async>
+  </script>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%84%A4%EC%A0%95"><span class="toc-number">1.</span> <span class="toc-text">설정</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%84%A4%EC%B9%98"><span class="toc-number">1.1.</span> <span class="toc-text">설치</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#workspace-%EC%84%A4%EC%A0%95"><span class="toc-number">1.2.</span> <span class="toc-text">workspace 설정</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%99%98%EA%B2%BD%EB%B3%80%EC%88%98"><span class="toc-number">1.3.</span> <span class="toc-text">환경변수</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#main-%ED%95%A8%EC%88%98-%EC%9E%91%EC%84%B1"><span class="toc-number">2.</span> <span class="toc-text">main 함수 작성</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%A3%BC%EC%84%9D"><span class="toc-number">3.</span> <span class="toc-text">주석</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%B6%9C%EB%A0%A5%EB%AC%B8"><span class="toc-number">4.</span> <span class="toc-text">출력문</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%B3%80%EC%88%98"><span class="toc-number">5.</span> <span class="toc-text">변수</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2019/01/27/go-study-1/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2019/01/27/go-study-1/&text=Go 설치 및 설정, 주석, 출력, 변수 정리"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2019/01/27/go-study-1/&title=Go 설치 및 설정, 주석, 출력, 변수 정리"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2019/01/27/go-study-1/&is_video=false&description=Go 설치 및 설정, 주석, 출력, 변수 정리"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Go 설치 및 설정, 주석, 출력, 변수 정리&body=Check out this article: https://hidelryn.github.io/2019/01/27/go-study-1/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2019/01/27/go-study-1/&title=Go 설치 및 설정, 주석, 출력, 변수 정리"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2019/01/27/go-study-1/&title=Go 설치 및 설정, 주석, 출력, 변수 정리"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2019/01/27/go-study-1/&title=Go 설치 및 설정, 주석, 출력, 변수 정리"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2019/01/27/go-study-1/&title=Go 설치 및 설정, 주석, 출력, 변수 정리"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2019/01/27/go-study-1/&name=Go 설치 및 설정, 주석, 출력, 변수 정리&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2019/01/27/go-study-1/&t=Go 설치 및 설정, 주석, 출력, 변수 정리"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2018-2020
+    delryn
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+<!-- clipboard -->
+
+  
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-104148803-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

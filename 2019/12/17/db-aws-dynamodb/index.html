@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="DynamoDB란?AWS에서 개발한 key-value형 NoSQL 데이터베이스 사용하면서 느꼈었던 장점 별도로 설치나 버전 관리 등을 할 일이 없어서 편리 했었다. 저장 공간 용량이 제한이 없기 때문에 신경 안 썼었다. 사용량 만큼 요금이 부과 된다.  사용하면서 느꼈었던 단점 여러 데이터를 삽입할 때 (bulk insert) 개수 제한이 있어서 조금 불편">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AWS DynamoDB 사용해보기">
+<meta property="og:url" content="https://hidelryn.github.io/2019/12/17/db-aws-dynamodb/index.html">
+<meta property="og:site_name" content="delryn&#39;s blog">
+<meta property="og:description" content="DynamoDB란?AWS에서 개발한 key-value형 NoSQL 데이터베이스 사용하면서 느꼈었던 장점 별도로 설치나 버전 관리 등을 할 일이 없어서 편리 했었다. 저장 공간 용량이 제한이 없기 때문에 신경 안 썼었다. 사용량 만큼 요금이 부과 된다.  사용하면서 느꼈었던 단점 여러 데이터를 삽입할 때 (bulk insert) 개수 제한이 있어서 조금 불편">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-12-16T15:26:06.000Z">
+<meta property="article:modified_time" content="2020-09-01T09:33:27.000Z">
+<meta property="article:author" content="delryn">
+<meta property="article:tag" content="NoSQL">
+<meta property="article:tag" content="AWS">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>AWS DynamoDB 사용해보기</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/css/rtl.css">
+
+    
+    <!-- rss -->
+    
+    
+    <link rel="canonical" href="https://hidelryn.github.io/2019/12/17/db-aws-dynamodb/">
+<meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="delryn's blog" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/12/20/db-redis/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/12/08/etc-mac-hidden/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2019/12/17/db-aws-dynamodb/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2019/12/17/db-aws-dynamodb/&text=AWS DynamoDB 사용해보기"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2019/12/17/db-aws-dynamodb/&title=AWS DynamoDB 사용해보기"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2019/12/17/db-aws-dynamodb/&is_video=false&description=AWS DynamoDB 사용해보기"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=AWS DynamoDB 사용해보기&body=Check out this article: https://hidelryn.github.io/2019/12/17/db-aws-dynamodb/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2019/12/17/db-aws-dynamodb/&title=AWS DynamoDB 사용해보기"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2019/12/17/db-aws-dynamodb/&title=AWS DynamoDB 사용해보기"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2019/12/17/db-aws-dynamodb/&title=AWS DynamoDB 사용해보기"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2019/12/17/db-aws-dynamodb/&title=AWS DynamoDB 사용해보기"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2019/12/17/db-aws-dynamodb/&name=AWS DynamoDB 사용해보기&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2019/12/17/db-aws-dynamodb/&t=AWS DynamoDB 사용해보기"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#DynamoDB%EB%9E%80"><span class="toc-number">1.</span> <span class="toc-text">DynamoDB란?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4%EC%84%9C-%EB%8A%90%EA%BC%88%EC%97%88%EB%8D%98-%EC%9E%A5%EC%A0%90"><span class="toc-number">2.</span> <span class="toc-text">사용하면서 느꼈었던 장점</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4%EC%84%9C-%EB%8A%90%EA%BC%88%EC%97%88%EB%8D%98-%EB%8B%A8%EC%A0%90"><span class="toc-number">3.</span> <span class="toc-text">사용하면서 느꼈었던 단점</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%ED%85%8C%EC%9D%B4%EB%B8%94"><span class="toc-number">4.</span> <span class="toc-text">테이블</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%85%8C%EC%9D%B4%EB%B8%94-%EC%9D%B4%EB%A6%84"><span class="toc-number">4.1.</span> <span class="toc-text">테이블 이름</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EA%B8%B0%EB%B3%B8-%ED%82%A4-%ED%8C%8C%ED%8B%B0%EC%85%98-%ED%82%A4"><span class="toc-number">4.2.</span> <span class="toc-text">기본 키 (파티션 키)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%A0%95%EB%A0%AC-%ED%82%A4"><span class="toc-number">4.3.</span> <span class="toc-text">정렬 키</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EB%B3%B4%EC%A1%B0-%EC%9D%B8%EB%8D%B1%EC%8A%A4"><span class="toc-number">4.4.</span> <span class="toc-text">보조 인덱스</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%9D%BD%EA%B8%B0-%EC%93%B0%EA%B8%B0-%EC%9A%A9%EB%9F%89-%EB%AA%A8%EB%93%9C"><span class="toc-number">4.5.</span> <span class="toc-text">읽기&#x2F;쓰기 용량 모드</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%98%A4%ED%86%A0%EC%8A%A4%EC%BC%80%EC%9D%BC%EB%A7%81"><span class="toc-number">4.6.</span> <span class="toc-text">오토스케일링</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CRUD"><span class="toc-number">5.</span> <span class="toc-text">CRUD</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create"><span class="toc-number">5.1.</span> <span class="toc-text">Create</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Put"><span class="toc-number">5.1.1.</span> <span class="toc-text">Put</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#BatchWrite"><span class="toc-number">5.1.2.</span> <span class="toc-text">BatchWrite</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Read"><span class="toc-number">5.2.</span> <span class="toc-text">Read</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Get"><span class="toc-number">5.2.1.</span> <span class="toc-text">Get</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#BatchGet"><span class="toc-number">5.2.2.</span> <span class="toc-text">BatchGet</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Query"><span class="toc-number">5.2.3.</span> <span class="toc-text">Query</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EB%B3%B4%EC%A1%B0%EC%9D%B8%EB%8D%B1%EC%8A%A4%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%BF%BC%EB%A6%AC"><span class="toc-number">5.2.4.</span> <span class="toc-text">보조인덱스를 이용한 쿼리</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Scan"><span class="toc-number">5.2.5.</span> <span class="toc-text">Scan</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Update"><span class="toc-number">5.3.</span> <span class="toc-text">Update</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Set"><span class="toc-number">5.3.0.1.</span> <span class="toc-text">Set</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ADD"><span class="toc-number">5.3.0.2.</span> <span class="toc-text">ADD</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Remove"><span class="toc-number">5.3.0.3.</span> <span class="toc-text">Remove</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Delete"><span class="toc-number">5.4.</span> <span class="toc-text">Delete</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Delete-1"><span class="toc-number">5.4.1.</span> <span class="toc-text">Delete</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#BatchWrite-1"><span class="toc-number">5.4.2.</span> <span class="toc-text">BatchWrite</span></a></li></ol></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98"><span class="toc-number">6.</span> <span class="toc-text">트랜잭션</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TransactGetItems"><span class="toc-number">6.1.</span> <span class="toc-text">TransactGetItems</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TransactWriteItems"><span class="toc-number">6.2.</span> <span class="toc-text">TransactWriteItems</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%B0%B8%EA%B3%A0"><span class="toc-number">7.</span> <span class="toc-text">참고</span></a></li>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        AWS DynamoDB 사용해보기
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">delryn's blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-12-16T15:26:06.000Z" itemprop="datePublished">2019-12-17</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/AWS/" rel="tag">AWS</a>, <a class="tag-link-link" href="/tags/NoSQL/" rel="tag">NoSQL</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="DynamoDB란"><a href="#DynamoDB란" class="headerlink" title="DynamoDB란?"></a>DynamoDB란?</h2><p>AWS에서 개발한 key-value형 NoSQL 데이터베이스</p>
+<h2 id="사용하면서-느꼈었던-장점"><a href="#사용하면서-느꼈었던-장점" class="headerlink" title="사용하면서 느꼈었던 장점"></a>사용하면서 느꼈었던 장점</h2><ul>
+<li>별도로 설치나 버전 관리 등을 할 일이 없어서 편리 했었다.</li>
+<li>저장 공간 용량이 제한이 없기 때문에 신경 안 썼었다.</li>
+<li>사용량 만큼 요금이 부과 된다.</li>
+</ul>
+<h2 id="사용하면서-느꼈었던-단점"><a href="#사용하면서-느꼈었던-단점" class="headerlink" title="사용하면서 느꼈었던 단점"></a>사용하면서 느꼈었던 단점</h2><ul>
+<li>여러 데이터를 삽입할 때 (bulk insert) 개수 제한이 있어서 조금 불편 했었다.</li>
+<li>보조 인덱스 생성 시 데이터 수가 많지 않은데 꽤 느린 편이다.</li>
+</ul>
+<h2 id="테이블"><a href="#테이블" class="headerlink" title="테이블"></a>테이블</h2><p>DynamoDB를 사용 하기전에 테이블이 존재 하기 때문에 생성을 해 줘야 한다.</p>
+<p>웹 콘솔 기준 테이블 작성 시 나오는 항목을 아는 대로 정리를 해 본다.</p>
+<p>테이블은 한 번 만들면 수정이 안 되므로 어떤 데이터를 다룰지에 따라 구성이 다르기 때문에</p>
+<p>신중히 생각을 한 다음 만들어야 한다.</p>
+<h3 id="테이블-이름"><a href="#테이블-이름" class="headerlink" title="테이블 이름"></a>테이블 이름</h3><p>말 그대로 해당 테이블의 이름을 작성 해야 한다.</p>
+<p>테이블명은 해당 리전에서는 중복된 이름으로는 만들 수 없기 때문에 고유해야 한다.</p>
+<p>예료 서울 리전에서 users란 테이블을 생성 시 서울에서는 user란 테이블을 새로 못 만든다.</p>
+<p>서울 리전에서 users가 있지만 다른 리전(도쿄)같은 경우에는 users 테이블 생성 가능</p>
+<h3 id="기본-키-파티션-키"><a href="#기본-키-파티션-키" class="headerlink" title="기본 키 (파티션 키)"></a>기본 키 (파티션 키)</h3><p>DynamoDB는 key-value의 구조다.</p>
+<p>기본 키는 key에 해당 하기 때문에 고유한 데이터가 들어올 항목으로 만들어야 한다.</p>
+<p>데이터를 삽입 할 때 필수적으로 들어 가야 한다.</p>
+<p>예로 이전에 쓰던 서비스에서는 유저 테이블을 생성 시 기본 키는 user_id로 만들었었다.</p>
+<h3 id="정렬-키"><a href="#정렬-키" class="headerlink" title="정렬 키"></a>정렬 키</h3><p>정렬 키는 어떠한 데이터를 다룰 지에 따라 선택 / 미선택을 하면 된다.</p>
+<p>내가 느끼기엔 second key 같은 느낌인데 예로 유저의 행동을 모두 기록하는 테이블을 생성 시</p>
+<p>기본 키만 생성한 경우에는 user_id가 a의 행동은 1회만 삽입을 할 수 있다.</p>
+<p>왜냐면 다음 번 삽입 시 user_id에 a가 등록되어 있기 때문이다.</p>
+<p>이러한 경우에 정렬 키를 추가하여 사용하면 가능 한데 예로 정렬 키를 timestamp로 만들어서</p>
+<p>삽입을 하면 아래의 테이블처럼 사용을 할 수 있게 된다.</p>
+<table>
+<thead>
+<tr>
+<th>user_id(기본 키)</th>
+<th>timestamp(정렬 키)</th>
+<th>action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>a</td>
+<td>1</td>
+<td>‘login’</td>
+</tr>
+<tr>
+<td>a</td>
+<td>2</td>
+<td>‘logout’</td>
+</tr>
+</tbody></table>
+<p>대신 정렬 키를 추가 하게 되면 이후 삽입, 조회, 삭제 요청 시 정렬 키의 데이터를 필수적으로</p>
+<p>넣어야 한다. 그러므로 꼭 필요한 경우에만 구성에 포함 하자.</p>
+<h3 id="보조-인덱스"><a href="#보조-인덱스" class="headerlink" title="보조 인덱스"></a>보조 인덱스</h3><p>key-value 구조이기 때문에 기본적으로 조회 시 기본 키 또는 기본 + 정렬 키로만 검색이</p>
+<p>가능한데 예로 아래의 테이블에서 유저의 login한 액션만 조회를 하고 싶을 때 </p>
+<p>보조 인덱스를 추가해서 이용을 하면 된다.</p>
+<table>
+<thead>
+<tr>
+<th>user_id(기본 키)</th>
+<th>timestamp(정렬 키)</th>
+<th>action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>a</td>
+<td>1</td>
+<td>‘login’</td>
+</tr>
+<tr>
+<td>a</td>
+<td>2</td>
+<td>‘logout’</td>
+</tr>
+<tr>
+<td>b</td>
+<td>3</td>
+<td>‘login’</td>
+</tr>
+</tbody></table>
+<p>보조 인덱스도 마찬가지로 기본 키 그리고 선택 사항으로 정렬 키를 추가할 수 있다.</p>
+<h3 id="읽기-쓰기-용량-모드"><a href="#읽기-쓰기-용량-모드" class="headerlink" title="읽기/쓰기 용량 모드"></a>읽기/쓰기 용량 모드</h3><p>읽기 용량 / 쓰기 용량 설정에 따라 사용 가격의 구성이 정해 진다.</p>
+<p>이 용량은 사용 회수라 생각을 하고 설정을 했었다. 유저가 많아져서 사용자가 많아 지면</p>
+<p>훅 올라가고, 사용자가 떨어 지면 자연스레 내려가고…</p>
+<p>읽기 용량은 올려도 가격이 많이 변화가 없는데 쓰기 용량은 좀 만 올려도 가격이 뻥튀기 된다.</p>
+<p>처음 DynamoDB 사용할 땐 온디멘드 모드가 없어서 용량 크기에 좀 불안 했었는데</p>
+<p>추가가 되어서 서비스 때 변경을 했었다. 온디멘드 최고!</p>
+<h3 id="오토스케일링"><a href="#오토스케일링" class="headerlink" title="오토스케일링"></a>오토스케일링</h3><p>사용 수가 많아지면 설정에 따라 알아서 늘어나고 하는데 이 부분은 크게 신경을 안 써봤다.</p>
+<p>온디멘드라면 건드릴 일도 없으니 패스</p>
+<h2 id="CRUD"><a href="#CRUD" class="headerlink" title="CRUD"></a>CRUD</h2><p>Node.js로 진행해보겠다.</p>
+<p>해당 프로젝트 폴더에서 npm을 통해 aws-sdk를 다운 받는다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i aws-sdk -S</span><br></pre></td></tr></table></figure>
+
+<h3 id="Create"><a href="#Create" class="headerlink" title="Create"></a>Create</h3><h4 id="Put"><a href="#Put" class="headerlink" title="Put"></a>Put</h4><p>하나의 row를 삽입 할 수 있다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> AWS = <span class="built_in">require</span>(<span class="string">&#x27;aws-sdk&#x27;</span>);</span><br><span class="line"></span><br><span class="line">AWS.config.update(&#123;</span><br><span class="line">  region: <span class="string">&#x27;ap-northeast-2&#x27;</span>, <span class="comment">// 서울 리전</span></span><br><span class="line">  accessKeyId: <span class="string">&#x27;IAM 엑세스 키&#x27;</span>,</span><br><span class="line">  secretAccessKey: <span class="string">&#x27;IAM 시크릿 엑세스 키&#x27;</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> dynamo = <span class="keyword">new</span> AWS.DynamoDB.DocumentClient();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> params = &#123;</span><br><span class="line">  TableName: <span class="string">&#x27;users&#x27;</span>, <span class="comment">// 테이블명</span></span><br><span class="line">  Item: &#123;</span><br><span class="line">    user_id: <span class="string">&#x27;a&#x27;</span>, <span class="comment">// 기본 키</span></span><br><span class="line">    ts: <span class="built_in">Date</span>.now(), <span class="comment">// 정렬 키, 존재 하지 않으면 생략 가능</span></span><br><span class="line">    action: <span class="string">&#x27;login&#x27;</span>, <span class="comment">// 이후로는 추가하고 싶은 데이터들</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">dynamo.put(params).promise().then(<span class="function">(<span class="params">result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// &#123;&#125; 삽입 성공 시 넘어오는 데이터 X</span></span><br><span class="line">&#125;).catch(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;err&#x27;</span>, e);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="BatchWrite"><a href="#BatchWrite" class="headerlink" title="BatchWrite"></a>BatchWrite</h4><p>한 번에 row를 여러 개 넣을 수 있는 방법, 그러나 25개 이하만 가능 하다..</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> AWS = <span class="built_in">require</span>(<span class="string">&#x27;aws-sdk&#x27;</span>);</span><br><span class="line"></span><br><span class="line">AWS.config.update(&#123;</span><br><span class="line">  region: <span class="string">&#x27;ap-northeast-2&#x27;</span>, <span class="comment">// 서울 리전</span></span><br><span class="line">  accessKeyId: <span class="string">&#x27;IAM 엑세스 키&#x27;</span>,</span><br><span class="line">  secretAccessKey: <span class="string">&#x27;IAM 시크릿 엑세스 키&#x27;</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> dynamo = <span class="keyword">new</span> AWS.DynamoDB.DocumentClient();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> params = &#123;</span><br><span class="line">  RequestItems: &#123;</span><br><span class="line">    users: [ <span class="comment">// 배열의 이름은 테이블명이다.</span></span><br><span class="line">      &#123;</span><br><span class="line">        PutRequest: &#123;</span><br><span class="line">          Item: &#123; <span class="comment">// put과 마찬가지로 기본 키, 정렬 키, 이하 추가하고 싶은 항목</span></span><br><span class="line">            user_id: <span class="string">&#x27;b&#x27;</span>,</span><br><span class="line">            ts: <span class="built_in">Date</span>.now(),</span><br><span class="line">            action: <span class="string">&#x27;logout&#x27;</span>,</span><br><span class="line">          &#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        PutRequest: &#123;</span><br><span class="line">          Item: &#123;</span><br><span class="line">            user_id: <span class="string">&#x27;a&#x27;</span>,</span><br><span class="line">            ts: <span class="built_in">Date</span>.now(),</span><br><span class="line">            action: <span class="string">&#x27;charge&#x27;</span>,</span><br><span class="line">          &#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        PutRequest: &#123;</span><br><span class="line">          Item: &#123;</span><br><span class="line">            user_id: <span class="string">&#x27;d&#x27;</span>,</span><br><span class="line">            ts: <span class="built_in">Date</span>.now(),</span><br><span class="line">            action: <span class="string">&#x27;login&#x27;</span>,</span><br><span class="line">          &#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;</span><br><span class="line">    ],</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">dynamo.batchWrite(params).promise().then(<span class="function">(<span class="params">result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// &#123; UnprocessedItems: &#123;&#125; &#125;</span></span><br><span class="line">&#125;).catch(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;err&#x27;</span>, e);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Read"><a href="#Read" class="headerlink" title="Read"></a>Read</h3><h4 id="Get"><a href="#Get" class="headerlink" title="Get"></a>Get</h4><p>하나의 row를 가지고 온다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> AWS = <span class="built_in">require</span>(<span class="string">&#x27;aws-sdk&#x27;</span>);</span><br><span class="line"></span><br><span class="line">AWS.config.update(&#123;</span><br><span class="line">  region: <span class="string">&#x27;ap-northeast-2&#x27;</span>, <span class="comment">// 서울 리전</span></span><br><span class="line">  accessKeyId: <span class="string">&#x27;IAM 엑세스 키&#x27;</span>,</span><br><span class="line">  secretAccessKey: <span class="string">&#x27;IAM 시크릿 엑세스 키&#x27;</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> dynamo = <span class="keyword">new</span> AWS.DynamoDB.DocumentClient();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> params = &#123;</span><br><span class="line">  TableName: <span class="string">&#x27;users&#x27;</span>, <span class="comment">// 테이블명</span></span><br><span class="line">  Key: &#123;</span><br><span class="line">    user_id: <span class="string">&#x27;a&#x27;</span>, <span class="comment">// 기본 키</span></span><br><span class="line">    ts: <span class="number">1597722895588</span>, <span class="comment">// 정렬 키, 존재 하지 않으면 생략 가능</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">dynamo.get(params).promise().then(<span class="function">(<span class="params">result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result);</span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">    &#123; Item: &#123; ts: 1597722895588, user_id: &#x27;a&#x27;, action: &#x27;login&#x27; &#125; &#125;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">    데이터가 존재 하지 않을 시에는 &#123;&#125;</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">&#125;).catch(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;err&#x27;</span>, e);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="BatchGet"><a href="#BatchGet" class="headerlink" title="BatchGet"></a>BatchGet</h4><p>한 번에 여러 row를 가지고 올 수 있는 방법, 이 역시 개수 제한 100개다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> AWS = <span class="built_in">require</span>(<span class="string">&#x27;aws-sdk&#x27;</span>);</span><br><span class="line"></span><br><span class="line">AWS.config.update(&#123;</span><br><span class="line">  region: <span class="string">&#x27;ap-northeast-2&#x27;</span>, <span class="comment">// 서울 리전</span></span><br><span class="line">  accessKeyId: <span class="string">&#x27;IAM 엑세스 키&#x27;</span>,</span><br><span class="line">  secretAccessKey: <span class="string">&#x27;IAM 시크릿 엑세스 키&#x27;</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> dynamo = <span class="keyword">new</span> AWS.DynamoDB.DocumentClient();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> params = &#123;</span><br><span class="line">  RequestItems: &#123;</span><br><span class="line">    users: &#123; <span class="comment">// 테이블명</span></span><br><span class="line">      Keys: [</span><br><span class="line">        &#123;</span><br><span class="line">          user_id: <span class="string">&#x27;a&#x27;</span>, <span class="comment">// 기본 키</span></span><br><span class="line">          ts: <span class="number">1597722895588</span>, <span class="comment">// 정렬 키, 없으면 생략 가능</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          user_id: <span class="string">&#x27;b&#x27;</span>,</span><br><span class="line">          ts: <span class="number">1597723408876</span>,</span><br><span class="line">        &#125;</span><br><span class="line">      ],</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">dynamo.batchGet(params).promise().then(<span class="function">(<span class="params">result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result);</span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">    하나 라도 데이터가 존재 시</span></span><br><span class="line"><span class="comment">    &#123; Responses: &#123; users: [ [Object], [Object] ] &#125;, UnprocessedKeys: &#123;&#125; &#125;</span></span><br><span class="line"><span class="comment">    </span></span><br><span class="line"><span class="comment">    모두 없을 시</span></span><br><span class="line"><span class="comment">    &#123; Responses: &#123; users: [] &#125;, UnprocessedKeys: &#123;&#125; &#125;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">&#125;).catch(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;err&#x27;</span>, e);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="Query"><a href="#Query" class="headerlink" title="Query"></a>Query</h4><p>조건을 넣어서 검색을 할 수 있다.</p>
+<p>기본 키의 경우에는 equal(=)만 되고 정렬 키가 있는 경우 부등호(&gt;, &gt;= 등등)가 가능 하다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> AWS = <span class="built_in">require</span>(<span class="string">&#x27;aws-sdk&#x27;</span>);</span><br><span class="line"></span><br><span class="line">AWS.config.update(&#123;</span><br><span class="line">  region: <span class="string">&#x27;ap-northeast-2&#x27;</span>, <span class="comment">// 서울 리전</span></span><br><span class="line">  accessKeyId: <span class="string">&#x27;IAM 엑세스 키&#x27;</span>,</span><br><span class="line">  secretAccessKey: <span class="string">&#x27;IAM 시크릿 엑세스 키&#x27;</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> dynamo = <span class="keyword">new</span> AWS.DynamoDB.DocumentClient();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> params = &#123;</span><br><span class="line">  TableName: <span class="string">&#x27;users&#x27;</span>, <span class="comment">// 테이블명</span></span><br><span class="line">  KeyConditionExpression: <span class="string">&#x27;#x = :x and #y &gt; :y&#x27;</span>, <span class="comment">// 조건문</span></span><br><span class="line">  ExpressionAttributeNames: &#123; <span class="comment">// #은 키의 alias라 생각하면 됨.</span></span><br><span class="line">    <span class="string">&#x27;#x&#x27;</span>: <span class="string">&#x27;user_id&#x27;</span>, <span class="comment">// x는 user_id</span></span><br><span class="line">    <span class="string">&#x27;#y&#x27;</span>: <span class="string">&#x27;ts&#x27;</span>, <span class="comment">// y는 타임스탬프</span></span><br><span class="line">  &#125;,</span><br><span class="line">  ExpressionAttributeValues: &#123; <span class="comment">// :은 값의 alias</span></span><br><span class="line">    <span class="string">&#x27;:x&#x27;</span>: <span class="string">&#x27;a&#x27;</span>, <span class="comment">// 검색할 user_id</span></span><br><span class="line">    <span class="string">&#x27;:y&#x27;</span>: <span class="number">10000</span>, <span class="comment">// 검색할 ts</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">dynamo.query(params).promise().then(<span class="function">(<span class="params">result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result);</span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">    데이터가 1개라도 있을 시에는</span></span><br><span class="line"><span class="comment">    &#123;</span></span><br><span class="line"><span class="comment">      Items: [</span></span><br><span class="line"><span class="comment">        &#123; ts: 1597722895588, user_id: &#x27;a&#x27;, action: &#x27;login&#x27; &#125;,</span></span><br><span class="line"><span class="comment">        &#123; ts: 1597723408876, user_id: &#x27;a&#x27;, action: &#x27;charge&#x27; &#125;</span></span><br><span class="line"><span class="comment">      ],</span></span><br><span class="line"><span class="comment">      Count: 2,</span></span><br><span class="line"><span class="comment">      ScannedCount: 2</span></span><br><span class="line"><span class="comment">    &#125;</span></span><br><span class="line"><span class="comment">    존재 하지 않을 시에는</span></span><br><span class="line"><span class="comment">    &#123; Items: [], Count: 0, ScannedCount: 0 &#125;</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">&#125;).catch(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;err&#x27;</span>, e);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="보조인덱스를-이용한-쿼리"><a href="#보조인덱스를-이용한-쿼리" class="headerlink" title="보조인덱스를 이용한 쿼리"></a>보조인덱스를 이용한 쿼리</h4><p>위에 적은 거 처럼 action을 보조 인덱스로 만들어서 검색을 해 본다.</p>
+<p>기본 키는 action 정렬 키는 생략 한다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> AWS = <span class="built_in">require</span>(<span class="string">&#x27;aws-sdk&#x27;</span>);</span><br><span class="line"></span><br><span class="line">AWS.config.update(&#123;</span><br><span class="line">  region: <span class="string">&#x27;ap-northeast-2&#x27;</span>, <span class="comment">// 서울 리전</span></span><br><span class="line">  accessKeyId: <span class="string">&#x27;IAM 엑세스 키&#x27;</span>,</span><br><span class="line">  secretAccessKey: <span class="string">&#x27;IAM 시크릿 엑세스 키&#x27;</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> dynamo = <span class="keyword">new</span> AWS.DynamoDB.DocumentClient();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> params = &#123;</span><br><span class="line">  TableName: <span class="string">&#x27;users&#x27;</span>, <span class="comment">// 테이블명</span></span><br><span class="line">  IndexName: <span class="string">&#x27;action-index&#x27;</span>, <span class="comment">// 보조 인덱스명</span></span><br><span class="line">  KeyConditionExpression: <span class="string">&#x27;#x = :x&#x27;</span>, <span class="comment">// 조건문</span></span><br><span class="line">  ExpressionAttributeNames: &#123; <span class="comment">// #은 키의 alias라 생각하면 됨.</span></span><br><span class="line">    <span class="string">&#x27;#x&#x27;</span>: <span class="string">&#x27;action&#x27;</span>, <span class="comment">// x는 action</span></span><br><span class="line">  &#125;,</span><br><span class="line">  ExpressionAttributeValues: &#123; <span class="comment">// :은 값의 alias</span></span><br><span class="line">    <span class="string">&#x27;:x&#x27;</span>: <span class="string">&#x27;login&#x27;</span>, <span class="comment">// 검색할 action</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">dynamo.query(params).promise().then(<span class="function">(<span class="params">result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result);</span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">    &#123;</span></span><br><span class="line"><span class="comment">      Items: [</span></span><br><span class="line"><span class="comment">        &#123; ts: 1597723408876, action: &#x27;login&#x27;, user_id: &#x27;d&#x27; &#125;,</span></span><br><span class="line"><span class="comment">        &#123; ts: 1597727204965, action: &#x27;login&#x27;, user_id: &#x27;z&#x27; &#125;</span></span><br><span class="line"><span class="comment">      ],</span></span><br><span class="line"><span class="comment">      Count: 2,</span></span><br><span class="line"><span class="comment">      ScannedCount: 2</span></span><br><span class="line"><span class="comment">    &#125;</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">&#125;).catch(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;err&#x27;</span>, e);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="Scan"><a href="#Scan" class="headerlink" title="Scan"></a>Scan</h4><p>데이터를 모두 검색 할 수 있는 방법 혹여나 해서 Filter는 검색하기 위한 조건이 아닌</p>
+<p>모든 데이터를 읽은 후에 조건대로 걸러지는 것이기 때문에 검색 속도와는 전혀 상관이 없다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> AWS = <span class="built_in">require</span>(<span class="string">&#x27;aws-sdk&#x27;</span>);</span><br><span class="line"></span><br><span class="line">AWS.config.update(&#123;</span><br><span class="line">  region: <span class="string">&#x27;ap-northeast-2&#x27;</span>, <span class="comment">// 서울 리전</span></span><br><span class="line">  accessKeyId: <span class="string">&#x27;IAM 엑세스 키&#x27;</span>,</span><br><span class="line">  secretAccessKey: <span class="string">&#x27;IAM 시크릿 엑세스 키&#x27;</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> dynamo = <span class="keyword">new</span> AWS.DynamoDB.DocumentClient();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> params = &#123;</span><br><span class="line">  TableName: <span class="string">&#x27;users&#x27;</span>, <span class="comment">// 테이블명, 이하 모든 프로퍼티는 생략 가능</span></span><br><span class="line">  <span class="comment">// Limit: 100, // 개수 제한</span></span><br><span class="line">  <span class="comment">// FilterExpression: &#x27;#action = :action&#x27;, // 필터링</span></span><br><span class="line">  <span class="comment">// ExpressionAttributeNames: &#123;</span></span><br><span class="line">  <span class="comment">//   &#x27;#action&#x27;: &#x27;action&#x27;</span></span><br><span class="line">  <span class="comment">// &#125;,</span></span><br><span class="line">  <span class="comment">// ExpressionAttributeValues: &#123;</span></span><br><span class="line">  <span class="comment">//   &#x27;:action&#x27;: &#x27;login&#x27;</span></span><br><span class="line">  <span class="comment">// &#125;,</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">dynamo.scan(params).promise().then(<span class="function">(<span class="params">result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result);</span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">    &#123;</span></span><br><span class="line"><span class="comment">      Items: [</span></span><br><span class="line"><span class="comment">        &#123; ts: 1597723408876, user_id: &#x27;b&#x27;, action: &#x27;logout&#x27; &#125;,</span></span><br><span class="line"><span class="comment">        &#123; ts: 1597723408876, user_id: &#x27;d&#x27;, action: &#x27;login&#x27; &#125;,</span></span><br><span class="line"><span class="comment">        &#123; ts: 1597722895588, user_id: &#x27;a&#x27;, action: &#x27;login&#x27; &#125;,</span></span><br><span class="line"><span class="comment">        &#123; ts: 1597723408876, user_id: &#x27;a&#x27;, action: &#x27;charge&#x27; &#125;</span></span><br><span class="line"><span class="comment">      ],</span></span><br><span class="line"><span class="comment">      Count: 4,</span></span><br><span class="line"><span class="comment">      ScannedCount: 4</span></span><br><span class="line"><span class="comment">    &#125;</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">&#125;).catch(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;err&#x27;</span>, e);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Update"><a href="#Update" class="headerlink" title="Update"></a>Update</h3><p>데이터를 수정하는 방법, 기본 키와 정렬 키를 제외한 항목만 수정이 가능 하다.</p>
+<p>UpdateExpression 설정에 따라 조금 다르다.</p>
+<h5 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h5><p>흔히 쓰는 기존의 X 값을 Y 값으로 변경할 때 쓴다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> AWS = <span class="built_in">require</span>(<span class="string">&#x27;aws-sdk&#x27;</span>);</span><br><span class="line"></span><br><span class="line">AWS.config.update(&#123;</span><br><span class="line">  region: <span class="string">&#x27;ap-northeast-2&#x27;</span>, <span class="comment">// 서울 리전</span></span><br><span class="line">  accessKeyId: <span class="string">&#x27;IAM 엑세스 키&#x27;</span>,</span><br><span class="line">  secretAccessKey: <span class="string">&#x27;IAM 시크릿 엑세스 키&#x27;</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> dynamo = <span class="keyword">new</span> AWS.DynamoDB.DocumentClient();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> params = &#123;</span><br><span class="line">  TableName: <span class="string">&#x27;users&#x27;</span>, <span class="comment">// 테이블명</span></span><br><span class="line">  Key: &#123; <span class="comment">// 기본 키, 정렬 키(미선택 시 생략 가능)</span></span><br><span class="line">    user_id: <span class="string">&#x27;a&#x27;</span>,</span><br><span class="line">    ts: <span class="number">1597723408876</span></span><br><span class="line">  &#125;,</span><br><span class="line">  UpdateExpression: <span class="string">&#x27;set #x = :x&#x27;</span>, <span class="comment">// 수정할 항목 alias</span></span><br><span class="line">  ExpressionAttributeNames: &#123;</span><br><span class="line">    <span class="string">&#x27;#x&#x27;</span>: <span class="string">&#x27;action&#x27;</span></span><br><span class="line">  &#125;,</span><br><span class="line">  ExpressionAttributeValues: &#123;</span><br><span class="line">    <span class="string">&#x27;:x&#x27;</span>: <span class="number">10</span></span><br><span class="line">  &#125;,</span><br><span class="line">  ReturnValues: <span class="string">&#x27;ALL_NEW&#x27;</span>, <span class="comment">// 수정한 데이터 받아오기, 생략 가능</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">dynamo.update(params).promise().then(<span class="function">(<span class="params">result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// &#123; Attributes: &#123; ts: 1597723408876, action: 10, user_id: &#x27;a&#x27; &#125; &#125;</span></span><br><span class="line">&#125;).catch(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;err&#x27;</span>, e);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h5 id="ADD"><a href="#ADD" class="headerlink" title="ADD"></a>ADD</h5><p>수정할 항목이 숫자 값이고 N만큼 증가시킬 필요가 있을 때 사용 한다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> AWS = <span class="built_in">require</span>(<span class="string">&#x27;aws-sdk&#x27;</span>);</span><br><span class="line"></span><br><span class="line">AWS.config.update(&#123;</span><br><span class="line">  region: <span class="string">&#x27;ap-northeast-2&#x27;</span>, <span class="comment">// 서울 리전</span></span><br><span class="line">  accessKeyId: <span class="string">&#x27;IAM 엑세스 키&#x27;</span>,</span><br><span class="line">  secretAccessKey: <span class="string">&#x27;IAM 시크릿 엑세스 키&#x27;</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> dynamo = <span class="keyword">new</span> AWS.DynamoDB.DocumentClient();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> params = &#123;</span><br><span class="line">  TableName: <span class="string">&#x27;users&#x27;</span>, <span class="comment">// 테이블명</span></span><br><span class="line">  Key: &#123; <span class="comment">// 기본 키, 정렬 키(미선택 시 생략 가능)</span></span><br><span class="line">    user_id: <span class="string">&#x27;a&#x27;</span>,</span><br><span class="line">    ts: <span class="number">1597723408876</span></span><br><span class="line">  &#125;,</span><br><span class="line">  UpdateExpression: <span class="string">&#x27;add #x :x&#x27;</span>, <span class="comment">// 수정할 항목 alias</span></span><br><span class="line">  ExpressionAttributeNames: &#123;</span><br><span class="line">    <span class="string">&#x27;#x&#x27;</span>: <span class="string">&#x27;action&#x27;</span></span><br><span class="line">  &#125;,</span><br><span class="line">  ExpressionAttributeValues: &#123;</span><br><span class="line">    <span class="string">&#x27;:x&#x27;</span>: <span class="number">1</span></span><br><span class="line">  &#125;,</span><br><span class="line">  ReturnValues: <span class="string">&#x27;ALL_NEW&#x27;</span>, <span class="comment">// 업데이트한 데이터 받아오기, 생략 가능</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">dynamo.update(params).promise().then(<span class="function">(<span class="params">result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// &#123; Attributes: &#123; ts: 1597723408876, action: 11, user_id: &#x27;a&#x27; &#125; &#125;</span></span><br><span class="line">&#125;).catch(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;err&#x27;</span>, e);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h5 id="Remove"><a href="#Remove" class="headerlink" title="Remove"></a>Remove</h5><p>특정 항목을 삭제할 때 사용한다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> AWS = <span class="built_in">require</span>(<span class="string">&#x27;aws-sdk&#x27;</span>);</span><br><span class="line"></span><br><span class="line">AWS.config.update(&#123;</span><br><span class="line">  region: <span class="string">&#x27;ap-northeast-2&#x27;</span>, <span class="comment">// 서울 리전</span></span><br><span class="line">  accessKeyId: <span class="string">&#x27;IAM 엑세스 키&#x27;</span>,</span><br><span class="line">  secretAccessKey: <span class="string">&#x27;IAM 시크릿 엑세스 키&#x27;</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> dynamo = <span class="keyword">new</span> AWS.DynamoDB.DocumentClient();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> params = &#123;</span><br><span class="line">  TableName: <span class="string">&#x27;users&#x27;</span>, <span class="comment">// 테이블명</span></span><br><span class="line">  Key: &#123; <span class="comment">// 기본 키, 정렬 키(미선택 시 생략 가능)</span></span><br><span class="line">    user_id: <span class="string">&#x27;a&#x27;</span>,</span><br><span class="line">    ts: <span class="number">1597723408876</span></span><br><span class="line">  &#125;,</span><br><span class="line">  UpdateExpression: <span class="string">&#x27;remove #x&#x27;</span>, <span class="comment">// 수정할 항목 alias</span></span><br><span class="line">  ExpressionAttributeNames: &#123;</span><br><span class="line">    <span class="string">&#x27;#x&#x27;</span>: <span class="string">&#x27;action&#x27;</span></span><br><span class="line">  &#125;,</span><br><span class="line">  ReturnValues: <span class="string">&#x27;ALL_NEW&#x27;</span>, <span class="comment">// 업데이트한 데이터 받아오기, 생략 가능</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">dynamo.update(params).promise().then(<span class="function">(<span class="params">result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// &#123; Attributes: &#123; ts: 1597723408876, user_id: &#x27;a&#x27; &#125; &#125;</span></span><br><span class="line">&#125;).catch(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;err&#x27;</span>, e);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Delete"><a href="#Delete" class="headerlink" title="Delete"></a>Delete</h3><h4 id="Delete-1"><a href="#Delete-1" class="headerlink" title="Delete"></a>Delete</h4><p>하나의 row를 삭제할 때 쓴다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> AWS = <span class="built_in">require</span>(<span class="string">&#x27;aws-sdk&#x27;</span>);</span><br><span class="line"></span><br><span class="line">AWS.config.update(&#123;</span><br><span class="line">  region: <span class="string">&#x27;ap-northeast-2&#x27;</span>, <span class="comment">// 서울 리전</span></span><br><span class="line">  accessKeyId: <span class="string">&#x27;IAM 엑세스 키&#x27;</span>,</span><br><span class="line">  secretAccessKey: <span class="string">&#x27;IAM 시크릿 엑세스 키&#x27;</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> dynamo = <span class="keyword">new</span> AWS.DynamoDB.DocumentClient();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> params = &#123;</span><br><span class="line">  TableName: <span class="string">&#x27;users&#x27;</span>, <span class="comment">// 테이블명</span></span><br><span class="line">  Key: &#123; <span class="comment">// 기본 키, 정렬 키(미선택 시 생략 가능)</span></span><br><span class="line">    user_id: <span class="string">&#x27;a&#x27;</span>,</span><br><span class="line">    ts: <span class="number">1597723408876</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">dynamo.delete(params).promise().then(<span class="function">(<span class="params">result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// &#123;&#125;</span></span><br><span class="line">&#125;).catch(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;err&#x27;</span>, e);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="BatchWrite-1"><a href="#BatchWrite-1" class="headerlink" title="BatchWrite"></a>BatchWrite</h4><p>한 번에 여러 row를 삭제하는 방법, 마찬가지로 개수 제한 25개</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> AWS = <span class="built_in">require</span>(<span class="string">&#x27;aws-sdk&#x27;</span>);</span><br><span class="line"></span><br><span class="line">AWS.config.update(&#123;</span><br><span class="line">  region: <span class="string">&#x27;ap-northeast-2&#x27;</span>, <span class="comment">// 서울 리전</span></span><br><span class="line">  accessKeyId: <span class="string">&#x27;IAM 엑세스 키&#x27;</span>,</span><br><span class="line">  secretAccessKey: <span class="string">&#x27;IAM 시크릿 엑세스 키&#x27;</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> dynamo = <span class="keyword">new</span> AWS.DynamoDB.DocumentClient();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> params = &#123;</span><br><span class="line">  RequestItems: &#123;</span><br><span class="line">    users: [ <span class="comment">// 테이블명</span></span><br><span class="line">      &#123;</span><br><span class="line">        DeleteRequest: &#123; <span class="comment">// 이 부분이 여러 개 삽입할 때와 다르다</span></span><br><span class="line">          Key: &#123;</span><br><span class="line">            user_id: <span class="string">&#x27;a&#x27;</span>, <span class="comment">// 기본 키</span></span><br><span class="line">            ts: <span class="number">1597722895588</span>, <span class="comment">// 정렬 키, 없으면 생략 가능</span></span><br><span class="line">          &#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        DeleteRequest: &#123;</span><br><span class="line">          Key: &#123;</span><br><span class="line">            user_id: <span class="string">&#x27;b&#x27;</span>,</span><br><span class="line">            ts: <span class="number">1597723408876</span>,</span><br><span class="line">          &#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;</span><br><span class="line">    ],</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">dynamo.batchWrite(params).promise().then(<span class="function">(<span class="params">result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result);</span><br><span class="line">&#125;).catch(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;err&#x27;</span>, e);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="트랜잭션"><a href="#트랜잭션" class="headerlink" title="트랜잭션"></a>트랜잭션</h2><p>DynamoDB를 처음 사용 했을 때는 못 봤었는데 얼마 안 되어서 추가가 되었다.</p>
+<p>실무에서는 써 보진 않음…😅</p>
+<p>TransactGetItems, TransactWriteItems 2 가지가 존재 하는데</p>
+<p>전자는 읽기 관련 트랜잭션, 후자는 쓰기, 수정, 삭제와 관련된 트랜잭션을 걸 수 있다.</p>
+<h3 id="TransactGetItems"><a href="#TransactGetItems" class="headerlink" title="TransactGetItems"></a>TransactGetItems</h3><p>유저 테이블에서 유저 정보를 읽어 온 후 유저가 보유한 아이템 테이블을 읽어보려 한다.</p>
+<p>유저 테이블에서는 user_id가 문자열인데 현재 데이터 타입이 숫자라서 다르기 때문에 </p>
+<p>2번째는 실행이 되질 않고 트랜잭션 실패라는 에러를 볼 수 있다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> AWS = <span class="built_in">require</span>(<span class="string">&#x27;aws-sdk&#x27;</span>);</span><br><span class="line"></span><br><span class="line">AWS.config.update(&#123;</span><br><span class="line">  region: <span class="string">&#x27;ap-northeast-2&#x27;</span>, <span class="comment">// 서울 리전</span></span><br><span class="line">  accessKeyId: <span class="string">&#x27;IAM 엑세스 키&#x27;</span>,</span><br><span class="line">  secretAccessKey: <span class="string">&#x27;IAM 시크릿 엑세스 키&#x27;</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> dynamo = <span class="keyword">new</span> AWS.DynamoDB.DocumentClient();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> getParams = &#123;</span><br><span class="line">  TransactItems: [</span><br><span class="line">    &#123;</span><br><span class="line">      Get: &#123;</span><br><span class="line">        TableName: <span class="string">&#x27;users&#x27;</span>,</span><br><span class="line">        Key: &#123;</span><br><span class="line">          user_id: <span class="number">1</span>,</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      Get: &#123;</span><br><span class="line">        TableName: <span class="string">&#x27;items&#x27;</span>,</span><br><span class="line">        Key: &#123;</span><br><span class="line">          user_id: <span class="number">1</span>,</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">  ],</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dynamo.transactGet(getParams).promise().then(<span class="function">(<span class="params">r</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="built_in">JSON</span>.stringify(r, <span class="literal">null</span>, <span class="number">2</span>));</span><br><span class="line">&#125;).catch(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(e);</span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">    TransactionCanceledException: Transaction cancelled, please refer cancellation reasons for specific reasons [None, ValidationError]</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="TransactWriteItems"><a href="#TransactWriteItems" class="headerlink" title="TransactWriteItems"></a>TransactWriteItems</h3><p>가입 시 유저 정보를 기록 하고 아이템 테이블에 초기 값으로 포션을 지급하려 한다.</p>
+<p>위와 마찬가지로 유저 테이블에서는 user_id가 문자열인데 현재 데이터 타입이 숫자라서 </p>
+<p>다르기 때문에 2번째는 실행이 되질 않고 트랜잭션 실패라는 에러를 볼 수 있다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> AWS = <span class="built_in">require</span>(<span class="string">&#x27;aws-sdk&#x27;</span>);</span><br><span class="line"></span><br><span class="line">AWS.config.update(&#123;</span><br><span class="line">  region: <span class="string">&#x27;ap-northeast-2&#x27;</span>, <span class="comment">// 서울 리전</span></span><br><span class="line">  accessKeyId: <span class="string">&#x27;IAM 엑세스 키&#x27;</span>,</span><br><span class="line">  secretAccessKey: <span class="string">&#x27;IAM 시크릿 엑세스 키&#x27;</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> dynamo = <span class="keyword">new</span> AWS.DynamoDB.DocumentClient();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> params = &#123;</span><br><span class="line">  TransactItems: [</span><br><span class="line">    &#123;</span><br><span class="line">      Put: &#123;</span><br><span class="line">        TableName: <span class="string">&#x27;users&#x27;</span>,</span><br><span class="line">        Item: &#123;</span><br><span class="line">          user_id: <span class="number">1</span>,</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      Put: &#123;</span><br><span class="line">        TableName: <span class="string">&#x27;items&#x27;</span>,</span><br><span class="line">        Item: &#123;</span><br><span class="line">          user_id: <span class="number">1</span>,</span><br><span class="line">          potion: <span class="number">10</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">  ],</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dynamo.transactWrite(params).promise().then(<span class="function">(<span class="params">r</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(r);</span><br><span class="line">&#125;).catch(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(e);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="참고"><a href="#참고" class="headerlink" title="참고"></a>참고</h2><ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html">DynamoDB doc</a></li>
+</ul>
+
+  </div>
+</article>
+
+<script src="https://utteranc.es/client.js" repo="cheese10yun/blog-comment" issue-term="title" label="Comment" theme="github-dark-orange" crossorigin="anonymous" async>
+  </script>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#DynamoDB%EB%9E%80"><span class="toc-number">1.</span> <span class="toc-text">DynamoDB란?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4%EC%84%9C-%EB%8A%90%EA%BC%88%EC%97%88%EB%8D%98-%EC%9E%A5%EC%A0%90"><span class="toc-number">2.</span> <span class="toc-text">사용하면서 느꼈었던 장점</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4%EC%84%9C-%EB%8A%90%EA%BC%88%EC%97%88%EB%8D%98-%EB%8B%A8%EC%A0%90"><span class="toc-number">3.</span> <span class="toc-text">사용하면서 느꼈었던 단점</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%ED%85%8C%EC%9D%B4%EB%B8%94"><span class="toc-number">4.</span> <span class="toc-text">테이블</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%85%8C%EC%9D%B4%EB%B8%94-%EC%9D%B4%EB%A6%84"><span class="toc-number">4.1.</span> <span class="toc-text">테이블 이름</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EA%B8%B0%EB%B3%B8-%ED%82%A4-%ED%8C%8C%ED%8B%B0%EC%85%98-%ED%82%A4"><span class="toc-number">4.2.</span> <span class="toc-text">기본 키 (파티션 키)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%A0%95%EB%A0%AC-%ED%82%A4"><span class="toc-number">4.3.</span> <span class="toc-text">정렬 키</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EB%B3%B4%EC%A1%B0-%EC%9D%B8%EB%8D%B1%EC%8A%A4"><span class="toc-number">4.4.</span> <span class="toc-text">보조 인덱스</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%9D%BD%EA%B8%B0-%EC%93%B0%EA%B8%B0-%EC%9A%A9%EB%9F%89-%EB%AA%A8%EB%93%9C"><span class="toc-number">4.5.</span> <span class="toc-text">읽기&#x2F;쓰기 용량 모드</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%98%A4%ED%86%A0%EC%8A%A4%EC%BC%80%EC%9D%BC%EB%A7%81"><span class="toc-number">4.6.</span> <span class="toc-text">오토스케일링</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CRUD"><span class="toc-number">5.</span> <span class="toc-text">CRUD</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create"><span class="toc-number">5.1.</span> <span class="toc-text">Create</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Put"><span class="toc-number">5.1.1.</span> <span class="toc-text">Put</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#BatchWrite"><span class="toc-number">5.1.2.</span> <span class="toc-text">BatchWrite</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Read"><span class="toc-number">5.2.</span> <span class="toc-text">Read</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Get"><span class="toc-number">5.2.1.</span> <span class="toc-text">Get</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#BatchGet"><span class="toc-number">5.2.2.</span> <span class="toc-text">BatchGet</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Query"><span class="toc-number">5.2.3.</span> <span class="toc-text">Query</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EB%B3%B4%EC%A1%B0%EC%9D%B8%EB%8D%B1%EC%8A%A4%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%BF%BC%EB%A6%AC"><span class="toc-number">5.2.4.</span> <span class="toc-text">보조인덱스를 이용한 쿼리</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Scan"><span class="toc-number">5.2.5.</span> <span class="toc-text">Scan</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Update"><span class="toc-number">5.3.</span> <span class="toc-text">Update</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Set"><span class="toc-number">5.3.0.1.</span> <span class="toc-text">Set</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ADD"><span class="toc-number">5.3.0.2.</span> <span class="toc-text">ADD</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Remove"><span class="toc-number">5.3.0.3.</span> <span class="toc-text">Remove</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Delete"><span class="toc-number">5.4.</span> <span class="toc-text">Delete</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Delete-1"><span class="toc-number">5.4.1.</span> <span class="toc-text">Delete</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#BatchWrite-1"><span class="toc-number">5.4.2.</span> <span class="toc-text">BatchWrite</span></a></li></ol></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98"><span class="toc-number">6.</span> <span class="toc-text">트랜잭션</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TransactGetItems"><span class="toc-number">6.1.</span> <span class="toc-text">TransactGetItems</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TransactWriteItems"><span class="toc-number">6.2.</span> <span class="toc-text">TransactWriteItems</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%B0%B8%EA%B3%A0"><span class="toc-number">7.</span> <span class="toc-text">참고</span></a></li>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2019/12/17/db-aws-dynamodb/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2019/12/17/db-aws-dynamodb/&text=AWS DynamoDB 사용해보기"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2019/12/17/db-aws-dynamodb/&title=AWS DynamoDB 사용해보기"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2019/12/17/db-aws-dynamodb/&is_video=false&description=AWS DynamoDB 사용해보기"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=AWS DynamoDB 사용해보기&body=Check out this article: https://hidelryn.github.io/2019/12/17/db-aws-dynamodb/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2019/12/17/db-aws-dynamodb/&title=AWS DynamoDB 사용해보기"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2019/12/17/db-aws-dynamodb/&title=AWS DynamoDB 사용해보기"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2019/12/17/db-aws-dynamodb/&title=AWS DynamoDB 사용해보기"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2019/12/17/db-aws-dynamodb/&title=AWS DynamoDB 사용해보기"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2019/12/17/db-aws-dynamodb/&name=AWS DynamoDB 사용해보기&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2019/12/17/db-aws-dynamodb/&t=AWS DynamoDB 사용해보기"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2018-2020
+    delryn
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+<!-- clipboard -->
+
+  
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-104148803-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

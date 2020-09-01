@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="redis란? key-value 형식의 NoSQL 데이터 베이스 일반적인 DB는 디스크에 저장을 하는데 redis는 메모리에 저장을 한다.  사용하면서 느꼈었던 점 데이터베이스를 다양하게 다뤄보진 않았지만 내가 다뤄본 거 중에는 읽고&#x2F;쓰기가 제일 빨랐음 다양한 데이터 타입이 존재 한다.  설치Mac의 경우 brew를 통해 설치 123brew install">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis 사용해보기">
+<meta property="og:url" content="https://hidelryn.github.io/2019/12/20/db-redis/index.html">
+<meta property="og:site_name" content="delryn&#39;s blog">
+<meta property="og:description" content="redis란? key-value 형식의 NoSQL 데이터 베이스 일반적인 DB는 디스크에 저장을 하는데 redis는 메모리에 저장을 한다.  사용하면서 느꼈었던 점 데이터베이스를 다양하게 다뤄보진 않았지만 내가 다뤄본 거 중에는 읽고&#x2F;쓰기가 제일 빨랐음 다양한 데이터 타입이 존재 한다.  설치Mac의 경우 brew를 통해 설치 123brew install">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-12-20T10:59:02.000Z">
+<meta property="article:modified_time" content="2020-09-01T09:33:37.000Z">
+<meta property="article:author" content="delryn">
+<meta property="article:tag" content="NoSQL">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Redis 사용해보기</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/css/rtl.css">
+
+    
+    <!-- rss -->
+    
+    
+    <link rel="canonical" href="https://hidelryn.github.io/2019/12/20/db-redis/">
+<meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="delryn's blog" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2020/01/05/etc-spring-jackson/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/12/17/db-aws-dynamodb/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2019/12/20/db-redis/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2019/12/20/db-redis/&text=Redis 사용해보기"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2019/12/20/db-redis/&title=Redis 사용해보기"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2019/12/20/db-redis/&is_video=false&description=Redis 사용해보기"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Redis 사용해보기&body=Check out this article: https://hidelryn.github.io/2019/12/20/db-redis/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2019/12/20/db-redis/&title=Redis 사용해보기"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2019/12/20/db-redis/&title=Redis 사용해보기"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2019/12/20/db-redis/&title=Redis 사용해보기"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2019/12/20/db-redis/&title=Redis 사용해보기"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2019/12/20/db-redis/&name=Redis 사용해보기&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2019/12/20/db-redis/&t=Redis 사용해보기"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#redis%EB%9E%80"><span class="toc-number">1.</span> <span class="toc-text">redis란?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4%EC%84%9C-%EB%8A%90%EA%BC%88%EC%97%88%EB%8D%98-%EC%A0%90"><span class="toc-number">2.</span> <span class="toc-text">사용하면서 느꼈었던 점</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%84%A4%EC%B9%98"><span class="toc-number">3.</span> <span class="toc-text">설치</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis-%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%83%80%EC%9E%85"><span class="toc-number">4.</span> <span class="toc-text">redis 데이터 타입</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EA%B3%B5%ED%86%B5"><span class="toc-number">4.1.</span> <span class="toc-text">공통</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#strings"><span class="toc-number">4.2.</span> <span class="toc-text">strings</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#set-mset"><span class="toc-number">4.2.1.</span> <span class="toc-text">set, mset</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#get-mget"><span class="toc-number">4.2.2.</span> <span class="toc-text">get, mget</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#del"><span class="toc-number">4.2.3.</span> <span class="toc-text">del</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#incrby"><span class="toc-number">4.2.4.</span> <span class="toc-text">incrby</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#setex"><span class="toc-number">4.2.5.</span> <span class="toc-text">setex</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lists"><span class="toc-number">4.3.</span> <span class="toc-text">lists</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#lpush"><span class="toc-number">4.3.1.</span> <span class="toc-text">lpush</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#rpop"><span class="toc-number">4.3.2.</span> <span class="toc-text">rpop</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#lpop"><span class="toc-number">4.3.3.</span> <span class="toc-text">lpop</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#lrange"><span class="toc-number">4.3.4.</span> <span class="toc-text">lrange</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sets"><span class="toc-number">4.4.</span> <span class="toc-text">sets</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#sadd"><span class="toc-number">4.4.1.</span> <span class="toc-text">sadd</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#srem"><span class="toc-number">4.4.2.</span> <span class="toc-text">srem</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#smembers"><span class="toc-number">4.4.3.</span> <span class="toc-text">smembers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#sunion"><span class="toc-number">4.4.4.</span> <span class="toc-text">sunion</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#srandmember"><span class="toc-number">4.4.5.</span> <span class="toc-text">srandmember</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#sscan"><span class="toc-number">4.4.6.</span> <span class="toc-text">sscan</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sorted-sets"><span class="toc-number">4.5.</span> <span class="toc-text">sorted sets</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#zadd"><span class="toc-number">4.5.1.</span> <span class="toc-text">zadd</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#zincrby"><span class="toc-number">4.5.2.</span> <span class="toc-text">zincrby</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#zrange-zrevrange"><span class="toc-number">4.5.3.</span> <span class="toc-text">zrange, zrevrange</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#zrank-zrevrank"><span class="toc-number">4.5.4.</span> <span class="toc-text">zrank, zrevrank</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#zscore"><span class="toc-number">4.5.5.</span> <span class="toc-text">zscore</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#zrem"><span class="toc-number">4.5.6.</span> <span class="toc-text">zrem</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#zscan"><span class="toc-number">4.5.7.</span> <span class="toc-text">zscan</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hashes"><span class="toc-number">4.6.</span> <span class="toc-text">hashes</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#hset-hmset"><span class="toc-number">4.6.1.</span> <span class="toc-text">hset, hmset</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#hget-hmget"><span class="toc-number">4.6.2.</span> <span class="toc-text">hget, hmget</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#hdel"><span class="toc-number">4.6.3.</span> <span class="toc-text">hdel</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#hgetall"><span class="toc-number">4.6.4.</span> <span class="toc-text">hgetall</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#hscan"><span class="toc-number">4.6.5.</span> <span class="toc-text">hscan</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hyperloglog"><span class="toc-number">4.7.</span> <span class="toc-text">hyperloglog</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pfadd"><span class="toc-number">4.7.1.</span> <span class="toc-text">pfadd</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pfcount"><span class="toc-number">4.7.2.</span> <span class="toc-text">pfcount</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EA%B7%B8-%EC%99%B8-%EC%BB%A4%EB%A7%A8%EB%93%9C"><span class="toc-number">5.</span> <span class="toc-text">그 외 커맨드</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#pub-sub"><span class="toc-number">5.1.</span> <span class="toc-text">pub&#x2F;sub</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98"><span class="toc-number">5.2.</span> <span class="toc-text">트랜잭션</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#watch"><span class="toc-number">5.2.1.</span> <span class="toc-text">watch</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%B0%B8%EA%B3%A0"><span class="toc-number">6.</span> <span class="toc-text">참고</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Redis 사용해보기
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">delryn's blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-12-20T10:59:02.000Z" itemprop="datePublished">2019-12-20</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/NoSQL/" rel="tag">NoSQL</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="redis란"><a href="#redis란" class="headerlink" title="redis란?"></a>redis란?</h2><ul>
+<li>key-value 형식의 NoSQL 데이터 베이스</li>
+<li>일반적인 DB는 디스크에 저장을 하는데 redis는 메모리에 저장을 한다.</li>
+</ul>
+<h2 id="사용하면서-느꼈었던-점"><a href="#사용하면서-느꼈었던-점" class="headerlink" title="사용하면서 느꼈었던 점"></a>사용하면서 느꼈었던 점</h2><ul>
+<li>데이터베이스를 다양하게 다뤄보진 않았지만 내가 다뤄본 거 중에는 읽고/쓰기가 제일 빨랐음</li>
+<li>다양한 데이터 타입이 존재 한다.</li>
+</ul>
+<h2 id="설치"><a href="#설치" class="headerlink" title="설치"></a>설치</h2><p>Mac의 경우 brew를 통해 설치</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">brew install redis</span><br><span class="line">brew services start redis</span><br><span class="line">redis-server -v <span class="comment"># 버전 확인</span></span><br></pre></td></tr></table></figure>
+
+<p>실행할 폴더에서 터미널을 열고 다음의 명령어를 입력 한다.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm init -y</span><br><span class="line">npm i redis -S <span class="comment"># node.js redis client</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="redis-데이터-타입"><a href="#redis-데이터-타입" class="headerlink" title="redis 데이터 타입"></a>redis 데이터 타입</h2><p>데이터 타입의 명령어들이 엄청 많기 때문에 전부 쓰기는 불가능 해서 최대한 써 본 위주로 작성</p>
+<h3 id="공통"><a href="#공통" class="headerlink" title="공통"></a>공통</h3><p>redis에 연결하기 위한 코드</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> redis = <span class="built_in">require</span>(<span class="string">&#x27;redis&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> redisClient = redis.createClient(<span class="number">6379</span>, <span class="string">&#x27;localhost&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="strings"><a href="#strings" class="headerlink" title="strings"></a>strings</h3><p>key - value를 저장할 수 있는 데이터 타입이다.</p>
+<p>모든 데이터(숫자, 문자, JSON, 기타 등등)를 쓸 수 있으나 읽을 때는 데이터 타입이</p>
+<p>string으로 되어 있다 그래서 타입 이름이 string인가..? 크기는 512MB까지 가능</p>
+<h4 id="set-mset"><a href="#set-mset" class="headerlink" title="set, mset"></a>set, mset</h4><ul>
+<li>set은 하나의 key와 value를 저장을 한다.</li>
+<li>mset은 여러 개의 key, value를 저장할 때 쓴다.</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">redisClient.set(<span class="string">&#x27;key&#x27;</span>, <span class="number">1</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) <span class="built_in">console</span>.log(err);</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// OK</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">redisClient.mset([<span class="string">&#x27;a&#x27;</span>, <span class="number">1</span>, <span class="string">&#x27;b&#x27;</span>, <span class="number">2</span>], <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123; <span class="comment">// 열 안에 [key, value ...]</span></span><br><span class="line">  <span class="keyword">if</span> (err) <span class="built_in">console</span>.log(err);</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// OK</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="get-mget"><a href="#get-mget" class="headerlink" title="get, mget"></a>get, mget</h4><ul>
+<li>get은 key를 통해 value를 읽는다.</li>
+<li>mget은 여러 개의 key로 value를 읽을 때 사용 한다.</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">redisClient.get(<span class="string">&#x27;key&#x27;</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) <span class="built_in">console</span>.log(err);</span><br><span class="line">  <span class="built_in">console</span>.log(result, <span class="keyword">typeof</span> result); <span class="comment">// value, string</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">redisClient.mget([<span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>], <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) <span class="built_in">console</span>.log(err);</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// [&#x27;1&#x27;, &#x27;2&#x27;]</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="del"><a href="#del" class="headerlink" title="del"></a>del</h4><p>key를 삭제 한다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">redisClient.del(<span class="string">&#x27;key&#x27;</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) <span class="built_in">console</span>.log(err);</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// 1</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="incrby"><a href="#incrby" class="headerlink" title="incrby"></a>incrby</h4><p>해당 숫자 만큼 증,감소가 진행 된다 이 녀석은 원자성을 지원 한다.</p>
+<p>예로 0인 상태에서 A에서는 숫자를 2를 증가 시키고 B에서는 4를 증가 하라는 게 비슷한 시기에 </p>
+<p>일어났을 때 덮어쓰지 않고 하나 하나씩 처리하여 총 6이 된다.</p>
+<p>그리고 이런 증,감소는 리턴 타입은 숫자로 받는다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">redisClient.incrby(<span class="string">&#x27;key&#x27;</span>, <span class="number">2</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) <span class="built_in">console</span>.log(err);</span><br><span class="line">  <span class="built_in">console</span>.log(result, <span class="keyword">typeof</span> result); <span class="comment">// 2, number</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="setex"><a href="#setex" class="headerlink" title="setex"></a>setex</h4><p>지정한 시간이 지나면 key가 삭제 된다 만료가 필요한 캐시나 세션에 좋은 타입이다.</p>
+<p>단위는 초</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">redisClient.setex(<span class="string">&#x27;Session:UserA&#x27;</span>, <span class="number">10</span>, <span class="string">&#x27;abc&#x27;</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) <span class="built_in">console</span>.log(err);</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// OK</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="lists"><a href="#lists" class="headerlink" title="lists"></a>lists</h3><p>list는 자료구조에 나오는 스택, 큐와 같다고 생각 하면 된다.</p>
+<p>리스트에 데이터가 하나도 없을 시 자동으로 삭제가 되고 리스트가 보유할 수 있는 데이터의 개수는</p>
+<p>최대 2<sup>32</sup> - 1 이다.</p>
+<h4 id="lpush"><a href="#lpush" class="headerlink" title="lpush"></a>lpush</h4><p>스택, 큐 처럼 마지막에 삽입 되고 돌아오는 결과 값은 현재 리스트에 포함된 값의 개수</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">redisClient.lpush(<span class="string">&#x27;MyList&#x27;</span>, <span class="string">&#x27;a&#x27;</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) <span class="built_in">console</span>.log(err);</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// 1</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">redisClient.lpush(<span class="string">&#x27;MyList&#x27;</span>, [<span class="string">&#x27;c&#x27;</span>, <span class="string">&#x27;d&#x27;</span>], <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) <span class="built_in">console</span>.log(err);</span><br><span class="line">  <span class="built_in">console</span>.log(result);  <span class="comment">// 3</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="rpop"><a href="#rpop" class="headerlink" title="rpop"></a>rpop</h4><p>먼저 들어온 데이터를 꺼내고 삭제, 큐를 생각하면 되겠다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">redisClient.rpop(<span class="string">&#x27;MyList&#x27;</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) <span class="built_in">console</span>.log(err);</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// &#x27;a&#x27;</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="lpop"><a href="#lpop" class="headerlink" title="lpop"></a>lpop</h4><p>마지막에 들어온 데이터를 꺼내고 삭제, 스택을 생각하면 된다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">redisClient.lpop(<span class="string">&#x27;MyList&#x27;</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) <span class="built_in">console</span>.log(err);</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// &#x27;d&#x27;</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="lrange"><a href="#lrange" class="headerlink" title="lrange"></a>lrange</h4><p>인덱스로 범위를 지정해서 리스트를 조회 할 수 있다.</p>
+<p>0, -1로 하면 전체 조회를 하고 인덱스는 제일 마지막 데이터가 0부터 시작 한다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">redisClient.lrange(<span class="string">&#x27;MyList&#x27;</span>, <span class="number">0</span>, <span class="number">-1</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) <span class="built_in">console</span>.log(err);</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// &#x27;c&#x27;</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="sets"><a href="#sets" class="headerlink" title="sets"></a>sets</h3><p>sets은 순서가 없고 똑같은 데이터가 없는 구조이며 하나의 set이 가질 수 있는 데이터의</p>
+<p>최대 개수는 2<sup>32</sup> - 1 이다.</p>
+<h4 id="sadd"><a href="#sadd" class="headerlink" title="sadd"></a>sadd</h4><p>하나 또는 여러 개의 데이터를 삽입할 수 있고 성공 시 리턴은 삽입한 개수다. </p>
+<p>중복된 데이터가 있는 경우에는 0을 받는다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">redisClient.sadd(<span class="string">&#x27;MySet&#x27;</span>, <span class="string">&#x27;a&#x27;</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) <span class="built_in">console</span>.log(err);</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// 1</span></span><br><span class="line">  redisClient.sadd(<span class="string">&#x27;MySet&#x27;</span>, <span class="string">&#x27;a&#x27;</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (err) <span class="built_in">console</span>.log(err);</span><br><span class="line">    <span class="built_in">console</span>.log(result); <span class="comment">// 0</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">redisClient.sadd(<span class="string">&#x27;MySet&#x27;</span>, [<span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;c&#x27;</span>, <span class="string">&#x27;d&#x27;</span>], <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) <span class="built_in">console</span>.log(err);</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// 3</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="srem"><a href="#srem" class="headerlink" title="srem"></a>srem</h4><p>하나 또는 여러 개의 데이터를 삭제할 수 있고 성공 시 삭제된 개수를 리턴 받는다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">redisClient.srem(<span class="string">&#x27;MySet&#x27;</span>, <span class="string">&#x27;a&#x27;</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) <span class="built_in">console</span>.log(err);</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// 1</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">redisClient.srem(<span class="string">&#x27;MySet&#x27;</span>, [<span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;c&#x27;</span>], <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) <span class="built_in">console</span>.log(err);</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// 2</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="smembers"><a href="#smembers" class="headerlink" title="smembers"></a>smembers</h4><p>sets에 속한 데이터들을 모두 볼 수 있다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">redisClient.smembers(<span class="string">&#x27;MySet&#x27;</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) <span class="built_in">console</span>.log(err);</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// [&#x27;d&#x27;]</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="sunion"><a href="#sunion" class="headerlink" title="sunion"></a>sunion</h4><p>합집합 처럼 여러 sets들의 데이터들을 합쳐서 볼 수 있다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">redisClient.sunion([<span class="string">&#x27;MySet&#x27;</span>, <span class="string">&#x27;MySet2&#x27;</span>], <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) <span class="built_in">console</span>.log(err);</span><br><span class="line">  <span class="built_in">console</span>.log(result);</span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">    [</span></span><br><span class="line"><span class="comment">      &#x27;1&#x27;, &#x27;b&#x27;, &#x27;2&#x27;,</span></span><br><span class="line"><span class="comment">      &#x27;c&#x27;, &#x27;d&#x27;, &#x27;4&#x27;,</span></span><br><span class="line"><span class="comment">      &#x27;3&#x27;</span></span><br><span class="line"><span class="comment">    ]</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="srandmember"><a href="#srandmember" class="headerlink" title="srandmember"></a>srandmember</h4><p>sets의 데이터들 중 랜덤으로 하나 가지고 온다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">redisClient.srandmember(<span class="string">&#x27;MySet2&#x27;</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) <span class="built_in">console</span>.log(err);</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// 1, 2, 3, 4 중 아무거나 </span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="sscan"><a href="#sscan" class="headerlink" title="sscan"></a>sscan</h4><p>데이터가 엄청 큰 sets에서 smembers를 호출 하는 경우 처리 하는 동안 다른 요청에 응답 하질</p>
+<p>않으므로 그럴 경우 sscan을 사용하면 된다고 한다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> sscan = <span class="function">(<span class="params">cursor, arr, cb</span>) =&gt;</span> &#123;</span><br><span class="line">  redisClient.sscan(<span class="string">&#x27;MySet3&#x27;</span>, cursor, <span class="function">(<span class="params">err, data</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> nextCursor = <span class="built_in">Number</span>(data[<span class="number">0</span>]);</span><br><span class="line">    <span class="keyword">const</span> result = arr.concat(data[<span class="number">1</span>]);</span><br><span class="line">    <span class="keyword">if</span> (nextCursor === <span class="number">0</span>) <span class="keyword">return</span> cb(<span class="literal">null</span>, result);</span><br><span class="line">    <span class="keyword">return</span> sscan(nextCursor, result);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>1000000건이 있는 sets에 재귀로 짜서 돌려봤는데 겁나 느리네…</p>
+<h3 id="sorted-sets"><a href="#sorted-sets" class="headerlink" title="sorted sets"></a>sorted sets</h3><p>정렬된 sets는 점수로 정렬된, 똑같은 데이터가 없는 구조이다.</p>
+<p>쉽게 이해 하자면 하나의 테이블(=key)에 key(=member), value(=score)가 세트로 </p>
+<p>저장이 되는데 value는 숫자만 되고 정렬을 할 수 있다는 의미 한 가지 유의할 점은 정렬 시</p>
+<p>같은 score가 있는 경우에는 이름순으로 정렬 된다.</p>
+<h4 id="zadd"><a href="#zadd" class="headerlink" title="zadd"></a>zadd</h4><p>하나의 member, score를 저장을 하고 성공 시 1을 리턴 하고 중복된 데이터는 0을 리턴 한다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">redisClient.zadd(<span class="string">&#x27;MySt&#x27;</span>, <span class="number">100</span>, <span class="string">&#x27;a&#x27;</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) <span class="built_in">console</span>.log(err);</span><br><span class="line">  <span class="built_in">console</span>.log(result);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="zincrby"><a href="#zincrby" class="headerlink" title="zincrby"></a>zincrby</h4><p>하나의 member의 score를 원하는 값만큼 증,감소 할 수 있고 리턴은 증,감소된 값이다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">redisClient.zincrby(<span class="string">&#x27;MySt&#x27;</span>, <span class="number">30</span>, <span class="string">&#x27;a&#x27;</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// 130</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="zrange-zrevrange"><a href="#zrange-zrevrange" class="headerlink" title="zrange, zrevrange"></a>zrange, zrevrange</h4><p>zrange는 지정한 index의 범위만큼 score가 낮은 순으로 정렬된 member들을 </p>
+<p>조회 할 수 있고 0, -1은 모두 조회이다.</p>
+<p>zrevrange는 zrange와 반대로 score가 높은 순으로 정렬된 member들을 조회 할 수 있다.</p>
+<p>withscores를 추가하면 score도 결과에 나온다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">redisClient.zrange(<span class="string">&#x27;MySt&#x27;</span>, <span class="number">0</span>, <span class="number">-1</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// [a, b]</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">redisClient.zrevrange(<span class="string">&#x27;MySt&#x27;</span>, <span class="number">0</span>, <span class="number">-1</span>, <span class="string">&#x27;withscores&#x27;</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// [ &#x27;b&#x27;, &#x27;200&#x27;, &#x27;a&#x27;, &#x27;130&#x27; ]</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="zrank-zrevrank"><a href="#zrank-zrevrank" class="headerlink" title="zrank, zrevrank"></a>zrank, zrevrank</h4><p>둘 다 member의 index를 리턴 한다.</p>
+<p>차이점은 zrank는 score가 작은 순으로 0, zrevrank는 score가 큰 순으로 0</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">redisClient.zrank(<span class="string">&#x27;MySt&#x27;</span>, <span class="string">&#x27;a&#x27;</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// 0</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">redisClient.zrevrank(<span class="string">&#x27;MySt&#x27;</span>, <span class="string">&#x27;a&#x27;</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// 1</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="zscore"><a href="#zscore" class="headerlink" title="zscore"></a>zscore</h4><p>member의 score를 리턴 한다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">redisClient.zscore(<span class="string">&#x27;MySt&#x27;</span>, <span class="string">&#x27;a&#x27;</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// 130, 타입은 문자형이다 숫자 아님..</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="zrem"><a href="#zrem" class="headerlink" title="zrem"></a>zrem</h4><p>데이터를 삭제 한다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">redisClient.zrem(<span class="string">&#x27;MySt&#x27;</span>, <span class="string">&#x27;a&#x27;</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// 1</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="zscan"><a href="#zscan" class="headerlink" title="zscan"></a>zscan</h4><p>zscan도 sscan과 비슷한 용도</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">redisClient.zscan(<span class="string">&#x27;MySt&#x27;</span>, <span class="number">0</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="hashes"><a href="#hashes" class="headerlink" title="hashes"></a>hashes</h3><p>hashes는 하나의 key에 여러개 field, value를 저장 할 수 있는 구조</p>
+<h4 id="hset-hmset"><a href="#hset-hmset" class="headerlink" title="hset, hmset"></a>hset, hmset</h4><ul>
+<li>hset은 하나의 field, value를 삽입</li>
+<li>hmset은 여러개의 field, value를 삽입</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">redisClient.hset(<span class="string">&#x27;MyHash&#x27;</span>, <span class="string">&#x27;a&#x27;</span>, <span class="number">1</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// 1</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">redisClient.hmset(<span class="string">&#x27;MyHash&#x27;</span>, [<span class="string">&#x27;b&#x27;</span>, <span class="number">1</span>, <span class="string">&#x27;c&#x27;</span>, <span class="number">2</span>], <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// OK</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="hget-hmget"><a href="#hget-hmget" class="headerlink" title="hget, hmget"></a>hget, hmget</h4><ul>
+<li>hget은 하나의 field로 조회 해서 value를 가지고 온다.</li>
+<li>hmget은 여러 개의 field로 조회를 해서 여러 value를 가지고 온다.</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">redisClient.hget(<span class="string">&#x27;MyHash&#x27;</span>, <span class="string">&#x27;a&#x27;</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// 1</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">redisClient.hmget(<span class="string">&#x27;MyHash&#x27;</span>, [<span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;c&#x27;</span>], <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// [&#x27;1&#x27;, &#x27;2&#x27;]</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="hdel"><a href="#hdel" class="headerlink" title="hdel"></a>hdel</h4><p>필드를 삭제 한다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">redisClient.hdel(<span class="string">&#x27;MyHash&#x27;</span>, <span class="string">&#x27;c&#x27;</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// 1</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="hgetall"><a href="#hgetall" class="headerlink" title="hgetall"></a>hgetall</h4><p>해당 key의 모든 field, value를 가지고 온다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">redisClient.hgetall(<span class="string">&#x27;MyHash&#x27;</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// &#123; a: &#x27;1&#x27;, b: &#x27;1&#x27; &#125;</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="hscan"><a href="#hscan" class="headerlink" title="hscan"></a>hscan</h4><p>scan 시리즈들은 모두 동일</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">redisClient.hscan(<span class="string">&#x27;MyHash&#x27;</span>, <span class="number">0</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// [ &#x27;0&#x27;, [ &#x27;a&#x27;, &#x27;1&#x27;, &#x27;b&#x27;, &#x27;1&#x27; ] ]</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="hyperloglog"><a href="#hyperloglog" class="headerlink" title="hyperloglog"></a>hyperloglog</h3><p>hyperloglog는 해당 key의 데이터 개수를 구하기 위한 처음 보는 구조다.</p>
+<p>장점은 하나의 key당 아주 작은 메모리(최대12KB)를 사용하고 단점은 이게 100% 정확도를</p>
+<p>보장하지 않는다고 한다 표준오차는 0.81%인데(그럼 99%는 맞는다는 소리네..) 사용 예는</p>
+<p>해당 사이트나 게임에 고유 방문자 수 같은 케이스</p>
+<h4 id="pfadd"><a href="#pfadd" class="headerlink" title="pfadd"></a>pfadd</h4><p>키에 하나의 데이터 또는 여러 데이터를 삽입할 수 있다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">redisClient.pfadd(<span class="string">&#x27;visit:2020-01-01&#x27;</span>, [<span class="string">&#x27;user1&#x27;</span>, <span class="string">&#x27;user2&#x27;</span>, <span class="string">&#x27;user3&#x27;</span>, <span class="string">&#x27;user4&#x27;</span>], <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">redisClient.pfadd(<span class="string">&#x27;visit:2020-01-02&#x27;</span>, <span class="string">&#x27;user4&#x27;</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="pfcount"><a href="#pfcount" class="headerlink" title="pfcount"></a>pfcount</h4><p>하나의 키 또는 여러 키의 개수를 받을 수 있다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">redisClient.pfcount(<span class="string">&#x27;visit:2020-01-02&#x27;</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// 4</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">redisClient.pfcount([<span class="string">&#x27;visit:2020-01-02&#x27;</span>, <span class="string">&#x27;visit:2020-01-01&#x27;</span>], <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// user4가 공통으로 들어가있기 때문에 4</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="그-외-커맨드"><a href="#그-외-커맨드" class="headerlink" title="그 외 커맨드"></a>그 외 커맨드</h2><h3 id="pub-sub"><a href="#pub-sub" class="headerlink" title="pub/sub"></a>pub/sub</h3><p>publish(발송) / subscribe(구독)의 약자</p>
+<p>메세지를 주고 받는 기능, 주의해야 할 점은 구독중인 경우 다른 redis의 명령어를 사용 불가</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// publish.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> redis = <span class="built_in">require</span>(<span class="string">&#x27;redis&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> redisClient = redis.createClient();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> channel = <span class="string">&#x27;MyChannel&#x27;</span>;</span><br><span class="line"></span><br><span class="line">redisClient.publish(channel, <span class="string">&#x27;Hi!&#x27;</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) <span class="built_in">console</span>.log(err);</span><br><span class="line">  <span class="built_in">console</span>.log(result);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// subscribe.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> redis = <span class="built_in">require</span>(<span class="string">&#x27;redis&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> redisClient = redis.createClient();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> channel = <span class="string">&#x27;MyChannel&#x27;</span>;</span><br><span class="line"></span><br><span class="line">redisClient.subscribe(channel);</span><br><span class="line"></span><br><span class="line">redisClient.on(<span class="string">&#x27;message&#x27;</span>, <span class="function">(<span class="params">channel, message</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;channel&#x27;</span>, channel, <span class="string">&#x27;message&#x27;</span>, message);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// redisClient.get(&#x27;qewqw&#x27;, (e, d) =&gt; &#123;</span></span><br><span class="line"><span class="comment">//   console.log(e); // 구독중이므로 에러가 뜬다.</span></span><br><span class="line"><span class="comment">// &#125;);</span></span><br></pre></td></tr></table></figure>
+
+<p>subscribe.js를 실행을 하면 채널(MyChannel)을 구독 중이고  </p>
+<p>publish.js를 실행을 하게 되면 내가 작성한 메세지가 채널(MyChannel)에 보내게 되고</p>
+<p>subscribe.js는 구독중이므로 publish.js에서 보낸 메세지를 계속 출력을 한다.</p>
+<h3 id="트랜잭션"><a href="#트랜잭션" class="headerlink" title="트랜잭션"></a>트랜잭션</h3><p>redis에서 순차적 실행할 수 있는 커맨드를 지원을 한다.</p>
+<p>그러나 중간에 에러가 나도 롤백이 안 되고 다음으로 넘어감…</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> multi = redisClient.multi();</span><br><span class="line"></span><br><span class="line">multi.set(<span class="string">&#x27;tr&#x27;</span>, <span class="number">1</span>);</span><br><span class="line">multi.setbit(<span class="string">&#x27;bbb&#x27;</span>, <span class="string">&#x27;bb&#x27;</span>, <span class="number">2</span>); <span class="comment">// 에러 나는 부분</span></span><br><span class="line">multi.incrby(<span class="string">&#x27;tr&#x27;</span>, <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">multi.exec(<span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) <span class="built_in">console</span>.log(err); <span class="comment">// 에러가 찍힘</span></span><br><span class="line">  <span class="built_in">console</span>.log(result);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>그러나 실제로 들어 가서 보면 tr이 3이 되어 있음</p>
+<h4 id="watch"><a href="#watch" class="headerlink" title="watch"></a>watch</h4><p>watch를 선언한 key를 트랜잭션을 쓸려고 했을 때 외부에서 값을 변경하게 되는 경우</p>
+<p>트랜잭션을 실행하지 않는다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">redisClient.watch(<span class="string">&#x27;tt&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> multi = redisClient.multi();</span><br><span class="line"></span><br><span class="line">multi.incrby(<span class="string">&#x27;tt&#x27;</span>, <span class="number">100</span>);</span><br><span class="line"></span><br><span class="line">redisClient.incrby(<span class="string">&#x27;tt&#x27;</span>, <span class="number">10</span>); <span class="comment">// multi를 실행 하기 전에 10을 올림</span></span><br><span class="line"></span><br><span class="line">multi.exec(<span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>실제 tt의 value를 보면 10으로 되어 있다.</p>
+<h2 id="참고"><a href="#참고" class="headerlink" title="참고"></a>참고</h2><ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="http://www.acornpub.co.kr/book/redis-essentials">Redis 핵심 정리</a></li>
+</ul>
+
+  </div>
+</article>
+
+<script src="https://utteranc.es/client.js" repo="cheese10yun/blog-comment" issue-term="title" label="Comment" theme="github-dark-orange" crossorigin="anonymous" async>
+  </script>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#redis%EB%9E%80"><span class="toc-number">1.</span> <span class="toc-text">redis란?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4%EC%84%9C-%EB%8A%90%EA%BC%88%EC%97%88%EB%8D%98-%EC%A0%90"><span class="toc-number">2.</span> <span class="toc-text">사용하면서 느꼈었던 점</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%84%A4%EC%B9%98"><span class="toc-number">3.</span> <span class="toc-text">설치</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis-%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%83%80%EC%9E%85"><span class="toc-number">4.</span> <span class="toc-text">redis 데이터 타입</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EA%B3%B5%ED%86%B5"><span class="toc-number">4.1.</span> <span class="toc-text">공통</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#strings"><span class="toc-number">4.2.</span> <span class="toc-text">strings</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#set-mset"><span class="toc-number">4.2.1.</span> <span class="toc-text">set, mset</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#get-mget"><span class="toc-number">4.2.2.</span> <span class="toc-text">get, mget</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#del"><span class="toc-number">4.2.3.</span> <span class="toc-text">del</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#incrby"><span class="toc-number">4.2.4.</span> <span class="toc-text">incrby</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#setex"><span class="toc-number">4.2.5.</span> <span class="toc-text">setex</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lists"><span class="toc-number">4.3.</span> <span class="toc-text">lists</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#lpush"><span class="toc-number">4.3.1.</span> <span class="toc-text">lpush</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#rpop"><span class="toc-number">4.3.2.</span> <span class="toc-text">rpop</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#lpop"><span class="toc-number">4.3.3.</span> <span class="toc-text">lpop</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#lrange"><span class="toc-number">4.3.4.</span> <span class="toc-text">lrange</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sets"><span class="toc-number">4.4.</span> <span class="toc-text">sets</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#sadd"><span class="toc-number">4.4.1.</span> <span class="toc-text">sadd</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#srem"><span class="toc-number">4.4.2.</span> <span class="toc-text">srem</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#smembers"><span class="toc-number">4.4.3.</span> <span class="toc-text">smembers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#sunion"><span class="toc-number">4.4.4.</span> <span class="toc-text">sunion</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#srandmember"><span class="toc-number">4.4.5.</span> <span class="toc-text">srandmember</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#sscan"><span class="toc-number">4.4.6.</span> <span class="toc-text">sscan</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sorted-sets"><span class="toc-number">4.5.</span> <span class="toc-text">sorted sets</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#zadd"><span class="toc-number">4.5.1.</span> <span class="toc-text">zadd</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#zincrby"><span class="toc-number">4.5.2.</span> <span class="toc-text">zincrby</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#zrange-zrevrange"><span class="toc-number">4.5.3.</span> <span class="toc-text">zrange, zrevrange</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#zrank-zrevrank"><span class="toc-number">4.5.4.</span> <span class="toc-text">zrank, zrevrank</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#zscore"><span class="toc-number">4.5.5.</span> <span class="toc-text">zscore</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#zrem"><span class="toc-number">4.5.6.</span> <span class="toc-text">zrem</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#zscan"><span class="toc-number">4.5.7.</span> <span class="toc-text">zscan</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hashes"><span class="toc-number">4.6.</span> <span class="toc-text">hashes</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#hset-hmset"><span class="toc-number">4.6.1.</span> <span class="toc-text">hset, hmset</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#hget-hmget"><span class="toc-number">4.6.2.</span> <span class="toc-text">hget, hmget</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#hdel"><span class="toc-number">4.6.3.</span> <span class="toc-text">hdel</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#hgetall"><span class="toc-number">4.6.4.</span> <span class="toc-text">hgetall</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#hscan"><span class="toc-number">4.6.5.</span> <span class="toc-text">hscan</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hyperloglog"><span class="toc-number">4.7.</span> <span class="toc-text">hyperloglog</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pfadd"><span class="toc-number">4.7.1.</span> <span class="toc-text">pfadd</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pfcount"><span class="toc-number">4.7.2.</span> <span class="toc-text">pfcount</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EA%B7%B8-%EC%99%B8-%EC%BB%A4%EB%A7%A8%EB%93%9C"><span class="toc-number">5.</span> <span class="toc-text">그 외 커맨드</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#pub-sub"><span class="toc-number">5.1.</span> <span class="toc-text">pub&#x2F;sub</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98"><span class="toc-number">5.2.</span> <span class="toc-text">트랜잭션</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#watch"><span class="toc-number">5.2.1.</span> <span class="toc-text">watch</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%B0%B8%EA%B3%A0"><span class="toc-number">6.</span> <span class="toc-text">참고</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2019/12/20/db-redis/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2019/12/20/db-redis/&text=Redis 사용해보기"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2019/12/20/db-redis/&title=Redis 사용해보기"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2019/12/20/db-redis/&is_video=false&description=Redis 사용해보기"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Redis 사용해보기&body=Check out this article: https://hidelryn.github.io/2019/12/20/db-redis/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2019/12/20/db-redis/&title=Redis 사용해보기"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2019/12/20/db-redis/&title=Redis 사용해보기"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2019/12/20/db-redis/&title=Redis 사용해보기"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2019/12/20/db-redis/&title=Redis 사용해보기"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2019/12/20/db-redis/&name=Redis 사용해보기&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2019/12/20/db-redis/&t=Redis 사용해보기"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2018-2020
+    delryn
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+<!-- clipboard -->
+
+  
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-104148803-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

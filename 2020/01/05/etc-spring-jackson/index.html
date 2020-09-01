@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="의존성pom.xml(maven)에 jackson을 추가 한다. 123456&lt;!-- https:&#x2F;&#x2F;mvnrepository.com&#x2F;artifact&#x2F;com.fasterxml.jackson.core&#x2F;jackson-databind --&gt;&lt;dependency&gt;  		&lt;groupId&gt;com.fasterxml.jackson.core&amp;lt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring에서 json 다루기">
+<meta property="og:url" content="https://hidelryn.github.io/2020/01/05/etc-spring-jackson/index.html">
+<meta property="og:site_name" content="delryn&#39;s blog">
+<meta property="og:description" content="의존성pom.xml(maven)에 jackson을 추가 한다. 123456&lt;!-- https:&#x2F;&#x2F;mvnrepository.com&#x2F;artifact&#x2F;com.fasterxml.jackson.core&#x2F;jackson-databind --&gt;&lt;dependency&gt;  		&lt;groupId&gt;com.fasterxml.jackson.core&amp;lt">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://res.cloudinary.com/dwmywmqv6/image/upload/v1578220977/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-01-05_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_7.42.33_oukrmv.png">
+<meta property="article:published_time" content="2020-01-05T04:42:06.000Z">
+<meta property="article:modified_time" content="2020-09-01T09:35:19.000Z">
+<meta property="article:author" content="delryn">
+<meta property="article:tag" content="Spring">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://res.cloudinary.com/dwmywmqv6/image/upload/v1578220977/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-01-05_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_7.42.33_oukrmv.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Spring에서 json 다루기</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/css/rtl.css">
+
+    
+    <!-- rss -->
+    
+    
+    <link rel="canonical" href="https://hidelryn.github.io/2020/01/05/etc-spring-jackson/">
+<meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="delryn's blog" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2020/01/12/nodejs-express-swagger/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/12/20/db-redis/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2020/01/05/etc-spring-jackson/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2020/01/05/etc-spring-jackson/&text=Spring에서 json 다루기"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2020/01/05/etc-spring-jackson/&title=Spring에서 json 다루기"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2020/01/05/etc-spring-jackson/&is_video=false&description=Spring에서 json 다루기"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Spring에서 json 다루기&body=Check out this article: https://hidelryn.github.io/2020/01/05/etc-spring-jackson/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2020/01/05/etc-spring-jackson/&title=Spring에서 json 다루기"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2020/01/05/etc-spring-jackson/&title=Spring에서 json 다루기"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2020/01/05/etc-spring-jackson/&title=Spring에서 json 다루기"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2020/01/05/etc-spring-jackson/&title=Spring에서 json 다루기"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2020/01/05/etc-spring-jackson/&name=Spring에서 json 다루기&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2020/01/05/etc-spring-jackson/&t=Spring에서 json 다루기"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%9D%98%EC%A1%B4%EC%84%B1"><span class="toc-number">1.</span> <span class="toc-text">의존성</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GET"><span class="toc-number">2.</span> <span class="toc-text">GET</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#POST"><span class="toc-number">3.</span> <span class="toc-text">POST</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Spring에서 json 다루기
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">delryn's blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-01-05T04:42:06.000Z" itemprop="datePublished">2020-01-05</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Spring/" rel="tag">Spring</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="의존성"><a href="#의존성" class="headerlink" title="의존성"></a>의존성</h2><p>pom.xml(maven)에 jackson을 추가 한다.</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.fasterxml.jackson.core<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jackson-databind<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  		<span class="tag">&lt;<span class="name">version</span>&gt;</span>2.10.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;userId&quot;</span>: <span class="string">&quot;hidelryn&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;password&quot;</span>: <span class="string">&quot;12345q&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;gameData&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;gameId&quot;</span>: <span class="string">&quot;a1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;sessionKey&quot;</span>: <span class="string">&quot;qrkqkej2l31qeqk&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;userLocale&quot;</span>: &#123;</span><br><span class="line">      <span class="attr">&quot;locale&quot;</span>: <span class="string">&quot;ko_KR&quot;</span>,</span><br><span class="line">      <span class="attr">&quot;createAt&quot;</span>: <span class="number">1578220139</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;delryn&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;scores&quot;</span>: [</span><br><span class="line">      <span class="number">100</span>,</span><br><span class="line">      <span class="number">30</span>,</span><br><span class="line">      <span class="number">60</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">&quot;item&quot;</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">&quot;itemId&quot;</span>: <span class="string">&quot;0_id&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;itemAmount&quot;</span>: <span class="number">0</span></span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">&quot;itemId&quot;</span>: <span class="string">&quot;1_id&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;itemAmount&quot;</span>: <span class="number">1</span></span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">&quot;itemId&quot;</span>: <span class="string">&quot;2_id&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;itemAmount&quot;</span>: <span class="number">2</span></span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">&quot;itemId&quot;</span>: <span class="string">&quot;3_id&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;itemAmount&quot;</span>: <span class="number">3</span></span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">&quot;itemId&quot;</span>: <span class="string">&quot;4_id&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;itemAmount&quot;</span>: <span class="number">4</span></span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">&quot;itemId&quot;</span>: <span class="string">&quot;5_id&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;itemAmount&quot;</span>: <span class="number">5</span></span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>위와 같은 json을 다루기 위해서 형태?에 맞는 데이터 클래스를 작성해줘야 한다.</p>
+<p>getter/setter가 하나 라도 생략 시 jackson 오류가 나므로 체크를 잘 하자.</p>
+<p>예시로 User라는 클래스를 작성해본다. 솔직히 자바스크립트에 비해 좀 귀찬다..</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.delryn.helloworld.model;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> String userId;</span><br><span class="line">	<span class="keyword">private</span> String password;</span><br><span class="line">	<span class="keyword">private</span> GameData gameData;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getUserId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> userId;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUserId</span><span class="params">(String userId)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.userId = userId;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getPassword</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> password;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPassword</span><span class="params">(String password)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.password = password;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> GameData <span class="title">getGameData</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> gameData;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setGameData</span><span class="params">(GameData gameData)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.gameData = gameData;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>GameData 클래스.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.delryn.helloworld.model;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GameData</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> List&lt;Item&gt; items;</span><br><span class="line">	<span class="keyword">private</span> String gameId;</span><br><span class="line">	<span class="keyword">private</span> String sessionKey;</span><br><span class="line">	<span class="keyword">private</span> UserLocale userLocale;</span><br><span class="line">	<span class="keyword">private</span> String name;</span><br><span class="line">	<span class="keyword">private</span> List&lt;Integer&gt; scores;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> List&lt;Item&gt; <span class="title">getItem</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> items;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setItem</span><span class="params">(List&lt;Item&gt; item)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.items = item;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getGameId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> gameId;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setGameId</span><span class="params">(String gameId)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.gameId = gameId;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getSessionKey</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> sessionKey;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSessionKey</span><span class="params">(String sessionKey)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.sessionKey = sessionKey;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> UserLocale <span class="title">getUserLocale</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> userLocale;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUserLocale</span><span class="params">(UserLocale userLocale)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.userLocale = userLocale;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> name;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.name = name;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title">getScores</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> scores;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setScores</span><span class="params">(List&lt;Integer&gt; scores)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.scores = scores;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>UserLocale 클래스</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.delryn.helloworld.model;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Locale;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserLocale</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> Locale locale;</span><br><span class="line">	<span class="keyword">private</span> Long createAt;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> Locale <span class="title">getLocale</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> locale;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLocale</span><span class="params">(Locale locale)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.locale = locale;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> Long <span class="title">getCreateAt</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> createAt;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCreateAt</span><span class="params">(Long createAt)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.createAt = createAt;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>데이터 모델 클래스가 완료되었으니 컨트롤러에서 써보자.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.delryn.helloworld.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Locale;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Controller;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestBody;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMethod;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestParam;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ResponseBody;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.delryn.helloworld.model.GameData;</span><br><span class="line"><span class="keyword">import</span> com.delryn.helloworld.model.Item;</span><br><span class="line"><span class="keyword">import</span> com.delryn.helloworld.model.User;</span><br><span class="line"><span class="keyword">import</span> com.delryn.helloworld.model.UserLocale;</span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.ObjectMapper;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Handles requests for the application home page.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HomeController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(HomeController.class);</span><br><span class="line"></span><br><span class="line">	<span class="meta">@ResponseBody</span></span><br><span class="line">	<span class="meta">@RequestMapping(value = &quot;/resjson&quot;, method = RequestMethod.GET, produces = &quot;application/json&quot;)</span> <span class="comment">// produces = &quot;application/json&quot;을 해줘야 응답 Content-type이 application/json이 됨.</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">resJson</span><span class="params">(Locale locale)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">long</span> unixTime = System.currentTimeMillis() / <span class="number">1000L</span>;</span><br><span class="line">				</span><br><span class="line">		UserLocale userLocale = <span class="keyword">new</span> UserLocale();</span><br><span class="line">		userLocale.setLocale(locale);</span><br><span class="line">		userLocale.setCreateAt(unixTime);</span><br><span class="line">		</span><br><span class="line">		List&lt;Integer&gt; scores = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">		scores.add(<span class="number">100</span>);</span><br><span class="line">		scores.add(<span class="number">30</span>);</span><br><span class="line">		scores.add(<span class="number">60</span>);</span><br><span class="line">		</span><br><span class="line">		List&lt;Item&gt; items = <span class="keyword">new</span> ArrayList&lt;Item&gt;();</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">6</span>; i++) &#123;</span><br><span class="line">			Item item = <span class="keyword">new</span> Item();</span><br><span class="line">			item.setItemId(i + <span class="string">&quot;_id&quot;</span>);</span><br><span class="line">			item.setItemAmount(i);</span><br><span class="line">			items.add(item);</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		GameData gameData = <span class="keyword">new</span> GameData();</span><br><span class="line">		gameData.setGameId(<span class="string">&quot;a1&quot;</span>);</span><br><span class="line">		gameData.setItem(items);</span><br><span class="line">		gameData.setSessionKey(<span class="string">&quot;qrkqkej2l31qeqk&quot;</span>);</span><br><span class="line">		gameData.setUserLocale(userLocale);</span><br><span class="line">		gameData.setName(<span class="string">&quot;delryn&quot;</span>);</span><br><span class="line">		gameData.setScores(scores);</span><br><span class="line">		</span><br><span class="line">		User user = <span class="keyword">new</span> User();</span><br><span class="line">		user.setUserId(<span class="string">&quot;hidelryn&quot;</span>);</span><br><span class="line">		user.setPassword(<span class="string">&quot;12345q&quot;</span>);</span><br><span class="line">		user.setGameData(gameData);</span><br><span class="line">		</span><br><span class="line">		ObjectMapper mapper = <span class="keyword">new</span> ObjectMapper();</span><br><span class="line">		</span><br><span class="line">		String result = mapper.writeValueAsString(user);</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">return</span> result;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/dwmywmqv6/image/upload/v1578220977/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-01-05_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_7.42.33_oukrmv.png" alt="응답"></p>
+<p>의도한 대로 나온다. 이제 GET, POST로 오는 데이터를 처리 해보자.</p>
+<h2 id="GET"><a href="#GET" class="headerlink" title="GET"></a>GET</h2><p>get인 경우 쿼리스트링의 데이터를 받아야 하는데 당연히 스트링이므로 json 파싱을 해줘야 한다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="meta">@RequestMapping(value = &quot;/reqjson&quot;, method = RequestMethod.GET)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">reqJson</span><span class="params">(<span class="meta">@RequestParam(value=&quot;data&quot;, required=false)</span> String data)</span> <span class="keyword">throws</span> IOException </span>&#123; <span class="comment">// @RequestParam을 통해 파라미터를 받을 수 있다.</span></span><br><span class="line">	ObjectMapper objectMapper = <span class="keyword">new</span> ObjectMapper();</span><br><span class="line">	User user = objectMapper.readValue(data, User.class);</span><br><span class="line">	logger.info(<span class="string">&quot;userId is &#123;&#125;.&quot;</span>, user.getUserId());</span><br><span class="line">	logger.info(<span class="string">&quot;password is &#123;&#125;.&quot;</span>, user.getPassword());</span><br><span class="line">	logger.info(<span class="string">&quot;gameData - sessionKey is &#123;&#125;.&quot;</span>, user.getGameData().getSessionKey());</span><br><span class="line">	<span class="keyword">for</span> (Integer i : user.getGameData().getScores()) &#123;</span><br><span class="line">		logger.info(<span class="string">&quot;score is &#123;&#125;.&quot;</span>, i);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> (Item item : user.getGameData().getItem()) &#123;</span><br><span class="line">		logger.info(<span class="string">&quot;itemId is &#123;&#125;, &#123;&#125;. &quot;</span>, item.getItemId(), item.getItemAmount());</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="string">&quot;ok&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>데이터 클래스에 넣어주기만 하면 된다.</p>
+<h2 id="POST"><a href="#POST" class="headerlink" title="POST"></a>POST</h2><p>post는 파라미터 받는 곳에 데이터 클래스를 적어주니 알아서 들어옴.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="meta">@RequestMapping(value = &quot;/reqjson2&quot;, method = RequestMethod.POST)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">reqJson2</span><span class="params">(<span class="meta">@RequestBody</span> User user)</span> <span class="keyword">throws</span> IOException </span>&#123; <span class="comment">// @RequestBody라는 어노테이션을 적어줘야 함.</span></span><br><span class="line">	logger.info(<span class="string">&quot;userId is &#123;&#125;.&quot;</span>, user.getUserId());</span><br><span class="line">	logger.info(<span class="string">&quot;password is &#123;&#125;.&quot;</span>, user.getPassword());</span><br><span class="line">	logger.info(<span class="string">&quot;gameData - sessionKey is &#123;&#125;.&quot;</span>, user.getGameData().getSessionKey());</span><br><span class="line">	<span class="keyword">for</span> (Integer i : user.getGameData().getScores()) &#123;</span><br><span class="line">		logger.info(<span class="string">&quot;score is &#123;&#125;.&quot;</span>, i);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> (Item item : user.getGameData().getItem()) &#123;</span><br><span class="line">		logger.info(<span class="string">&quot;itemId is &#123;&#125;, &#123;&#125;. &quot;</span>, item.getItemId(), item.getItemAmount());</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="string">&quot;ok&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+</article>
+
+<script src="https://utteranc.es/client.js" repo="cheese10yun/blog-comment" issue-term="title" label="Comment" theme="github-dark-orange" crossorigin="anonymous" async>
+  </script>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%9D%98%EC%A1%B4%EC%84%B1"><span class="toc-number">1.</span> <span class="toc-text">의존성</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GET"><span class="toc-number">2.</span> <span class="toc-text">GET</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#POST"><span class="toc-number">3.</span> <span class="toc-text">POST</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2020/01/05/etc-spring-jackson/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2020/01/05/etc-spring-jackson/&text=Spring에서 json 다루기"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2020/01/05/etc-spring-jackson/&title=Spring에서 json 다루기"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2020/01/05/etc-spring-jackson/&is_video=false&description=Spring에서 json 다루기"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Spring에서 json 다루기&body=Check out this article: https://hidelryn.github.io/2020/01/05/etc-spring-jackson/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2020/01/05/etc-spring-jackson/&title=Spring에서 json 다루기"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2020/01/05/etc-spring-jackson/&title=Spring에서 json 다루기"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2020/01/05/etc-spring-jackson/&title=Spring에서 json 다루기"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2020/01/05/etc-spring-jackson/&title=Spring에서 json 다루기"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2020/01/05/etc-spring-jackson/&name=Spring에서 json 다루기&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2020/01/05/etc-spring-jackson/&t=Spring에서 json 다루기"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2018-2020
+    delryn
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+<!-- clipboard -->
+
+  
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-104148803-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
