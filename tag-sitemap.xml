@@ -4,7 +4,14 @@
 
     <url>
         <loc>https://hidelryn.github.io/tags/Vue/</loc>
-        <lastmod>2020-09-04T14:54:00.000Z</lastmod>
+        <lastmod>2020-09-11T08:43:23.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://hidelryn.github.io/tags/MessageQueue/</loc>
+        <lastmod>2020-09-07T05:52:43.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
@@ -103,13 +110,6 @@
     <url>
         <loc>https://hidelryn.github.io/tags/SMS/</loc>
         <lastmod>2020-09-01T06:36:26.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://hidelryn.github.io/tags/MessageQueue/</loc>
-        <lastmod>2020-09-01T06:36:05.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
