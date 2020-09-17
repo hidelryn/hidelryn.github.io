@@ -8,14 +8,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="description" content="서버사이드렌더링(SSR)이란Vue 컴포넌트를 서버에서 HTML 문자열로 브라우저에 전송을 하는 방식 사용 시 장점 검색 엔진 크롤러가 완성된 페이지를 볼 수 있으므로 SEO 향상 클라이언트에서 화면을 그리는 작업이 줄어드므로 로딩 속도 향상  사용 시 주의점 서버에서 받아와야 하니까 서버가 꼭 필요 (정적 파일 -&gt; index.html 불가) 서버와의">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Vue에서 서버 사이드 렌더링 알아 보기">
+<meta property="og:title" content="Vue에서 서버 사이드 렌더링 알아보기">
 <meta property="og:url" content="https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/index.html">
 <meta property="og:site_name" content="delryn&#39;s blog">
 <meta property="og:description" content="서버사이드렌더링(SSR)이란Vue 컴포넌트를 서버에서 HTML 문자열로 브라우저에 전송을 하는 방식 사용 시 장점 검색 엔진 크롤러가 완성된 페이지를 볼 수 있으므로 SEO 향상 클라이언트에서 화면을 그리는 작업이 줄어드므로 로딩 속도 향상  사용 시 주의점 서버에서 받아와야 하니까 서버가 꼭 필요 (정적 파일 -&gt; index.html 불가) 서버와의">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://res.cloudinary.com/ddebpn43q/image/upload/v1600326954/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-09-17_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_4.12.07_cdprkl.png">
 <meta property="article:published_time" content="2020-09-17T07:22:54.000Z">
-<meta property="article:modified_time" content="2020-09-17T08:30:07.000Z">
+<meta property="article:modified_time" content="2020-09-17T08:31:45.000Z">
 <meta property="article:author" content="delryn">
 <meta property="article:tag" content="Vue">
 <meta name="twitter:card" content="summary">
@@ -39,7 +39,7 @@
         
     
     <!-- title -->
-    <title>Vue에서 서버 사이드 렌더링 알아 보기</title>
+    <title>Vue에서 서버 사이드 렌더링 알아보기</title>
     <!-- styles -->
     
 <link rel="stylesheet" href="/css/style.css">
@@ -98,16 +98,16 @@
     <div id="share" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&text=Vue에서 서버 사이드 렌더링 알아 보기"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&title=Vue에서 서버 사이드 렌더링 알아 보기"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&is_video=false&description=Vue에서 서버 사이드 렌더링 알아 보기"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Vue에서 서버 사이드 렌더링 알아 보기&body=Check out this article: https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&title=Vue에서 서버 사이드 렌더링 알아 보기"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&title=Vue에서 서버 사이드 렌더링 알아 보기"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&title=Vue에서 서버 사이드 렌더링 알아 보기"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&title=Vue에서 서버 사이드 렌더링 알아 보기"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&name=Vue에서 서버 사이드 렌더링 알아 보기&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&t=Vue에서 서버 사이드 렌더링 알아 보기"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&text=Vue에서 서버 사이드 렌더링 알아보기"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&title=Vue에서 서버 사이드 렌더링 알아보기"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&is_video=false&description=Vue에서 서버 사이드 렌더링 알아보기"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Vue에서 서버 사이드 렌더링 알아보기&body=Check out this article: https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&title=Vue에서 서버 사이드 렌더링 알아보기"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&title=Vue에서 서버 사이드 렌더링 알아보기"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&title=Vue에서 서버 사이드 렌더링 알아보기"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&title=Vue에서 서버 사이드 렌더링 알아보기"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&name=Vue에서 서버 사이드 렌더링 알아보기&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&t=Vue에서 서버 사이드 렌더링 알아보기"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -124,7 +124,7 @@
   <header>
     
     <h1 class="posttitle" itemprop="name headline">
-        Vue에서 서버 사이드 렌더링 알아 보기
+        Vue에서 서버 사이드 렌더링 알아보기
     </h1>
 
 
@@ -214,16 +214,16 @@
     <div id="share-footer" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&text=Vue에서 서버 사이드 렌더링 알아 보기"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&title=Vue에서 서버 사이드 렌더링 알아 보기"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&is_video=false&description=Vue에서 서버 사이드 렌더링 알아 보기"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Vue에서 서버 사이드 렌더링 알아 보기&body=Check out this article: https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&title=Vue에서 서버 사이드 렌더링 알아 보기"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&title=Vue에서 서버 사이드 렌더링 알아 보기"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&title=Vue에서 서버 사이드 렌더링 알아 보기"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&title=Vue에서 서버 사이드 렌더링 알아 보기"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&name=Vue에서 서버 사이드 렌더링 알아 보기&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&t=Vue에서 서버 사이드 렌더링 알아 보기"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&text=Vue에서 서버 사이드 렌더링 알아보기"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&title=Vue에서 서버 사이드 렌더링 알아보기"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&is_video=false&description=Vue에서 서버 사이드 렌더링 알아보기"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Vue에서 서버 사이드 렌더링 알아보기&body=Check out this article: https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&title=Vue에서 서버 사이드 렌더링 알아보기"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&title=Vue에서 서버 사이드 렌더링 알아보기"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&title=Vue에서 서버 사이드 렌더링 알아보기"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&title=Vue에서 서버 사이드 렌더링 알아보기"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&name=Vue에서 서버 사이드 렌더링 알아보기&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/&t=Vue에서 서버 사이드 렌더링 알아보기"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
