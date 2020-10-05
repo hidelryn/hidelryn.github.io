@@ -8,6 +8,14 @@
     </url>
 
     <url>
+        <loc>https://hidelryn.github.io/2020/10/05/nodejs-luxon/</loc>
+        <lastmod>2020-10-05T15:22:22.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/</loc>
         <lastmod>2020-09-17T08:31:45.000Z</lastmod>
         <changefreq>weekly</changefreq>

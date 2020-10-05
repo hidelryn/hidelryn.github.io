@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="이전에 페이스북 그룹에서 Moment 프로젝트가 더 이상 유지 보수를 하지 않는다는 글을 봤었다. 실제 프로젝트 상태에 적혀 있었고 신규 프로젝트에서 대체할 모듈을 제시를 하는데 나는 그 중에 맨 처음에 적혀있는 luxon을 사용해보기로 했다. 설치1npm i luxon -S  mt와 비교가장 큰 차이점은 Moment의 경우 처음 객체를 생성 하고 이후에">
+<meta property="og:type" content="article">
+<meta property="og:title" content="luxon 사용 해보기">
+<meta property="og:url" content="https://hidelryn.github.io/2020/10/05/nodejs-luxon/index.html">
+<meta property="og:site_name" content="delryn&#39;s blog">
+<meta property="og:description" content="이전에 페이스북 그룹에서 Moment 프로젝트가 더 이상 유지 보수를 하지 않는다는 글을 봤었다. 실제 프로젝트 상태에 적혀 있었고 신규 프로젝트에서 대체할 모듈을 제시를 하는데 나는 그 중에 맨 처음에 적혀있는 luxon을 사용해보기로 했다. 설치1npm i luxon -S  mt와 비교가장 큰 차이점은 Moment의 경우 처음 객체를 생성 하고 이후에">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-10-05T13:18:32.000Z">
+<meta property="article:modified_time" content="2020-10-05T15:22:22.000Z">
+<meta property="article:author" content="delryn">
+<meta property="article:tag" content="Node.js">
+<meta property="article:tag" content="Date">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>luxon 사용 해보기</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/css/rtl.css">
+
+    
+    <!-- rss -->
+    
+    
+    <link rel="canonical" href="https://hidelryn.github.io/2020/10/05/nodejs-luxon/">
+<meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="delryn's blog" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2020/09/17/nodejs-vue-ssr/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2020/10/05/nodejs-luxon/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2020/10/05/nodejs-luxon/&text=luxon 사용 해보기"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2020/10/05/nodejs-luxon/&title=luxon 사용 해보기"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2020/10/05/nodejs-luxon/&is_video=false&description=luxon 사용 해보기"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=luxon 사용 해보기&body=Check out this article: https://hidelryn.github.io/2020/10/05/nodejs-luxon/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2020/10/05/nodejs-luxon/&title=luxon 사용 해보기"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2020/10/05/nodejs-luxon/&title=luxon 사용 해보기"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2020/10/05/nodejs-luxon/&title=luxon 사용 해보기"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2020/10/05/nodejs-luxon/&title=luxon 사용 해보기"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2020/10/05/nodejs-luxon/&name=luxon 사용 해보기&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2020/10/05/nodejs-luxon/&t=luxon 사용 해보기"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%84%A4%EC%B9%98"><span class="toc-number">1.</span> <span class="toc-text">설치</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mt%EC%99%80-%EB%B9%84%EA%B5%90"><span class="toc-number">2.</span> <span class="toc-text">mt와 비교</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EA%B8%B0%EC%A1%B4%EC%97%90-%EC%8D%A8-%EB%B4%A4%EB%8D%98-mt-%EB%8C%80%EC%B2%B4-%EC%8B%A4%EC%8A%B5"><span class="toc-number">3.</span> <span class="toc-text">기존에 써 봤던 mt 대체 실습</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%B0%B8%EA%B3%A0"><span class="toc-number">4.</span> <span class="toc-text">참고</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        luxon 사용 해보기
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">delryn's blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-10-05T13:18:32.000Z" itemprop="datePublished">2020-10-05</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Date/" rel="tag">Date</a>, <a class="tag-link-link" href="/tags/Node-js/" rel="tag">Node.js</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>이전에 페이스북 그룹에서 Moment 프로젝트가 더 이상 유지 보수를 하지 않는다는 글을 봤었다.</p>
+<p>실제 프로젝트 상태에 적혀 있었고 신규 프로젝트에서 대체할 모듈을 제시를 하는데 나는 그 중에</p>
+<p>맨 처음에 적혀있는 luxon을 사용해보기로 했다.</p>
+<h2 id="설치"><a href="#설치" class="headerlink" title="설치"></a>설치</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i luxon -S</span><br></pre></td></tr></table></figure>
+
+<h2 id="mt와-비교"><a href="#mt와-비교" class="headerlink" title="mt와 비교"></a>mt와 비교</h2><p>가장 큰 차이점은 Moment의 경우 처음 객체를 생성 하고 이후에 추가적인 연산 등의 행위를</p>
+<p>하였을 때 원본 객체도 바뀌기 때문에 별도로 clone을 해서 사용을 해야 되는데 인지를 못 해서</p>
+<p>실수를 했던 경험이 있는데 luxon의 경우 생성 객체가 불변이기 때문에 별도 작업이 필요가 없다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; DateTime &#125; = <span class="built_in">require</span>(<span class="string">&quot;luxon&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> MomentTimezone = <span class="built_in">require</span>(<span class="string">&quot;moment-timezone&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> date = &#123;</span><br><span class="line">  mt: MomentTimezone().tz(<span class="string">&quot;America/New_York&quot;</span>),</span><br><span class="line">  luxon: DateTime.fromObject(&#123; <span class="attr">zone</span>: <span class="string">&quot;America/New_York&quot;</span> &#125;),</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mt1 = date.mt.format(<span class="string">&quot;YYYY-MM-DD&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mt2 = date.mt.add(<span class="number">1</span>, <span class="string">&quot;days&quot;</span>).format(<span class="string">&quot;YYYY-MM-DD&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(</span><br><span class="line">  <span class="string">`mt: <span class="subst">$&#123;mt1&#125;</span>`</span>,</span><br><span class="line">  <span class="string">`mt2: <span class="subst">$&#123;mt2&#125;</span>`</span>,</span><br><span class="line">  <span class="string">`원본: <span class="subst">$&#123;date.mt.format(<span class="string">&quot;YYYY-MM-DD&quot;</span>)&#125;</span>`</span></span><br><span class="line">); <span class="comment">// mt: 2020-10-05 mt2: 2020-10-06 원본: 2020-10-06</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> luxon1 = date.luxon.toFormat(<span class="string">&quot;yyyy-LL-dd&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> luxon2 = date.luxon.plus(&#123; <span class="attr">days</span>: <span class="number">1</span> &#125;).toFormat(<span class="string">&quot;yyyy-LL-dd&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(</span><br><span class="line">  <span class="string">`luxon1: <span class="subst">$&#123;luxon1&#125;</span>`</span>,</span><br><span class="line">  <span class="string">`luxon2: <span class="subst">$&#123;luxon2&#125;</span>`</span>,</span><br><span class="line">  <span class="string">`원본: <span class="subst">$&#123;date.luxon.toFormat(<span class="string">&quot;yyyy-LL-dd&quot;</span>)&#125;</span>`</span></span><br><span class="line">); <span class="comment">// luxon1: 2020-10-05 luxon2: 2020-10-06 원본: 2020-10-05</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="기존에-써-봤던-mt-대체-실습"><a href="#기존에-써-봤던-mt-대체-실습" class="headerlink" title="기존에 써 봤던 mt 대체 실습"></a>기존에 써 봤던 mt 대체 실습</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">const</span> &#123; DateTime &#125; = <span class="built_in">require</span>(<span class="string">&quot;luxon&quot;</span>); <span class="comment">// luxon load</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> MomentTimezone = <span class="built_in">require</span>(<span class="string">&quot;moment-timezone&quot;</span>); <span class="comment">// moment-timezone load</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> date = &#123;</span><br><span class="line">  mt: MomentTimezone().tz(<span class="string">&quot;America/New_York&quot;</span>),</span><br><span class="line">  luxon: DateTime.fromObject(&#123; <span class="attr">zone</span>: <span class="string">&quot;America/New_York&quot;</span> &#125;),</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`mt를 통한 뉴욕 시간: <span class="subst">$&#123;date.mt.format(<span class="string">&quot;YYYY-MM-DD HH:mm&quot;</span>)&#125;</span>`</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// mt를 통한 뉴욕 시간: 2020-10-05 10:10</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(</span><br><span class="line">  <span class="string">`luxon을 통한 뉴욕 시간: <span class="subst">$&#123;date.luxon.toFormat(<span class="string">&quot;yyyy-LL-dd HH:mm&quot;</span>)&#125;</span>`</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// luxon을 통한 뉴욕 시간: 2020-10-05 10:10</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`mt로 보는 주차(년 기준): <span class="subst">$&#123;date.mt.week()&#125;</span>`</span>); <span class="comment">// 41</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`luxon으로 보는 주차(년 기준): <span class="subst">$&#123;date.luxon.weekNumber&#125;</span>`</span>); <span class="comment">// 41</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> weekOfMonth = &#123;</span><br><span class="line">  mt:</span><br><span class="line">    MomentTimezone().tz(<span class="string">&quot;America/New_York&quot;</span>).week() -</span><br><span class="line">    MomentTimezone().tz(<span class="string">&quot;America/New_York&quot;</span>).startOf(<span class="string">&quot;month&quot;</span>).week() +</span><br><span class="line">    <span class="number">1</span>,</span><br><span class="line">  luxon: date.luxon.weekNumber - date.luxon.startOf(<span class="string">&quot;month&quot;</span>).weekNumber + <span class="number">1</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`mt로 보는 주차(월 기준): <span class="subst">$&#123;weekOfMonth.mt&#125;</span>`</span>); <span class="comment">// 2</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`luxon으로 보는 주차(월 기준): <span class="subst">$&#123;weekOfMonth.luxon&#125;</span>`</span>); <span class="comment">// 2</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> diff = &#123;</span><br><span class="line">  mt: MomentTimezone.tz(<span class="string">&quot;Asia/Seoul&quot;</span>).diff(</span><br><span class="line">    MomentTimezone(<span class="string">&quot;2020-10-05 00:00:00&quot;</span>).tz(<span class="string">&quot;Asia/Seoul&quot;</span>)</span><br><span class="line">  ),</span><br><span class="line">  luxon: DateTime.fromObject(&#123; <span class="attr">zone</span>: <span class="string">&quot;Asia/Seoul&quot;</span> &#125;).diff(</span><br><span class="line">    DateTime.fromObject(&#123;</span><br><span class="line">      zone: <span class="string">&quot;Asia/Seoul&quot;</span>,</span><br><span class="line">      year: <span class="number">2020</span>,</span><br><span class="line">      month: <span class="number">10</span>,</span><br><span class="line">      day: <span class="number">5</span>,</span><br><span class="line">      hour: <span class="number">0</span>,</span><br><span class="line">      minute: <span class="number">0</span>,</span><br><span class="line">      second: <span class="number">0</span>,</span><br><span class="line">    &#125;)</span><br><span class="line">  ).toObject(),</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`mt로 보는 현재 - 지정된 날 = ts: <span class="subst">$&#123;diff.mt&#125;</span>`</span>); <span class="comment">// 87448000</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`luxon으로 보는 현재 - 지정된 날 = ts: <span class="subst">$&#123;diff.luxon.milliseconds&#125;</span>`</span>); <span class="comment">// 87448004</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="참고"><a href="#참고" class="headerlink" title="참고"></a>참고</h2><ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://momentjs.com/docs/?fbclid=IwAR18PnJT5jAcBBeQZwHgaKVdyR_tba3WCzoo2oXzXrJb2vNY-xxV2iedB1c#/-project-status/">Moment 프로젝트 상태</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://moment.github.io/luxon/docs/identifiers.html">luxon 문서</a></li>
+</ul>
+
+  </div>
+</article>
+
+<script src="https://utteranc.es/client.js" repo="cheese10yun/blog-comment" issue-term="title" label="Comment" theme="github-dark-orange" crossorigin="anonymous" async>
+  </script>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%84%A4%EC%B9%98"><span class="toc-number">1.</span> <span class="toc-text">설치</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mt%EC%99%80-%EB%B9%84%EA%B5%90"><span class="toc-number">2.</span> <span class="toc-text">mt와 비교</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EA%B8%B0%EC%A1%B4%EC%97%90-%EC%8D%A8-%EB%B4%A4%EB%8D%98-mt-%EB%8C%80%EC%B2%B4-%EC%8B%A4%EC%8A%B5"><span class="toc-number">3.</span> <span class="toc-text">기존에 써 봤던 mt 대체 실습</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%B0%B8%EA%B3%A0"><span class="toc-number">4.</span> <span class="toc-text">참고</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2020/10/05/nodejs-luxon/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2020/10/05/nodejs-luxon/&text=luxon 사용 해보기"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2020/10/05/nodejs-luxon/&title=luxon 사용 해보기"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2020/10/05/nodejs-luxon/&is_video=false&description=luxon 사용 해보기"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=luxon 사용 해보기&body=Check out this article: https://hidelryn.github.io/2020/10/05/nodejs-luxon/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2020/10/05/nodejs-luxon/&title=luxon 사용 해보기"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2020/10/05/nodejs-luxon/&title=luxon 사용 해보기"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2020/10/05/nodejs-luxon/&title=luxon 사용 해보기"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2020/10/05/nodejs-luxon/&title=luxon 사용 해보기"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2020/10/05/nodejs-luxon/&name=luxon 사용 해보기&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2020/10/05/nodejs-luxon/&t=luxon 사용 해보기"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2018-2020
+    delryn
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+<!-- clipboard -->
+
+  
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-104148803-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
