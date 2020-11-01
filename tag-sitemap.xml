@@ -3,15 +3,22 @@
 
 
     <url>
-        <loc>https://hidelryn.github.io/tags/Date/</loc>
-        <lastmod>2020-10-05T15:22:22.000Z</lastmod>
+        <loc>https://hidelryn.github.io/tags/Game/</loc>
+        <lastmod>2020-11-01T09:35:13.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://hidelryn.github.io/tags/Node-js/</loc>
-        <lastmod>2020-10-05T15:22:22.000Z</lastmod>
+        <lastmod>2020-11-01T09:35:13.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://hidelryn.github.io/tags/Date/</loc>
+        <lastmod>2020-11-01T09:21:55.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
