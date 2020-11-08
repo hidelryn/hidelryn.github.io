@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>RDB 실행 계획 간략하게 정리</title>
+      <link href="/2020/11/08/db-rdb-explain-plan/"/>
+      <url>/2020/11/08/db-rdb-explain-plan/</url>
+      
+        <content type="html"><![CDATA[<h2 id="실행-계획이란"><a href="#실행-계획이란" class="headerlink" title="실행 계획이란"></a>실행 계획이란</h2><p>쿼리 평가 엔진에서 SQL 구문을 분석하고 어떤 순서로 기억장치의 데이터에 접근 할지를</p><p>결정 하는데 이 때 결정되는 계획을 실행 계획 또는 실행 플랜이라고 한다.</p><h2 id="쿼리-평가-엔진"><a href="#쿼리-평가-엔진" class="headerlink" title="쿼리 평가 엔진"></a>쿼리 평가 엔진</h2><p><img src="https://res.cloudinary.com/ddebpn43q/image/upload/v1604844387/qe_anowxw.jpg" alt="쿼리평가엔진"></p><h3 id="파서"><a href="#파서" class="headerlink" title="파서"></a>파서</h3><p>SQL 구문을 분석 하여 잘못된 문법으로 이루어져 있는지 등을 체크 한다.</p><h3 id="옵티마이저"><a href="#옵티마이저" class="headerlink" title="옵티마이저"></a>옵티마이저</h3><p>인덱스 유무, 데이터 분산 등 여러 조건을 고려해서 선택 가능한 많은 실행 계획을</p><p>작성 해서 이들의 비용을 연산 하여 가장 낮은 비용을 가진 실행 계획을 선택 하는 일을 한다.</p><h3 id="카탈로그-매니저"><a href="#카탈로그-매니저" class="headerlink" title="카탈로그 매니저"></a>카탈로그 매니저</h3><p>DB의 내부 정보 (테이블 정보, 인덱스 정보등등)을 모아놓은 테이블로 옵티마이저가</p><p>실행 계획을 세울 때 정보를 제공하는 역할을 한다.</p><h3 id="플랜-평가"><a href="#플랜-평가" class="headerlink" title="플랜 평가"></a>플랜 평가</h3><p>옵티마이저가 세운 실행 계획을 받아 최적의 실행 결과를 선택하는 역할을 한다.</p><h2 id="SQL-실행-계획-확인-방법"><a href="#SQL-실행-계획-확인-방법" class="headerlink" title="SQL 실행 계획 확인 방법"></a>SQL 실행 계획 확인 방법</h2><p>RDB마다 확인 하는 방법이 다르기 때문에 현재 주로 쓰는 MySQL 기준으로 작성</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">EXPLAIN</span> <span class="keyword">sql</span>구문</span><br></pre></td></tr></table></figure><p><img src="https://res.cloudinary.com/ddebpn43q/image/upload/v1604842429/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-11-08_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_10.33.26_svbayl.png" alt="explain - 1"></p><h3 id="select-type"><a href="#select-type" class="headerlink" title="select_type"></a>select_type</h3><p>쿼리의 복잡도, 문서에는 유니온이나 서브쿼리등을 사용 하면 바뀐다고 하는데 써보지는 않았다.</p><h3 id="table"><a href="#table" class="headerlink" title="table"></a>table</h3><p>어떤 테이블에 접근해서 결과를 가져오는지 알려준다.</p><h3 id="type"><a href="#type" class="headerlink" title="type"></a>type</h3><p>몇 가지만 정리</p><ul><li>all: 테이블의 모든 행을 검색을 한 경우</li><li>index: 해당 인덱스를 모두 검색한 경우</li><li>range: 인덱스 특정 범위의 행만 검색</li><li>ref: 고유 키가 아닌 인덱스에 등가 비교(=, &gt;, &lt; 같은)한 경우</li><li>const: 고유 키로 검색을 해서 1개의 결과가 나올 경우</li></ul><h3 id="possible-key"><a href="#possible-key" class="headerlink" title="possible_key"></a>possible_key</h3><p>해당 데이터를 찾기 위해 MySQL에서 사용하려는 키</p><p>null은 관련된 인덱스가 없다는 뜻</p><h3 id="key"><a href="#key" class="headerlink" title="key"></a>key</h3><p>실제 사용한 키</p><h3 id="rows"><a href="#rows" class="headerlink" title="rows"></a>rows</h3><p>결과 값을 찾기 위해 어느 만큼의 row를 읽는지 예측 값</p><h2 id="연습"><a href="#연습" class="headerlink" title="연습"></a>연습</h2><p>실제 위의 테이블은 PK(=id)만 존재한 테이블이고 조건절을 사용 했을 때</p><p>모든 row를 검색을 하게 되었는데 조건에 해당하는 event의 index를 생성을 하고</p><p>실행 계획을 확인 했더니 rows 수가 줄어들었고 타입도 all -&gt; ref로 바뀌었다.</p><p><img src="https://res.cloudinary.com/ddebpn43q/image/upload/v1604844929/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-11-08_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_11.10.01_amyor4.png" alt="index 추가"></p><p>앞으로 쿼리를 짤 때 실행 계획을 참조 해서 좋은 쿼리를 짜도록 노력 해야 겠다 😊</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> RDB </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Express에서 게임 행동력 구현 해보기</title>
       <link href="/2020/11/01/nodejs-game-active-point/"/>
       <url>/2020/11/01/nodejs-game-active-point/</url>
