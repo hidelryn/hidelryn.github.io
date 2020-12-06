@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="페북 그룹에서 Express를 사용 하지 않고 API 서버 만드는 글을 보고 나도 도전 해보았다. DB 연결은 안 하고 기타 라이브러리 없이 기본적인 구조 및 라우팅만 만들어 보기로 했다. 구조는 아래와 같이 작성 하였다. 123456789├── app│   ├── controllers        ├── user.js├── lib    ├── routes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Express 사용 안하고 API 서버 만들어보기">
+<meta property="og:url" content="https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/index.html">
+<meta property="og:site_name" content="delryn&#39;s blog">
+<meta property="og:description" content="페북 그룹에서 Express를 사용 하지 않고 API 서버 만드는 글을 보고 나도 도전 해보았다. DB 연결은 안 하고 기타 라이브러리 없이 기본적인 구조 및 라우팅만 만들어 보기로 했다. 구조는 아래와 같이 작성 하였다. 123456789├── app│   ├── controllers        ├── user.js├── lib    ├── routes">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-12-06T12:54:02.000Z">
+<meta property="article:modified_time" content="2020-12-06T13:40:59.000Z">
+<meta property="article:author" content="delryn">
+<meta property="article:tag" content="Node.js">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Express 사용 안하고 API 서버 만들어보기</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/css/rtl.css">
+
+    
+    <!-- rss -->
+    
+    
+    <link rel="canonical" href="https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/">
+<meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="delryn's blog" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2020/11/08/db-rdb-explain-plan/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/&text=Express 사용 안하고 API 서버 만들어보기"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/&title=Express 사용 안하고 API 서버 만들어보기"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/&is_video=false&description=Express 사용 안하고 API 서버 만들어보기"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Express 사용 안하고 API 서버 만들어보기&body=Check out this article: https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/&title=Express 사용 안하고 API 서버 만들어보기"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/&title=Express 사용 안하고 API 서버 만들어보기"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/&title=Express 사용 안하고 API 서버 만들어보기"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/&title=Express 사용 안하고 API 서버 만들어보기"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/&name=Express 사용 안하고 API 서버 만들어보기&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/&t=Express 사용 안하고 API 서버 만들어보기"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%ED%8C%8C%EB%9D%BC%EB%AF%B8%ED%84%B0-%EB%B0%9B%EA%B8%B0"><span class="toc-number">1.</span> <span class="toc-text">파라미터 받기</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%8D%B0%EC%9D%B4%ED%84%B0-%EB%AA%A8%EB%8D%B8-%EC%9E%91%EC%84%B1-%ED%95%98%EA%B8%B0"><span class="toc-number">2.</span> <span class="toc-text">데이터 모델 작성 하기</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC-%EC%9E%91%EC%84%B1-%ED%95%98%EA%B8%B0"><span class="toc-number">3.</span> <span class="toc-text">컨트롤러 작성 하기</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%9D%BC%EC%9A%B0%ED%84%B0-%EC%9E%91%EC%84%B1"><span class="toc-number">4.</span> <span class="toc-text">라우터 작성</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EA%B3%B5%ED%86%B5-%EC%9D%91%EB%8B%B5-%EC%B2%98%EB%A6%AC-%EC%9E%91%EC%84%B1"><span class="toc-number">5.</span> <span class="toc-text">공통 응답 처리 작성</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Server-js-%EC%9E%91%EC%84%B1"><span class="toc-number">6.</span> <span class="toc-text">Server.js 작성</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%B0%B8%EC%A1%B0"><span class="toc-number">7.</span> <span class="toc-text">참조</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Express 사용 안하고 API 서버 만들어보기
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">delryn's blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-12-06T12:54:02.000Z" itemprop="datePublished">2020-12-06</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Node-js/" rel="tag">Node.js</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>페북 그룹에서 Express를 사용 하지 않고 API 서버 만드는 글을 보고 나도 도전 해보았다.</p>
+<p>DB 연결은 안 하고 기타 라이브러리 없이 기본적인 구조 및 라우팅만 만들어 보기로 했다.</p>
+<p>구조는 아래와 같이 작성 하였다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">├── app</span><br><span class="line">│   ├── controllers</span><br><span class="line">        ├── user.js</span><br><span class="line">├── lib</span><br><span class="line">    ├── routes.js</span><br><span class="line">    ├── utils.js</span><br><span class="line">├── package.json</span><br><span class="line">├── node_modules</span><br><span class="line">├── server.js</span><br></pre></td></tr></table></figure>
+
+<h2 id="파라미터-받기"><a href="#파라미터-받기" class="headerlink" title="파라미터 받기"></a>파라미터 받기</h2><p>Express에서는 쿼리스트링은 req.query로 받고 POST의 경우에는 body-parser를 설치하여</p>
+<p>사용 했었는데 이번엔 직접 utils.js에 파라미터 처리 함수를 작성 해보았다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> url = <span class="built_in">require</span>(<span class="string">&#x27;url&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> NONE_CHECK_PARAM_GET_URL = [</span><br><span class="line">  <span class="string">&#x27;/userAll&#x27;</span></span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * GET, POST 파라미터 파싱</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;*&#125;</span> <span class="variable">req</span></span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> parseParameters = <span class="function">(<span class="params">req</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (req.method === <span class="string">&quot;GET&quot;</span>) &#123; <span class="comment">// GET일 경우 처리</span></span><br><span class="line">      <span class="keyword">const</span> qs = url.parse(req.url, <span class="literal">true</span>).query;</span><br><span class="line">      <span class="keyword">if</span> (NONE_CHECK_PARAM_GET_URL.indexOf(req.url) &lt; <span class="number">0</span> &amp;&amp; <span class="built_in">Object</span>.keys(qs).length === <span class="number">0</span>) <span class="keyword">return</span> reject(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;파라미터가 안 넙어 왔습니다&#x27;</span>));</span><br><span class="line">      req.body = qs;</span><br><span class="line">      <span class="keyword">return</span> resolve();</span><br><span class="line">    &#125; <span class="comment">// 이외 POST 처리</span></span><br><span class="line">    <span class="keyword">const</span> body = [];</span><br><span class="line">    req</span><br><span class="line">      .on(<span class="string">&quot;error&quot;</span>, <span class="function">(<span class="params">err</span>) =&gt;</span> reject(err))</span><br><span class="line">      .on(<span class="string">&quot;data&quot;</span>, <span class="function">(<span class="params">chuck</span>) =&gt;</span> body.push(chuck))</span><br><span class="line">      .on(<span class="string">&quot;end&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">          req.body = <span class="built_in">JSON</span>.parse(Buffer.concat(body).toString());</span><br><span class="line">          resolve();</span><br><span class="line">        &#125; <span class="keyword">catch</span>(e) &#123;</span><br><span class="line">          <span class="keyword">if</span> (body.length == <span class="number">0</span>) e.message = <span class="string">&#x27;파라미터가 안 넘어 왔습니다.&#x27;</span>;</span><br><span class="line">          reject(e);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>METHOD의 따라 GET인 경우 내장된 URL 모듈을 이용해 쿼리스트링 데이터를 넘겼으며</p>
+<p>POST의 경우에는 공식 문서 가이드에 따라 해봤는데 잘 넘어오는 걸 확인 할 수 있었다.</p>
+<h2 id="데이터-모델-작성-하기"><a href="#데이터-모델-작성-하기" class="headerlink" title="데이터 모델 작성 하기"></a>데이터 모델 작성 하기</h2><p>DB를 안 쓰기로 했으므로 간단하게 글로벌 변수에 넣거나 가져오는 걸로 처리를 했다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> create = <span class="function">(<span class="params">id, data</span>) =&gt;</span> &#123; <span class="comment">// 생성</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">global</span>.user[id]) <span class="keyword">return</span> reject(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;이미 존재하는 아이디&#x27;</span>));</span><br><span class="line">    <span class="built_in">global</span>.user[id] = data;</span><br><span class="line">    <span class="keyword">return</span> resolve(<span class="built_in">global</span>.user[id]);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> findByOne = <span class="function">(<span class="params">id</span>) =&gt;</span> &#123; <span class="comment">// 하나 가져오기</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">global</span>.user[id]) <span class="keyword">return</span> reject(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;존재하지 않은 회원&#x27;</span>));</span><br><span class="line">    <span class="keyword">return</span> resolve(<span class="built_in">global</span>.user[id]);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> findAll = <span class="function">() =&gt;</span> &#123; <span class="comment">// 전체 가져오기</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> resolve(<span class="built_in">global</span>.user);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  create,</span><br><span class="line">  findByOne,</span><br><span class="line">  findAll,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="컨트롤러-작성-하기"><a href="#컨트롤러-작성-하기" class="headerlink" title="컨트롤러 작성 하기"></a>컨트롤러 작성 하기</h2><p>데이터 모델을 호출 하기 위한 컨트롤러를 만들어 본다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">const</span> userModel = <span class="built_in">require</span>(<span class="string">&#x27;../models/user&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> createUser = <span class="keyword">async</span> (req) =&gt; &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">await</span> userModel.create(req.body.id, req.body);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">    <span class="keyword">throw</span> e;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> getUserByID = <span class="keyword">async</span> (req) =&gt; &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">await</span> userModel.findByOne(req.body.id);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">    <span class="keyword">throw</span> e;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> getAllUser = <span class="keyword">async</span> (req) =&gt; &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">await</span> userModel.findAll();</span><br><span class="line">  &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">    <span class="keyword">throw</span> e;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  createUser,</span><br><span class="line">  getUserByID,</span><br><span class="line">  getAllUser,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="라우터-작성"><a href="#라우터-작성" class="headerlink" title="라우터 작성"></a>라우터 작성</h2><p>Express로 작성할 때 보통 따로 만들지는 않았었는데 걍 문득 레일즈였나..? 생각 나서 따로 분류를 해보았다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> user = <span class="built_in">require</span>(<span class="string">&#x27;../app/controllers/user&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> router = &#123;</span><br><span class="line">  POST: &#123;</span><br><span class="line">    <span class="string">&#x27;/userCreate&#x27;</span>: user.createUser,</span><br><span class="line">  &#125;,</span><br><span class="line">  GET: &#123;</span><br><span class="line">    <span class="string">&#x27;/userByID&#x27;</span>: user.getUserByID,</span><br><span class="line">    <span class="string">&#x27;/userAll&#x27;</span>: user.getAllUser,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = router;</span><br></pre></td></tr></table></figure>
+
+<h2 id="공통-응답-처리-작성"><a href="#공통-응답-처리-작성" class="headerlink" title="공통 응답 처리 작성"></a>공통 응답 처리 작성</h2><p>일일이 res 하기 귀찮으므로 공통으로 만들어서 호출을 하자.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 공통) 응답 처리</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;*&#125;</span> <span class="variable">err</span></span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;*&#125;</span> <span class="variable">body</span></span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;*&#125;</span> <span class="variable">res</span></span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> responseResult = <span class="function">(<span class="params">err, body, res</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> results = &#123;</span><br><span class="line">    status: <span class="number">200</span>,</span><br><span class="line">    message: <span class="string">&#x27;SUCCESS&#x27;</span>,</span><br><span class="line">    body,</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">if</span> (err) &#123;</span><br><span class="line">    results.status = <span class="number">500</span>;</span><br><span class="line">    results.message = err.message;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!results.message &amp;&amp; <span class="keyword">typeof</span> results.message === <span class="string">&quot;object&quot;</span>) &#123;</span><br><span class="line">    results.status = <span class="number">403</span>;</span><br><span class="line">    results.message = <span class="string">&quot;페이지를 찾을 수 없습니다.&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  res.writeHead(results.status, &#123; <span class="string">&quot;Content-Type&quot;</span>: <span class="string">&quot;application/json&quot;</span> &#125;);</span><br><span class="line">  res.end(<span class="built_in">JSON</span>.stringify(results));</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">exports</span>.parseParameters = parseParameters;</span><br><span class="line"><span class="built_in">exports</span>.responseResult = responseResult;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Server-js-작성"><a href="#Server-js-작성" class="headerlink" title="Server.js 작성"></a>Server.js 작성</h2><p>이제 재료를 모두 만들었으니 실제 구동 부분을 내장 http 모듈을 이용하여 만들어 본다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> http = <span class="built_in">require</span>(<span class="string">&quot;http&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> utils = <span class="built_in">require</span>(<span class="string">&#x27;./libs/utils&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> router = <span class="built_in">require</span>(<span class="string">&#x27;./libs/routes&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> PORT = process.env.PORT || <span class="number">3000</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> server = http.createServer(<span class="keyword">async</span> (req, res) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> opt = &#123;</span><br><span class="line">    err: <span class="literal">null</span>,</span><br><span class="line">    body: <span class="literal">null</span>,</span><br><span class="line">    res,</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">await</span> utils.parseParameters(req);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">    <span class="keyword">return</span> utils.responseResult(e, opt.body, opt.res);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">let</span> url = req.url;</span><br><span class="line">  <span class="keyword">if</span> (req.method === <span class="string">&#x27;GET&#x27;</span>) url = req.url.split(<span class="string">&#x27;?&#x27;</span>)[<span class="number">0</span>];</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    opt.body = <span class="keyword">await</span> router[req.method][url].call(<span class="literal">null</span>, req);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">    <span class="keyword">if</span> (router[req.method][url]) opt.err = e;</span><br><span class="line">  &#125;</span><br><span class="line">  utils.responseResult(opt.err, opt.body, opt.res);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">server.listen(PORT, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">global</span>.user = &#123;&#125;;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`서버는 <span class="subst">$&#123;PORT&#125;</span>에서 동작중..`</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>검색 좀 해보면서 만들어보니 음 생각보다 어렵지 않았고 막상 설명 적을 것도 없다… 😰</p>
+<p>다만 이번에 만들다가 안 건데 미들웨어 처리가 Node.js 내장이 아니고 Express 내장이였다.</p>
+<p>검색 해보니 직접 구현 관련 글들 좀 나오던데 굳이 따라해보고 싶진 않았음..</p>
+<p>Express는 가볍고 쓰기 쉬운 프레임워크 라고 생각하기 때문에 굳이 안 쓰고 순수하게</p>
+<p>짤 필요성을 못 느껴서 앞으로도 Node.js 기반으로 개발 할 때는 계속 쓸 거 같다 😊 </p>
+<h2 id="참조"><a href="#참조" class="headerlink" title="참조"></a>참조</h2><ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://nodejs.org/ko/docs/guides/anatomy-of-an-http-transaction/">HTTP 트랜잭션 해부</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://stackoverflow.com/questions/8590042/parsing-query-string-in-node-js">Parsing Query String in node.js</a></li>
+</ul>
+
+  </div>
+</article>
+
+<script src="https://utteranc.es/client.js" repo="cheese10yun/blog-comment" issue-term="title" label="Comment" theme="github-dark-orange" crossorigin="anonymous" async>
+  </script>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%ED%8C%8C%EB%9D%BC%EB%AF%B8%ED%84%B0-%EB%B0%9B%EA%B8%B0"><span class="toc-number">1.</span> <span class="toc-text">파라미터 받기</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%8D%B0%EC%9D%B4%ED%84%B0-%EB%AA%A8%EB%8D%B8-%EC%9E%91%EC%84%B1-%ED%95%98%EA%B8%B0"><span class="toc-number">2.</span> <span class="toc-text">데이터 모델 작성 하기</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC-%EC%9E%91%EC%84%B1-%ED%95%98%EA%B8%B0"><span class="toc-number">3.</span> <span class="toc-text">컨트롤러 작성 하기</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%9D%BC%EC%9A%B0%ED%84%B0-%EC%9E%91%EC%84%B1"><span class="toc-number">4.</span> <span class="toc-text">라우터 작성</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EA%B3%B5%ED%86%B5-%EC%9D%91%EB%8B%B5-%EC%B2%98%EB%A6%AC-%EC%9E%91%EC%84%B1"><span class="toc-number">5.</span> <span class="toc-text">공통 응답 처리 작성</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Server-js-%EC%9E%91%EC%84%B1"><span class="toc-number">6.</span> <span class="toc-text">Server.js 작성</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%B0%B8%EC%A1%B0"><span class="toc-number">7.</span> <span class="toc-text">참조</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/&text=Express 사용 안하고 API 서버 만들어보기"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/&title=Express 사용 안하고 API 서버 만들어보기"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/&is_video=false&description=Express 사용 안하고 API 서버 만들어보기"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Express 사용 안하고 API 서버 만들어보기&body=Check out this article: https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/&title=Express 사용 안하고 API 서버 만들어보기"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/&title=Express 사용 안하고 API 서버 만들어보기"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/&title=Express 사용 안하고 API 서버 만들어보기"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/&title=Express 사용 안하고 API 서버 만들어보기"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/&name=Express 사용 안하고 API 서버 만들어보기&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/&t=Express 사용 안하고 API 서버 만들어보기"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2018-2020
+    delryn
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+<!-- clipboard -->
+
+  
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-104148803-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

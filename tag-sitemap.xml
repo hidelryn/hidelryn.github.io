@@ -3,6 +3,13 @@
 
 
     <url>
+        <loc>https://hidelryn.github.io/tags/Node-js/</loc>
+        <lastmod>2020-12-06T13:40:59.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>https://hidelryn.github.io/tags/RDB/</loc>
         <lastmod>2020-11-08T14:31:12.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -11,13 +18,6 @@
 
     <url>
         <loc>https://hidelryn.github.io/tags/Game/</loc>
-        <lastmod>2020-11-01T09:35:13.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://hidelryn.github.io/tags/Node-js/</loc>
         <lastmod>2020-11-01T09:35:13.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
