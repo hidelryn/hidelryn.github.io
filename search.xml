@@ -25,11 +25,11 @@
     
     
     <entry>
-      <title>애플 M1 Big Sur OS에서 HomeBrew 설치가 안되는 경우</title>
+      <title>애플 M1 Big Sur OS에서 HomeBrew 실행이 안되는 경우</title>
       <link href="/2021/01/20/etc-apple-m1-homebrew/"/>
       <url>/2021/01/20/etc-apple-m1-homebrew/</url>
       
-        <content type="html"><![CDATA[<p>HomeBrew 설치 후 아래의 명령어를 입력 한 뒤 터미널 다시 껐다가 키면 동작이 됨.</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vi ~/.zshrc</span><br><span class="line"><span class="built_in">export</span> PATH=/opt/homebrew/bin:<span class="variable">$PATH</span></span><br><span class="line"><span class="built_in">source</span> ~/.zshrc</span><br></pre></td></tr></table></figure><h2 id="참조"><a href="#참조" class="headerlink" title="참조"></a>참조</h2><ul><li><a href="https://stackoverflow.com/questions/65487249/getting-a-warning-when-installing-homebrew-on-macos-big-sur-m1-chip">Getting a warning when installing homebrew on MacOS Big Sur (M1 chip)</a></li></ul>]]></content>
+        <content type="html"><![CDATA[<p>HomeBrew 설치 후 아래의 명령어를 입력하고 실행을 하면 동작이 됨.</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vi ~/.zshrc</span><br><span class="line"><span class="built_in">export</span> PATH=/opt/homebrew/bin:<span class="variable">$PATH</span></span><br><span class="line"><span class="built_in">source</span> ~/.zshrc</span><br></pre></td></tr></table></figure><h2 id="참조"><a href="#참조" class="headerlink" title="참조"></a>참조</h2><ul><li><a href="https://stackoverflow.com/questions/65487249/getting-a-warning-when-installing-homebrew-on-macos-big-sur-m1-chip">Getting a warning when installing homebrew on MacOS Big Sur (M1 chip)</a></li></ul>]]></content>
       
       
       
