@@ -14,7 +14,7 @@
 <meta property="og:description" content="기억이 안 나는데 yarn으로 설치를 할라 하면 아래 같이 계속 떳음. &#x2F;usr&#x2F;local&#x2F;lib&#x2F;node_modules 12EACCES: permission denied...  처음엔 매 번 sudo 붙여 가지고 햇는데 어이구 이거 너무 귀찬고 짜증 남. 역시 스택오버플로우에 검색 하니 나 같은 사람이 있었다 명령어 yarn의 경우 12sudo chown">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2019-08-17T04:47:37.000Z">
-<meta property="article:modified_time" content="2020-09-01T09:35:10.000Z">
+<meta property="article:modified_time" content="2021-01-20T13:40:16.995Z">
 <meta property="article:author" content="delryn">
 <meta property="article:tag" content="ETC">
 <meta name="twitter:card" content="summary">
@@ -167,19 +167,20 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo chown -R <span class="variable">$USER</span>:<span class="variable">$GROUP</span> ~/.npm</span><br><span class="line">sudo chown -R <span class="variable">$USER</span>:<span class="variable">$GROUP</span> ~/.config</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>npm의 경우</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chown -R $(whoami) /usr/<span class="built_in">local</span>/lib/node_modules</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mkdir ~/.npm-global</span><br><span class="line">npm config <span class="built_in">set</span> prefix <span class="string">&#x27;~/.npm-global&#x27;</span></span><br><span class="line">vi ~/.profile</span><br><span class="line"><span class="built_in">export</span> PATH=~/.npm-global/bin:<span class="variable">$PATH</span> <span class="comment"># profile 안에 작성</span></span><br><span class="line"><span class="built_in">source</span> ~/.profile</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 </li>
 </ul>
 <p>그냥 그대로 치면 다음 부터 퍼미션 에러 안 뜬다.</p>
 <h2 id="참고"><a href="#참고" class="headerlink" title="참고"></a>참고</h2><ul>
 <li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://stackoverflow.com/questions/49529696/yarn-error-eaccess-permission-denied-scandir-home-ubuntu-config-yarn-link">stackoverflow - yarn error “EACCESS: permission denied, scandir ‘/home/ubuntu/.config/yarn/link’”</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally">npm doc - Resolving EACCES permissions errors when installing packages globally</a></li>
 </ul>
 
   </div>
 </article>
 
-<script src="https://utteranc.es/client.js" repo="cheese10yun/blog-comment" issue-term="title" label="Comment" theme="github-dark-orange" crossorigin="anonymous" async>
+<script src="https://utteranc.es/client.js" repo="hidelryn/blog-comment" issue-term="title" label="Comment" theme="github-dark-orange" crossorigin="anonymous" async>
   </script>
 
 
@@ -240,7 +241,7 @@
     Copyright &copy;
     
     
-    2018-2020
+    2018-2021
     delryn
   </div>
   <div class="footer-right">

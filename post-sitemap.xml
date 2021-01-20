@@ -8,6 +8,30 @@
     </url>
 
     <url>
+        <loc>https://hidelryn.github.io/2021/01/20/nodejs-mysql2-multiple-query/</loc>
+        <lastmod>2021-01-20T14:12:41.200Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://hidelryn.github.io/2019/08/17/etc-npm-yarn-permission-err/</loc>
+        <lastmod>2021-01-20T13:40:16.995Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://hidelryn.github.io/2021/01/20/etc-apple-m1-homebrew/</loc>
+        <lastmod>2021-01-20T13:25:20.177Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/</loc>
         <lastmod>2020-12-06T13:40:59.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -122,14 +146,6 @@
     <url>
         <loc>https://hidelryn.github.io/2020/01/05/etc-spring-jackson/</loc>
         <lastmod>2020-09-01T09:35:19.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://hidelryn.github.io/2019/08/17/etc-npm-yarn-permission-err/</loc>
-        <lastmod>2020-09-01T09:35:10.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
