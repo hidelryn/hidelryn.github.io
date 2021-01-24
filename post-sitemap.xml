@@ -8,6 +8,14 @@
     </url>
 
     <url>
+        <loc>https://hidelryn.github.io/2021/01/23/java-spring-1/</loc>
+        <lastmod>2021-01-24T13:22:57.589Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://hidelryn.github.io/2021/01/20/etc-apple-m1-homebrew/</loc>
         <lastmod>2021-01-20T14:17:41.089Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -138,14 +146,6 @@
     <url>
         <loc>https://hidelryn.github.io/2020/01/12/nodejs-express-swagger/</loc>
         <lastmod>2020-09-01T09:35:57.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://hidelryn.github.io/2020/01/05/etc-spring-jackson/</loc>
-        <lastmod>2020-09-01T09:35:19.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
