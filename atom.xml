@@ -6,7 +6,7 @@
   <link href="https://hidelryn.github.io/atom.xml" rel="self"/>
   
   <link href="https://hidelryn.github.io/"/>
-  <updated>2021-02-07T04:21:45.281Z</updated>
+  <updated>2021-02-06T14:14:17.827Z</updated>
   <id>https://hidelryn.github.io/</id>
   
   <author>
@@ -15,19 +15,6 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>qqq</title>
-    <link href="https://hidelryn.github.io/2021/02/07/qqq/"/>
-    <id>https://hidelryn.github.io/2021/02/07/qqq/</id>
-    <published>2021-02-07T04:21:45.000Z</published>
-    <updated>2021-02-07T04:21:45.281Z</updated>
-    
-    
-    
-    
-    
-  </entry>
   
   <entry>
     <title>MySQL2 모듈에서 다중 쿼리를 실행하는 법</title>
@@ -502,6 +489,33 @@
     <category term="Express" scheme="https://hidelryn.github.io/tags/Express/"/>
     
     <category term="Swagger" scheme="https://hidelryn.github.io/tags/Swagger/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redis 사용해보기</title>
+    <link href="https://hidelryn.github.io/2019/12/20/db-redis/"/>
+    <id>https://hidelryn.github.io/2019/12/20/db-redis/</id>
+    <published>2019-12-20T10:59:02.000Z</published>
+    <updated>2021-02-06T14:15:09.740Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;redis란&quot;&gt;&lt;a href=&quot;#redis란&quot; class=&quot;headerlink&quot; title=&quot;redis란?&quot;&gt;&lt;/a&gt;redis란?&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;key-value 형식의 NoSQL 데이터 베이스&lt;/li&gt;
+&lt;li&gt;일반적인 DB는</summary>
+        
+      
+    
+    
+    
+    
+    <category term="NoSQL" scheme="https://hidelryn.github.io/tags/NoSQL/"/>
+    
+    <category term="Redis" scheme="https://hidelryn.github.io/tags/Redis/"/>
     
   </entry>
   
