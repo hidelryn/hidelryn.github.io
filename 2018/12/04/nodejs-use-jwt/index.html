@@ -1,163 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="description" content="세션 데이터를 token으로 발급하는 형태. 장점은 서버가 부담을 안 받는다. 그러나 역시 단점은 서버에서 제어가 안됨 페이스북이나 기타 SNS의 access_token이 이런 형태. 테스트는 심플하게 해본다.  클라이언트에서 sdk로 페이스북 엑세스 토큰, 유저 ID를 받아서 서버에 보낸다. 서버에서는 받은 토큰, ID를 검증을 한다. 레디스에 있으면 j">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Node.js JSONWEBTOKEN 사용법 정리">
-<meta property="og:url" content="https://hidelryn.github.io/2018/12/04/nodejs-use-jwt/index.html">
-<meta property="og:site_name" content="Delryn&#39;s Blog">
-<meta property="og:description" content="세션 데이터를 token으로 발급하는 형태. 장점은 서버가 부담을 안 받는다. 그러나 역시 단점은 서버에서 제어가 안됨 페이스북이나 기타 SNS의 access_token이 이런 형태. 테스트는 심플하게 해본다.  클라이언트에서 sdk로 페이스북 엑세스 토큰, 유저 ID를 받아서 서버에 보낸다. 서버에서는 받은 토큰, ID를 검증을 한다. 레디스에 있으면 j">
-<meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2018-12-04T07:45:11.000Z">
-<meta property="article:modified_time" content="2020-09-01T06:37:15.000Z">
-<meta property="article:author" content="delryn">
-<meta property="article:tag" content="Node.js">
-<meta property="article:tag" content="Auth">
-<meta name="twitter:card" content="summary">
-    
-    
-        
-          
-              <link rel="shortcut icon" href="/images/favicon.ico">
-          
-        
-        
-          
-            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-          
-        
-        
-          
-            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-          
-        
-    
-    <!-- title -->
-    <title>Node.js JSONWEBTOKEN 사용법 정리</title>
-    <!-- styles -->
-    
-<link rel="stylesheet" href="/css/style.css">
 
-    <!-- persian styles -->
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="keywords" content>
+  <meta name="author" content="delryn">
+  <meta name="description" content="나의 개발 노트 ʕ •ᴥ• ʔ">
+  
+  
+  <title>
     
+      Node.js JSONWEBTOKEN 사용법 정리 
       
-<link rel="stylesheet" href="/css/rtl.css">
-
-    
-    <!-- rss -->
-    
-    
-    <link rel="canonical" href="https://hidelryn.github.io/2018/12/04/nodejs-use-jwt/">
-<meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="Delryn's Blog" type="application/atom+xml">
-</head>
-
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a href="/tags/">tags</a></li>
-         
-          <li><a href="/search/">Search</a></li>
-        
-      </ul>
-    </span>
-    <br>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" href="/2018/12/23/nodejs-redis-queue/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" href="/2018/11/11/nodejs-crypto/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">Previous post</span>
-      <span id="i-next" class="info" style="display:none;">Next post</span>
-      <span id="i-top" class="info" style="display:none;">Back to top</span>
-      <span id="i-share" class="info" style="display:none;">Share post</span>
-    </span>
-    <br>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2018/12/04/nodejs-use-jwt/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2018/12/04/nodejs-use-jwt/&text=Node.js JSONWEBTOKEN 사용법 정리"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2018/12/04/nodejs-use-jwt/&title=Node.js JSONWEBTOKEN 사용법 정리"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2018/12/04/nodejs-use-jwt/&is_video=false&description=Node.js JSONWEBTOKEN 사용법 정리"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Node.js JSONWEBTOKEN 사용법 정리&body=Check out this article: https://hidelryn.github.io/2018/12/04/nodejs-use-jwt/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2018/12/04/nodejs-use-jwt/&title=Node.js JSONWEBTOKEN 사용법 정리"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2018/12/04/nodejs-use-jwt/&title=Node.js JSONWEBTOKEN 사용법 정리"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2018/12/04/nodejs-use-jwt/&title=Node.js JSONWEBTOKEN 사용법 정리"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2018/12/04/nodejs-use-jwt/&title=Node.js JSONWEBTOKEN 사용법 정리"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2018/12/04/nodejs-use-jwt/&name=Node.js JSONWEBTOKEN 사용법 정리&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2018/12/04/nodejs-use-jwt/&t=Node.js JSONWEBTOKEN 사용법 정리"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#JWT"><span class="toc-number">1.</span> <span class="toc-text">JWT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%ED%8E%98%EC%9D%B4%EC%8A%A4%EB%B6%81"><span class="toc-number">2.</span> <span class="toc-text">페이스북</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%8E%98%EC%9D%B4%EC%8A%A4%EB%B6%81-API-%EC%9D%91%EB%8B%B5"><span class="toc-number">2.1.</span> <span class="toc-text">페이스북 API 응답</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%97%91%EC%84%B8%EC%8A%A4-%ED%86%A0%ED%81%B0%EC%9D%B4-%EB%A7%8C%EB%A3%8C-%EB%90%9C-%EA%B2%BD%EC%9A%B0"><span class="toc-number">2.2.</span> <span class="toc-text">엑세스 토큰이 만료 된 경우</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%97%91%EC%84%B8%EC%8A%A4-%ED%86%A0%ED%81%B0-%EC%A0%95%EC%83%81%EC%9D%B8-%EA%B2%BD%EC%9A%B0"><span class="toc-number">2.3.</span> <span class="toc-text">엑세스 토큰 정상인 경우</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%94%84%EB%A1%9C%ED%95%84"><span class="toc-number">2.4.</span> <span class="toc-text">프로필</span></a></li></ol></li></ol>
-    </div>
-  </span>
-</div>
-
-    
-    <div class="content index py4">
-        
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        Node.js JSONWEBTOKEN 사용법 정리
-    </h1>
-
-
-
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">Delryn's Blog</span>
-      </span>
       
-    <div class="postdate">
-      
-        <time datetime="2018-12-04T07:45:11.000Z" itemprop="datePublished">2018-12-04</time>
-        
-      
-    </div>
+    
+  </title>
 
-
-      
-
-      
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link-link" href="/tags/Auth/" rel="tag">Auth</a>, <a class="tag-link-link" href="/tags/Node-js/" rel="tag">Node.js</a>
-    </div>
-
-
-    </div>
-  </header>
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
   
 
-  <div class="content" itemprop="articleBody">
-    <p>세션 데이터를 token으로 발급하는 형태.</p>
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-104148803-2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-104148803-2');
+    </script>
+  
+
+<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Delryn's Blog" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt>
+      
+    </a>
+    <div class="nickname"><a href="/">Delryn</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+<!-- LaTex Display -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Node.js JSONWEBTOKEN 사용법 정리</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2018-12-04 16:45:11
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/Node-js/" title="Node.js">
+                    <b>#</b> Node.js
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Auth/" title="Auth">
+                    <b>#</b> Auth
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>세션 데이터를 token으로 발급하는 형태.</p>
 <p>장점은 서버가 부담을 안 받는다. 그러나 역시 단점은 서버에서 제어가 안됨</p>
 <p>페이스북이나 기타 SNS의 access_token이 이런 형태.</p>
 <p>테스트는 심플하게 해본다.</p>
@@ -168,7 +164,6 @@
 </ol>
 <h2 id="JWT"><a href="#JWT" class="headerlink" title="JWT"></a>JWT</h2><p>jwt는 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.npmjs.com/package/jsonwebtoken">jsonwebtoken</a>을 통해 쉽게 처리가 가능하다.</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">const</span> jwt = <span class="built_in">require</span>(<span class="string">&#x27;jsonwebtoken&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> secret = <span class="string">&#x27;nyancat (=^･ｪ･^=))ﾉ彡☆&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">TODO:</span> jwt 토큰 생성</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>사용 알고리즘은 hmac sha256이라고 함</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;*&#125;</span> </span>id 넣고싶은 해시 값, 지금은 걍 아디로.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> makeToken = <span class="function">(<span class="params">id</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> payload = &#123; id &#125;;</span><br><span class="line">  <span class="keyword">const</span> options = &#123;</span><br><span class="line">    issuer: <span class="string">&#x27;delryn&#x27;</span>, <span class="comment">// 발행자</span></span><br><span class="line">    expiresIn: <span class="string">&#x27;12h&#x27;</span>, <span class="comment">// 날짜는 @d 시간은 @h, 분은 @m 그냥 숫자만 넣으면 ms단위</span></span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">return</span> jwt.sign(payload, secret, options);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 검증 미들웨어</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;*&#125;</span> <span class="variable">req</span></span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;*&#125;</span> <span class="variable">res</span></span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;*&#125;</span> <span class="variable">next</span></span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> verify = <span class="function">(<span class="params">req, res, next</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> checksum = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    jwt.verify(req.body.token, secret, <span class="function">(<span class="params">err, decode</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (err) <span class="keyword">return</span> reject(err);</span><br><span class="line">      <span class="keyword">return</span> resolve(decode);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> checksum.then(<span class="function">(<span class="params">result</span>) =&gt;</span> &#123;</span><br><span class="line">    req.decode = result;</span><br><span class="line">    <span class="keyword">return</span> next();</span><br><span class="line">  &#125;).catch(<span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(err.message);</span><br><span class="line">    <span class="keyword">return</span> res.status(<span class="number">401</span>).send(<span class="string">&#x27;jwt verify fail&#x27;</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">exports</span>.makeToken = makeToken;</span><br><span class="line"><span class="built_in">exports</span>.verify = verify;</span><br></pre></td></tr></table></figure>
-
 <p>payload에는 쉽게 말해 세션에 담을 꺼 넣어주면 됨.</p>
 <p>option에는 issuer, expiresIn 이외에도 넣을 수 잇는 규칙이 잇는데 이건 공홈에 ㄱ</p>
 <p>sign을 통해 일종의 hash 값이 생긴다.</p>
@@ -177,12 +172,9 @@
 <p>한 가지 알아두어야 할 점은 만료된 토큰의 경우도 에러로 받는다. 적절하게 예외 처리 요망.</p>
 <h2 id="페이스북"><a href="#페이스북" class="headerlink" title="페이스북"></a>페이스북</h2><p>클라이언트는 귀찬아서 패스</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">const</span> axios = <span class="built_in">require</span>(<span class="string">&#x27;axios&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> redis = <span class="built_in">require</span>(<span class="string">&#x27;redis&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> jwt = <span class="built_in">require</span>(<span class="string">&#x27;./jwt&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> redisClient = redis.createClient();</span><br><span class="line"><span class="keyword">const</span> FACEBOOK_URL = <span class="string">&#x27;https://graph.facebook.com/v3.2/&#x27;</span>;</span><br><span class="line"><span class="keyword">const</span> &#123; FACEBOOK_APP_TOKEN &#125; = process.env;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">TODO:</span> 엑세스 토큰 검증 체크</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;*&#125;</span> </span>userId 페이스북에서 발급한 유저 ID</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;*&#125;</span> </span>accessToken 페이스북에서 발급한 엑세스 토큰</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> accessTokenVerify = <span class="function">(<span class="params">userId, accessToken</span>) =&gt;</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> requestURL = <span class="string">`<span class="subst">$&#123;FACEBOOK_URL&#125;</span>debug_token?input_token=<span class="subst">$&#123;accessToken&#125;</span>&amp;access_token=<span class="subst">$&#123;FACEBOOK_APP_TOKEN&#125;</span>`</span>;</span><br><span class="line">  axios.get(requestURL).then(<span class="function">(<span class="params">response</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> body = response.data;</span><br><span class="line">    <span class="keyword">if</span> (body.data.is_valid &amp;&amp; body.data.user_id === userId) <span class="keyword">return</span> resolve();</span><br><span class="line">    <span class="keyword">return</span> reject(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;facebook verify fail&#x27;</span>));</span><br><span class="line">  &#125;).catch(<span class="function">(<span class="params">err</span>) =&gt;</span> reject(err));</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">TODO:</span> 페이스북 유저 프로필 가지고 오기.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;*&#125;</span> </span>accessToken 페이스북에서 발급한 엑세스 토큰</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> getFaceebookProfile = <span class="function">(<span class="params">accessToken</span>) =&gt;</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> requestUrl = <span class="string">`<span class="subst">$&#123;FACEBOOK_URL&#125;</span>me?fields=id,name,picture&amp;access_token=<span class="subst">$&#123;accessToken&#125;</span>`</span>;</span><br><span class="line">  axios.get(requestUrl).then(<span class="function">(<span class="params">response</span>) =&gt;</span> resolve(response.data)).catch(<span class="function">(<span class="params">err</span>) =&gt;</span> reject(err));</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">TODO:</span> redis에 유저 데이터 저장</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;*&#125;</span> </span>userId 페이스북에서 발급한 유저 ID</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;*&#125;</span> </span>userData 유저 페이스북 프로필</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> setUser = <span class="function">(<span class="params">userId, userData</span>) =&gt;</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">  redisClient.hset(<span class="string">&#x27;profile&#x27;</span>, userId, <span class="built_in">JSON</span>.stringify(userData), <span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (err) <span class="keyword">return</span> reject(err);</span><br><span class="line">    <span class="keyword">return</span> resolve();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">TODO:</span> redis에 저장된 유저 프로필 가지고 오기.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;*&#125;</span> </span>userId 페이스북에서 발급한 유저 ID</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> getUser = <span class="function">(<span class="params">userId</span>) =&gt;</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">  redisClient.hget(<span class="string">&#x27;profile&#x27;</span>, userId, <span class="function">(<span class="params">err, data</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (err) <span class="keyword">return</span> reject(err);</span><br><span class="line">    <span class="keyword">if</span> (!data) <span class="keyword">return</span> resolve();</span><br><span class="line">    <span class="keyword">return</span> resolve(<span class="built_in">JSON</span>.parse(data));</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">TODO:</span> 로그인 처리 후 JWT 토큰 발급</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;*&#125;</span> </span>userId 페이스북에서 발급한 유저 ID</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;*&#125;</span> </span>accessToken 페이스북에서 발급한 엑세스 토큰</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> login = <span class="function">(<span class="params">userId, accessToken</span>) =&gt;</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">  accessTokenVerify(userId, accessToken).then(<span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> userData = <span class="keyword">await</span> getUser(userId);</span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">typeof</span> userData !== <span class="string">&#x27;undefined&#x27;</span>) &#123;</span><br><span class="line">        userData.token = jwt.makeToken(userId);</span><br><span class="line">        <span class="keyword">return</span> resolve(userData);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">const</span> facebookProfile = <span class="keyword">await</span> getFaceebookProfile(accessToken);</span><br><span class="line">      <span class="keyword">await</span> setUser(userId, facebookProfile);</span><br><span class="line">      facebookProfile.token = jwt.makeToken(userId);</span><br><span class="line">      <span class="keyword">return</span> resolve(facebookProfile);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">      <span class="keyword">return</span> reject(err);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;).catch(<span class="function">(<span class="params">err</span>) =&gt;</span> reject(err));</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = login;</span><br></pre></td></tr></table></figure>
-
 <h3 id="페이스북-API-응답"><a href="#페이스북-API-응답" class="headerlink" title="페이스북 API 응답"></a>페이스북 API 응답</h3><p>페이스북 API의 응답도 정리 해놓는다.</p>
 <h3 id="엑세스-토큰이-만료-된-경우"><a href="#엑세스-토큰이-만료-된-경우" class="headerlink" title="엑세스 토큰이 만료 된 경우"></a>엑세스 토큰이 만료 된 경우</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123; <span class="attr">data</span>:</span><br><span class="line">   &#123; <span class="attr">app_id</span>: <span class="string">&#x27;내 페북 앱 아이디&#x27;</span>,</span><br><span class="line">     type: <span class="string">&#x27;USER&#x27;</span>,</span><br><span class="line">     application: <span class="string">&#x27;내 페북 앱 이름&#x27;</span>,</span><br><span class="line">     data_access_expires_at: <span class="number">1551621795</span>,</span><br><span class="line">     error:</span><br><span class="line">      &#123; <span class="attr">code</span>: <span class="number">190</span>,</span><br><span class="line">        message: <span class="string">&#x27;Error validating access token: Session has expired on Monday, 03-Dec-1808:00:00 PST. The current time is Tuesday, 04-Dec-18 06:17:26 PST.&#x27;</span>,</span><br><span class="line">        subcode: <span class="number">463</span> &#125;,</span><br><span class="line">     expires_at: <span class="number">1543852800</span>,</span><br><span class="line">     is_valid: <span class="literal">false</span>,</span><br><span class="line">     scopes: [ <span class="string">&#x27;email&#x27;</span>, <span class="string">&#x27;public_profile&#x27;</span> ],</span><br><span class="line">     user_id: <span class="string">&#x27;이 앱의 내 유저 ID&#x27;</span> &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <h3 id="엑세스-토큰-정상인-경우"><a href="#엑세스-토큰-정상인-경우" class="headerlink" title="엑세스 토큰 정상인 경우"></a>엑세스 토큰 정상인 경우</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123; <span class="attr">data</span>:</span><br><span class="line">   &#123; <span class="attr">app_id</span>: <span class="string">&#x27;내 페북 앱 아이디&#x27;</span>,</span><br><span class="line">     type: <span class="string">&#x27;USER&#x27;</span>,</span><br><span class="line">     application: <span class="string">&#x27;내 패북 앱 이름&#x27;</span>,</span><br><span class="line">     data_access_expires_at: <span class="number">1551621795</span>,</span><br><span class="line">     expires_at: <span class="number">1543939200</span>,</span><br><span class="line">     is_valid: <span class="literal">true</span>,</span><br><span class="line">     scopes: [ <span class="string">&#x27;email&#x27;</span>, <span class="string">&#x27;public_profile&#x27;</span> ],</span><br><span class="line">     user_id: <span class="string">&#x27;이 앱의 내 유저 ID&#x27;</span> &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <h3 id="프로필"><a href="#프로필" class="headerlink" title="프로필"></a>프로필</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123; <span class="attr">id</span>: <span class="string">&#x27;이 앱의 내 유저 ID&#x27;</span>,</span><br><span class="line">  name: <span class="string">&#x27;내 이름&#x27;</span>,</span><br><span class="line">  picture:</span><br><span class="line">   &#123; <span class="attr">data</span>:</span><br><span class="line">      &#123; <span class="attr">height</span>: <span class="number">50</span>,</span><br><span class="line">        is_silhouette: <span class="literal">false</span>,</span><br><span class="line">        url: <span class="string">&#x27;내 프로필 사진 url&#x27;</span>,</span><br><span class="line">        width: <span class="number">50</span> &#125; </span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
@@ -191,154 +183,331 @@
 
 
 
-
-  </div>
-</article>
-
-<script src="https://utteranc.es/client.js" repo="hidelryn/blog-comment" issue-term="title" label="Comment" theme="github-dark-orange" crossorigin="anonymous" async>
-  </script>
-
-
-        
-          <div id="footer-post-container">
-  <div id="footer-post">
-
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a href="/tags/">tags</a></li>
-         
-          <li><a href="/search/">Search</a></li>
-        
-      </ul>
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2018/11/11/nodejs-crypto/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2018-12-04 16:45:11
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Node-js/" title="Node.js">
+                        <b>#</b> Node.js
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Auth/" title="Auth">
+                        <b>#</b> Auth
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2018/12/23/nodejs-redis-queue/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
     </div>
-
-    <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#JWT"><span class="toc-number">1.</span> <span class="toc-text">JWT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%ED%8E%98%EC%9D%B4%EC%8A%A4%EB%B6%81"><span class="toc-number">2.</span> <span class="toc-text">페이스북</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%8E%98%EC%9D%B4%EC%8A%A4%EB%B6%81-API-%EC%9D%91%EB%8B%B5"><span class="toc-number">2.1.</span> <span class="toc-text">페이스북 API 응답</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%97%91%EC%84%B8%EC%8A%A4-%ED%86%A0%ED%81%B0%EC%9D%B4-%EB%A7%8C%EB%A3%8C-%EB%90%9C-%EA%B2%BD%EC%9A%B0"><span class="toc-number">2.2.</span> <span class="toc-text">엑세스 토큰이 만료 된 경우</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%97%91%EC%84%B8%EC%8A%A4-%ED%86%A0%ED%81%B0-%EC%A0%95%EC%83%81%EC%9D%B8-%EA%B2%BD%EC%9A%B0"><span class="toc-number">2.3.</span> <span class="toc-text">엑세스 토큰 정상인 경우</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%94%84%EB%A1%9C%ED%95%84"><span class="toc-number">2.4.</span> <span class="toc-text">프로필</span></a></li></ol></li></ol>
-    </div>
-
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2018/12/04/nodejs-use-jwt/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2018/12/04/nodejs-use-jwt/&text=Node.js JSONWEBTOKEN 사용법 정리"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2018/12/04/nodejs-use-jwt/&title=Node.js JSONWEBTOKEN 사용법 정리"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2018/12/04/nodejs-use-jwt/&is_video=false&description=Node.js JSONWEBTOKEN 사용법 정리"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Node.js JSONWEBTOKEN 사용법 정리&body=Check out this article: https://hidelryn.github.io/2018/12/04/nodejs-use-jwt/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2018/12/04/nodejs-use-jwt/&title=Node.js JSONWEBTOKEN 사용법 정리"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2018/12/04/nodejs-use-jwt/&title=Node.js JSONWEBTOKEN 사용법 정리"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2018/12/04/nodejs-use-jwt/&title=Node.js JSONWEBTOKEN 사용법 정리"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2018/12/04/nodejs-use-jwt/&title=Node.js JSONWEBTOKEN 사용법 정리"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2018/12/04/nodejs-use-jwt/&name=Node.js JSONWEBTOKEN 사용법 정리&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2018/12/04/nodejs-use-jwt/&t=Node.js JSONWEBTOKEN 사용법 정리"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
-        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
-    </div>
-
-  </div>
-</div>
-
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy;
     
-    
-    2018-2021
-    delryn
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a href="/tags/">tags</a></li>
-         
-          <li><a href="/search/">Search</a></li>
-        
-      </ul>
-    </nav>
-  </div>
-</footer>
-
+  <div class="post-catalog" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#JWT"><span class="toc-text">JWT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%ED%8E%98%EC%9D%B4%EC%8A%A4%EB%B6%81"><span class="toc-text">페이스북</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%8E%98%EC%9D%B4%EC%8A%A4%EB%B6%81-API-%EC%9D%91%EB%8B%B5"><span class="toc-text">페이스북 API 응답</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%97%91%EC%84%B8%EC%8A%A4-%ED%86%A0%ED%81%B0%EC%9D%B4-%EB%A7%8C%EB%A3%8C-%EB%90%9C-%EA%B2%BD%EC%9A%B0"><span class="toc-text">엑세스 토큰이 만료 된 경우</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%97%91%EC%84%B8%EC%8A%A4-%ED%86%A0%ED%81%B0-%EC%A0%95%EC%83%81%EC%9D%B8-%EA%B2%BD%EC%9A%B0"><span class="toc-text">엑세스 토큰 정상인 경우</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%94%84%EB%A1%9C%ED%95%84"><span class="toc-text">프로필</span></a></li></ol></li></ol>
     </div>
-    <!-- styles -->
-
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-
-
-<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
-
-
-    <!-- jquery -->
-
-<script src="/lib/jquery/jquery.min.js"></script>
-
-
-<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
-
-<!-- clipboard -->
+  </div>
 
   
-<script src="/lib/clipboard/clipboard.min.js"></script>
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+  <script src="https://utteranc.es/client.js" repo="hidelryn/blog-comment" issue-term="title" label="Comment" theme="github-light" crossorigin="anonymous" async>
+    </script>
+  
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/hidelryn/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="mailto:hidelryn@gmail.com" rel="external nofollow noopener noreferrer" target="_blank">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="/atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+  
+    <div class="footer-more">
+      
+        <span style="color: #666;">Copyright © Delryn 2021</span>
+        
+        
+    </div>
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+      
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
 
   <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
-    btn += '<i class="far fa-clone"></i>';
-    btn += '</span>'; 
-    // mount it!
-    $(".highlight table").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      text: function(trigger) {
-        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
       }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "Copied!");
-      e.clearSelection();
-    })
-  })
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
   </script>
 
 
-<script src="/js/main.js"></script>
-
-<!-- search -->
-
-<!-- Google Analytics -->
-
-    <script type="text/javascript">
-        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-        ga('create', 'UA-104148803-2', 'auto');
-        ga('send', 'pageview');
-    </script>
-
-<!-- Baidu Analytics -->
-
-<!-- Disqus Comments -->
 
 
-</body>
+    </div>
+  </body>
 </html>

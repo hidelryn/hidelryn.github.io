@@ -1,165 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="description" content="개요 클라이언트에서 form input file에 이미지를 등록 후 서버에 전송 서버에서는 multer를 통해 file 정보를 받아서 필요한 데이터를 db에 저장 다운로드 버튼을 누르면 여러 이미지의 경우 zip으로 묶어서, 아니면 걍 다운로드  클라이언트중요한 건 form 태그의 enctype&#x3D;”multipart&#x2F;form-data”가 있어야 함. inpu">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Express에서 multer를 이용한 업로드, 다운로드 구현">
-<meta property="og:url" content="https://hidelryn.github.io/2018/06/20/nodejs-upload/index.html">
-<meta property="og:site_name" content="Delryn&#39;s Blog">
-<meta property="og:description" content="개요 클라이언트에서 form input file에 이미지를 등록 후 서버에 전송 서버에서는 multer를 통해 file 정보를 받아서 필요한 데이터를 db에 저장 다운로드 버튼을 누르면 여러 이미지의 경우 zip으로 묶어서, 아니면 걍 다운로드  클라이언트중요한 건 form 태그의 enctype&#x3D;”multipart&#x2F;form-data”가 있어야 함. inpu">
-<meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://res.cloudinary.com/ddebpn43q/image/upload/v1568264595/ezgif.com-video-to-gif_ae3dpi.gif">
-<meta property="article:published_time" content="2018-06-20T04:03:40.000Z">
-<meta property="article:modified_time" content="2020-09-01T06:37:00.000Z">
-<meta property="article:author" content="delryn">
-<meta property="article:tag" content="Node.js">
-<meta property="article:tag" content="Express">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://res.cloudinary.com/ddebpn43q/image/upload/v1568264595/ezgif.com-video-to-gif_ae3dpi.gif">
-    
-    
-        
-          
-              <link rel="shortcut icon" href="/images/favicon.ico">
-          
-        
-        
-          
-            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-          
-        
-        
-          
-            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-          
-        
-    
-    <!-- title -->
-    <title>Express에서 multer를 이용한 업로드, 다운로드 구현</title>
-    <!-- styles -->
-    
-<link rel="stylesheet" href="/css/style.css">
 
-    <!-- persian styles -->
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="keywords" content>
+  <meta name="author" content="delryn">
+  <meta name="description" content="나의 개발 노트 ʕ •ᴥ• ʔ">
+  
+  
+  <title>
     
+      Express에서 multer를 이용한 업로드, 다운로드 구현 
       
-<link rel="stylesheet" href="/css/rtl.css">
-
-    
-    <!-- rss -->
-    
-    
-    <link rel="canonical" href="https://hidelryn.github.io/2018/06/20/nodejs-upload/">
-<meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="Delryn's Blog" type="application/atom+xml">
-</head>
-
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a href="/tags/">tags</a></li>
-         
-          <li><a href="/search/">Search</a></li>
-        
-      </ul>
-    </span>
-    <br>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" href="/2018/06/24/nodejs-paging/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" href="/2018/06/18/nodejs-express-use-mongoose-2/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">Previous post</span>
-      <span id="i-next" class="info" style="display:none;">Next post</span>
-      <span id="i-top" class="info" style="display:none;">Back to top</span>
-      <span id="i-share" class="info" style="display:none;">Share post</span>
-    </span>
-    <br>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2018/06/20/nodejs-upload/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2018/06/20/nodejs-upload/&text=Express에서 multer를 이용한 업로드, 다운로드 구현"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2018/06/20/nodejs-upload/&title=Express에서 multer를 이용한 업로드, 다운로드 구현"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2018/06/20/nodejs-upload/&is_video=false&description=Express에서 multer를 이용한 업로드, 다운로드 구현"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Express에서 multer를 이용한 업로드, 다운로드 구현&body=Check out this article: https://hidelryn.github.io/2018/06/20/nodejs-upload/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2018/06/20/nodejs-upload/&title=Express에서 multer를 이용한 업로드, 다운로드 구현"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2018/06/20/nodejs-upload/&title=Express에서 multer를 이용한 업로드, 다운로드 구현"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2018/06/20/nodejs-upload/&title=Express에서 multer를 이용한 업로드, 다운로드 구현"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2018/06/20/nodejs-upload/&title=Express에서 multer를 이용한 업로드, 다운로드 구현"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2018/06/20/nodejs-upload/&name=Express에서 multer를 이용한 업로드, 다운로드 구현&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2018/06/20/nodejs-upload/&t=Express에서 multer를 이용한 업로드, 다운로드 구현"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EA%B0%9C%EC%9A%94"><span class="toc-number">1.</span> <span class="toc-text">개요</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8"><span class="toc-number">2.</span> <span class="toc-text">클라이언트</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%97%85%EB%A1%9C%EB%93%9C-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C-%EB%A1%9C%EC%A7%81"><span class="toc-number">3.</span> <span class="toc-text">업로드, 다운로드 로직</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#db"><span class="toc-number">4.</span> <span class="toc-text">db</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%97%85%EB%A1%9C%EB%93%9C-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C-route"><span class="toc-number">5.</span> <span class="toc-text">업로드, 다운로드 route</span></a></li></ol>
-    </div>
-  </span>
-</div>
-
-    
-    <div class="content index py4">
-        
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        Express에서 multer를 이용한 업로드, 다운로드 구현
-    </h1>
-
-
-
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">Delryn's Blog</span>
-      </span>
       
-    <div class="postdate">
-      
-        <time datetime="2018-06-20T04:03:40.000Z" itemprop="datePublished">2018-06-20</time>
-        
-      
-    </div>
+    
+  </title>
 
-
-      
-
-      
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link-link" href="/tags/Express/" rel="tag">Express</a>, <a class="tag-link-link" href="/tags/Node-js/" rel="tag">Node.js</a>
-    </div>
-
-
-    </div>
-  </header>
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
   
 
-  <div class="content" itemprop="articleBody">
-    <h2 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h2><ol>
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-104148803-2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-104148803-2');
+    </script>
+  
+
+<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Delryn's Blog" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt>
+      
+    </a>
+    <div class="nickname"><a href="/">Delryn</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+<!-- LaTex Display -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Express에서 multer를 이용한 업로드, 다운로드 구현</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2018-06-20 13:03:40
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/Node-js/" title="Node.js">
+                    <b>#</b> Node.js
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Express/" title="Express">
+                    <b>#</b> Express
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h2><ol>
 <li>클라이언트에서 form input file에 이미지를 등록 후 서버에 전송</li>
 <li>서버에서는 multer를 통해 file 정보를 받아서 필요한 데이터를 db에 저장</li>
 <li>다운로드 버튼을 누르면 여러 이미지의 경우 zip으로 묶어서, 아니면 걍 다운로드</li>
@@ -167,17 +161,13 @@
 <h2 id="클라이언트"><a href="#클라이언트" class="headerlink" title="클라이언트"></a>클라이언트</h2><p>중요한 건 form 태그의 enctype=”multipart/form-data”가 있어야 함.</p>
 <p>input file 태그는 원하는 개수에 맞게 추가하거나 multiple 옵션을 주면 됨.</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">class</span>=<span class="string">&quot;&quot;</span> <span class="attr">action</span>=<span class="string">&quot;&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span> <span class="attr">enctype</span>=<span class="string">&quot;multipart/form-data&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;field&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">label</span> <span class="attr">class</span>=<span class="string">&quot;label&quot;</span>&gt;</span>title<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;control&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">class</span>=<span class="string">&quot;input&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;title&quot;</span> <span class="attr">placeholder</span>=<span class="string">&quot;title&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;field&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;file is-primary has-name&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">label</span> <span class="attr">class</span>=<span class="string">&quot;file-label&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">class</span>=<span class="string">&quot;file-input&quot;</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">name</span>=<span class="string">&quot;attachment&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;file-cta&quot;</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;file-icon&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-image&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;file-label&quot;</span>&gt;</span></span><br><span class="line">            Choose a image…</span><br><span class="line">          <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"></span><br><span class="line">      <span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;field is-grouped&quot;</span> <span class="attr">style</span>=<span class="string">&quot;margin-top:30px;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;control&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;button is-primary&quot;</span>&gt;</span>Submit<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;control&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;/&quot;</span> <span class="attr">class</span>=<span class="string">&quot;button is-primary is-outlined&quot;</span>&gt;</span>Cancel<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
 <h2 id="업로드-다운로드-로직"><a href="#업로드-다운로드-로직" class="headerlink" title="업로드, 다운로드 로직"></a>업로드, 다운로드 로직</h2><p>express 혼자서는 multipart/form-data 데이터를 핸들링 할수가 업기 때문에 </p>
 <p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.npmjs.com/package/multer">multer</a>라는 모듈을 사용 한다.</p>
 <p>zip 다운로드의 경우 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.npmjs.com/package/node-zip">node-zip</a>을 사용.</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* eslint-disable no-new-require */</span></span><br><span class="line"><span class="comment">/* eslint-disable new-cap */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> multer = <span class="built_in">require</span>(<span class="string">&#x27;multer&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> crypto = <span class="built_in">require</span>(<span class="string">&#x27;crypto&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> config = <span class="built_in">require</span>(<span class="string">&#x27;../../config/config&#x27;</span>); <span class="comment">// 환경 설정</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> uploadFolder = <span class="string">&#x27;/upload/&#x27;</span>; <span class="comment">// <span class="doctag">NOTE:</span> 업로드한 이미자가 잇을 express static folder</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">TODO:</span> 디렉토리가 존재하는지 체크</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>절대 경로</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> dirExists = <span class="function">(<span class="params">absolutePath</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> fs.statSync(absolutePath).isDirectory();</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="comment">// console.log(&#x27;dirExists err&#x27;, err); // <span class="doctag">NOTE:</span> 폴더가 존재하지 않으면 &#x27;ENOENT&#x27; 에러를 반환함.</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">TODO:</span> 파일이 있는지 체크</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Array&#125;</span> </span>절대 경로</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> fileExists = <span class="function">(<span class="params">files</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> result = <span class="literal">true</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; files.length; i += <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      fs.statSync(files[i]).isFile();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">      <span class="comment">// console.log(&#x27;fileExists err&#x27;, err);</span></span><br><span class="line">      result = <span class="literal">false</span>;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">TODO:</span> multer 기본 세팅</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>업로드할 폴더명</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> multerInit = <span class="function">(<span class="params">folder</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!folder) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">const</span> storage = multer.diskStorage(&#123;</span><br><span class="line">    destination: <span class="function">(<span class="params">req, file, callback</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> uploadRoot = path.join(config.root, <span class="string">&#x27;/public/upload/&#x27;</span>); <span class="comment">// 시스템 절대 경로</span></span><br><span class="line">      <span class="keyword">const</span> uploadPath = path.join(config.root, <span class="string">`/public/upload/<span class="subst">$&#123;folder&#125;</span>`</span>);</span><br><span class="line">      <span class="keyword">if</span> (!dirExists(uploadRoot)) fs.mkdirSync(uploadRoot); <span class="comment">// <span class="doctag">NOTE:</span> 업로드 폴더 체크 후 생성.</span></span><br><span class="line">      <span class="keyword">if</span> (!dirExists(uploadPath)) fs.mkdirSync(uploadPath); <span class="comment">// <span class="doctag">NOTE:</span> 업로드 폴더 체크 후 생성.</span></span><br><span class="line">      callback(<span class="literal">null</span>, uploadPath);</span><br><span class="line">    &#125;,</span><br><span class="line">    filename: <span class="function">(<span class="params">req, file, callback</span>) =&gt;</span> &#123; <span class="comment">// <span class="doctag">NOTE:</span> 파일명 변환</span></span><br><span class="line">      callback(<span class="literal">null</span>, <span class="string">`<span class="subst">$&#123;<span class="built_in">Date</span>.now()&#125;</span>.<span class="subst">$&#123;file.mimetype.split(<span class="string">&#x27;/&#x27;</span>)[<span class="number">1</span>]&#125;</span>`</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> multer(&#123;</span><br><span class="line">    storage,</span><br><span class="line">    limits: &#123; <span class="attr">fileSize</span>: <span class="number">2097152</span> &#125;, <span class="comment">// <span class="doctag">NOTE:</span> 업로드 파일은 2mb 제한</span></span><br><span class="line">    fileFilter: <span class="function">(<span class="params">req, file, callback</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (file.mimetype.indexOf(<span class="string">&#x27;image&#x27;</span>) === <span class="number">-1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> callback(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;이미지 파일만 업로드 가능&#x27;</span>));</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> callback(<span class="literal">null</span>, <span class="literal">true</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">TODO:</span> db에 저장할 path 만들기.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>multer에서 주는 path는 시스템 경로이기 때문에 그대로 저장하면 클라이언트에서 view로 쓸수 업음.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;*&#125;</span> <span class="variable">filePath</span></span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> changeDBPath = <span class="function">(<span class="params">filePath</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> origin = filePath;</span><br><span class="line">  <span class="keyword">const</span> start = origin.match(uploadFolder).index;</span><br><span class="line">  <span class="keyword">let</span> result = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = start; i &lt; origin.length; i += <span class="number">1</span>) &#123;</span><br><span class="line">    result += origin[i];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">TODO:</span> db에 저장된 path를 실제 업로드 path로 변경.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>dbpath는 client view용 (express static) 경로 이기 때문에 시스템 경로로 바꿔줘야 다운로드가 진행이 됨.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;*&#125;</span> <span class="variable">dbPath</span></span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> changeUploadPath = <span class="function">(<span class="params">dbPath</span>) =&gt;</span> path.join(config.root, <span class="string">`/public<span class="subst">$&#123;dbPath&#125;</span>`</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">TODO:</span> req.files에서 path, name, originalName만 가지고 오기</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>db 저장용</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Array&#125;</span> </span>files req.files</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> convertMulterData = <span class="function">(<span class="params">files</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (files.length === <span class="number">0</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> uploadPaths = files.map(<span class="function">(<span class="params">file</span>) =&gt;</span> changeDBPath(file.path));</span><br><span class="line">    <span class="keyword">const</span> fileName = files.map(<span class="function">(<span class="params">file</span>) =&gt;</span> file.filename);</span><br><span class="line">    <span class="keyword">const</span> fileOriginalName = files.map(<span class="function">(<span class="params">file</span>) =&gt;</span> file.originalname);</span><br><span class="line">    <span class="keyword">return</span> &#123; uploadPaths, fileName, fileOriginalName &#125;;</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;convertMulterData err&#x27;</span>, err);</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">TODO:</span> 여러 파일을 다운받아야 할 경우엔 zip으로 묶어서 넘긴다.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Array&#125;</span> </span>uploadPath db에 저장된 업로드 경로</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Array&#125;</span> </span>originalname db에 저장된 원래 파일명</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> zipDownload = <span class="function">(<span class="params">dbPath, originalname</span>) =&gt;</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!dbPath || !originalname) <span class="keyword">return</span> reject(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;다운로드에 필요한 파라미터 누락&#x27;</span>));</span><br><span class="line">  <span class="keyword">if</span> (dbPath.length !== originalname.length) <span class="keyword">return</span> reject(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;다운로드 파리미터 확인&#x27;</span>));</span><br><span class="line">  <span class="keyword">if</span> (!<span class="built_in">Array</span>.isArray(dbPath) || !<span class="built_in">Array</span>.isArray(originalname)) <span class="keyword">return</span> reject(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;다운로드 파일 타입 체크&#x27;</span>));</span><br><span class="line">  <span class="keyword">const</span> uploadPath = dbPath.map(<span class="function">(<span class="params">p</span>) =&gt;</span> changeUploadPath(p)); <span class="comment">// <span class="doctag">NOTE:</span> dbpath -&gt; uploadpath</span></span><br><span class="line">  <span class="keyword">if</span> (!fileExists(uploadPath)) <span class="keyword">return</span> reject(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;업로드된 파일이 존재 하지 않음&#x27;</span>));</span><br><span class="line">  <span class="keyword">const</span> zip = <span class="keyword">new</span> <span class="built_in">require</span>(<span class="string">&#x27;node-zip&#x27;</span>)();</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; uploadPath.length; i += <span class="number">1</span>) &#123;</span><br><span class="line">    zip.file(originalname[i], fs.readFileSync(uploadPath[i]));</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> zipDownloadRoot = path.join(config.root, <span class="string">&#x27;/public/upload/zip&#x27;</span>);</span><br><span class="line">  <span class="keyword">if</span> (!dirExists(zipDownloadRoot)) fs.mkdirSync(zipDownloadRoot); <span class="comment">// <span class="doctag">NOTE:</span> zip 만들 폴더 체크 후 생성.</span></span><br><span class="line">  <span class="keyword">const</span> zipPath = <span class="string">`<span class="subst">$&#123;zipDownloadRoot&#125;</span>/<span class="subst">$&#123;<span class="built_in">Date</span>.now()&#125;</span>_<span class="subst">$&#123;crypto.randomBytes(<span class="number">8</span>).toString(<span class="string">&#x27;hex&#x27;</span>)&#125;</span>.zip`</span>;</span><br><span class="line">  <span class="keyword">const</span> addZip = zip.generate(&#123; <span class="attr">base64</span>: <span class="literal">false</span>, <span class="attr">compression</span>: <span class="string">&#x27;DEFLATE&#x27;</span> &#125;); <span class="comment">// <span class="doctag">NOTE:</span> zip 파일 생성.</span></span><br><span class="line">  fs.writeFileSync(zipPath, addZip, <span class="string">&#x27;binary&#x27;</span>); <span class="comment">// <span class="doctag">NOTE:</span> zip 파일 저장</span></span><br><span class="line">  <span class="keyword">return</span> resolve(zipPath);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">exports</span>.changeDBPath = changeDBPath;</span><br><span class="line"><span class="built_in">exports</span>.changeUploadPath = changeUploadPath;</span><br><span class="line"><span class="built_in">exports</span>.multerInit = multerInit;</span><br><span class="line"><span class="built_in">exports</span>.convertMulterData = convertMulterData;</span><br><span class="line"><span class="built_in">exports</span>.zipDownload = zipDownload;</span><br></pre></td></tr></table></figure>
-
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* eslint-disable no-new-require */</span></span><br><span class="line"><span class="comment">/* eslint-disable new-cap */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> multer = <span class="built_in">require</span>(<span class="string">&#x27;multer&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> crypto = <span class="built_in">require</span>(<span class="string">&#x27;crypto&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> config = <span class="built_in">require</span>(<span class="string">&#x27;../../config/config&#x27;</span>); <span class="comment">// 환경 설정</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> uploadFolder = <span class="string">&#x27;/upload/&#x27;</span>; <span class="comment">// <span class="doctag">NOTE:</span> 업로드한 이미자가 잇을 express static folder</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">TODO:</span> 디렉토리가 존재하는지 체크</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>절대 경로</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> dirExists = <span class="function">(<span class="params">absolutePath</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> fs.statSync(absolutePath).isDirectory();</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="comment">// console.log(&#x27;dirExists err&#x27;, err); // <span class="doctag">NOTE:</span> 폴더가 존재하지 않으면 &#x27;ENOENT&#x27; 에러를 반환함.</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">TODO:</span> 파일이 있는지 체크</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Array&#125;</span> </span>절대 경로</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> fileExists = <span class="function">(<span class="params">files</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> result = <span class="literal">true</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; files.length; i += <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      fs.statSync(files[i]).isFile();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">      <span class="comment">// console.log(&#x27;fileExists err&#x27;, err);</span></span><br><span class="line">      result = <span class="literal">false</span>;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">TODO:</span> multer 기본 세팅</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;String&#125;</span> </span>업로드할 폴더명</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> multerInit = <span class="function">(<span class="params">folder</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!folder) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">const</span> storage = multer.diskStorage(&#123;</span><br><span class="line">    destination: <span class="function">(<span class="params">req, file, callback</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> uploadRoot = path.join(config.root, <span class="string">&#x27;/public/upload/&#x27;</span>); <span class="comment">// 시스템 절대 경로</span></span><br><span class="line">      <span class="keyword">const</span> uploadPath = path.join(config.root, <span class="string">`/public/upload/<span class="subst">$&#123;folder&#125;</span>`</span>);</span><br><span class="line">      <span class="keyword">if</span> (!dirExists(uploadRoot)) fs.mkdirSync(uploadRoot); <span class="comment">// <span class="doctag">NOTE:</span> 업로드 폴더 체크 후 생성.</span></span><br><span class="line">      <span class="keyword">if</span> (!dirExists(uploadPath)) fs.mkdirSync(uploadPath); <span class="comment">// <span class="doctag">NOTE:</span> 업로드 폴더 체크 후 생성.</span></span><br><span class="line">      callback(<span class="literal">null</span>, uploadPath);</span><br><span class="line">    &#125;,</span><br><span class="line">    filename: <span class="function">(<span class="params">req, file, callback</span>) =&gt;</span> &#123; <span class="comment">// <span class="doctag">NOTE:</span> 파일명 변환</span></span><br><span class="line">      callback(<span class="literal">null</span>, <span class="string">`<span class="subst">$&#123;<span class="built_in">Date</span>.now()&#125;</span>.<span class="subst">$&#123;file.mimetype.split(<span class="string">&#x27;/&#x27;</span>)[<span class="number">1</span>]&#125;</span>`</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> multer(&#123;</span><br><span class="line">    storage,</span><br><span class="line">    limits: &#123; <span class="attr">fileSize</span>: <span class="number">2097152</span> &#125;, <span class="comment">// <span class="doctag">NOTE:</span> 업로드 파일은 2mb 제한</span></span><br><span class="line">    fileFilter: <span class="function">(<span class="params">req, file, callback</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (file.mimetype.indexOf(<span class="string">&#x27;image&#x27;</span>) === -<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> callback(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;이미지 파일만 업로드 가능&#x27;</span>));</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> callback(<span class="literal">null</span>, <span class="literal">true</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">TODO:</span> db에 저장할 path 만들기.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>multer에서 주는 path는 시스템 경로이기 때문에 그대로 저장하면 클라이언트에서 view로 쓸수 업음.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;*&#125;</span> <span class="variable">filePath</span></span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> changeDBPath = <span class="function">(<span class="params">filePath</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> origin = filePath;</span><br><span class="line">  <span class="keyword">const</span> start = origin.match(uploadFolder).index;</span><br><span class="line">  <span class="keyword">let</span> result = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = start; i &lt; origin.length; i += <span class="number">1</span>) &#123;</span><br><span class="line">    result += origin[i];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">TODO:</span> db에 저장된 path를 실제 업로드 path로 변경.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>dbpath는 client view용 (express static) 경로 이기 때문에 시스템 경로로 바꿔줘야 다운로드가 진행이 됨.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;*&#125;</span> <span class="variable">dbPath</span></span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> changeUploadPath = <span class="function">(<span class="params">dbPath</span>) =&gt;</span> path.join(config.root, <span class="string">`/public<span class="subst">$&#123;dbPath&#125;</span>`</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">TODO:</span> req.files에서 path, name, originalName만 가지고 오기</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>db 저장용</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Array&#125;</span> </span>files req.files</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> convertMulterData = <span class="function">(<span class="params">files</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (files.length === <span class="number">0</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> uploadPaths = files.map(<span class="function">(<span class="params">file</span>) =&gt;</span> changeDBPath(file.path));</span><br><span class="line">    <span class="keyword">const</span> fileName = files.map(<span class="function">(<span class="params">file</span>) =&gt;</span> file.filename);</span><br><span class="line">    <span class="keyword">const</span> fileOriginalName = files.map(<span class="function">(<span class="params">file</span>) =&gt;</span> file.originalname);</span><br><span class="line">    <span class="keyword">return</span> &#123; uploadPaths, fileName, fileOriginalName &#125;;</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;convertMulterData err&#x27;</span>, err);</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">TODO:</span> 여러 파일을 다운받아야 할 경우엔 zip으로 묶어서 넘긴다.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Array&#125;</span> </span>uploadPath db에 저장된 업로드 경로</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Array&#125;</span> </span>originalname db에 저장된 원래 파일명</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> zipDownload = <span class="function">(<span class="params">dbPath, originalname</span>) =&gt;</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!dbPath || !originalname) <span class="keyword">return</span> reject(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;다운로드에 필요한 파라미터 누락&#x27;</span>));</span><br><span class="line">  <span class="keyword">if</span> (dbPath.length !== originalname.length) <span class="keyword">return</span> reject(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;다운로드 파리미터 확인&#x27;</span>));</span><br><span class="line">  <span class="keyword">if</span> (!<span class="built_in">Array</span>.isArray(dbPath) || !<span class="built_in">Array</span>.isArray(originalname)) <span class="keyword">return</span> reject(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;다운로드 파일 타입 체크&#x27;</span>));</span><br><span class="line">  <span class="keyword">const</span> uploadPath = dbPath.map(<span class="function">(<span class="params">p</span>) =&gt;</span> changeUploadPath(p)); <span class="comment">// <span class="doctag">NOTE:</span> dbpath -&gt; uploadpath</span></span><br><span class="line">  <span class="keyword">if</span> (!fileExists(uploadPath)) <span class="keyword">return</span> reject(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;업로드된 파일이 존재 하지 않음&#x27;</span>));</span><br><span class="line">  <span class="keyword">const</span> zip = <span class="keyword">new</span> <span class="built_in">require</span>(<span class="string">&#x27;node-zip&#x27;</span>)();</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; uploadPath.length; i += <span class="number">1</span>) &#123;</span><br><span class="line">    zip.file(originalname[i], fs.readFileSync(uploadPath[i]));</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> zipDownloadRoot = path.join(config.root, <span class="string">&#x27;/public/upload/zip&#x27;</span>);</span><br><span class="line">  <span class="keyword">if</span> (!dirExists(zipDownloadRoot)) fs.mkdirSync(zipDownloadRoot); <span class="comment">// <span class="doctag">NOTE:</span> zip 만들 폴더 체크 후 생성.</span></span><br><span class="line">  <span class="keyword">const</span> zipPath = <span class="string">`<span class="subst">$&#123;zipDownloadRoot&#125;</span>/<span class="subst">$&#123;<span class="built_in">Date</span>.now()&#125;</span>_<span class="subst">$&#123;crypto.randomBytes(<span class="number">8</span>).toString(<span class="string">&#x27;hex&#x27;</span>)&#125;</span>.zip`</span>;</span><br><span class="line">  <span class="keyword">const</span> addZip = zip.generate(&#123; <span class="attr">base64</span>: <span class="literal">false</span>, <span class="attr">compression</span>: <span class="string">&#x27;DEFLATE&#x27;</span> &#125;); <span class="comment">// <span class="doctag">NOTE:</span> zip 파일 생성.</span></span><br><span class="line">  fs.writeFileSync(zipPath, addZip, <span class="string">&#x27;binary&#x27;</span>); <span class="comment">// <span class="doctag">NOTE:</span> zip 파일 저장</span></span><br><span class="line">  <span class="keyword">return</span> resolve(zipPath);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">exports</span>.changeDBPath = changeDBPath;</span><br><span class="line"><span class="built_in">exports</span>.changeUploadPath = changeUploadPath;</span><br><span class="line"><span class="built_in">exports</span>.multerInit = multerInit;</span><br><span class="line"><span class="built_in">exports</span>.convertMulterData = convertMulterData;</span><br><span class="line"><span class="built_in">exports</span>.zipDownload = zipDownload;</span><br></pre></td></tr></table></figure>
 <h2 id="db"><a href="#db" class="headerlink" title="db"></a>db</h2><p>db는 mongodb로 view, 다운로드에 필요한 정보를 저장 한다.</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Example model</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mongoose = <span class="built_in">require</span>(<span class="string">&#x27;mongoose&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> &#123; Schema &#125; = mongoose;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> uploadsSchema = <span class="keyword">new</span> Schema(&#123;</span><br><span class="line">  title: <span class="built_in">String</span>, <span class="comment">// 글 제목</span></span><br><span class="line">  uploadImagePath: <span class="built_in">Array</span>, <span class="comment">// view 이미지 경로</span></span><br><span class="line">  uploadImageName: <span class="built_in">Array</span>, <span class="comment">// view 이미지 파일명</span></span><br><span class="line">  imageOriginalName: <span class="built_in">Array</span>, <span class="comment">// download 원래 파일명</span></span><br><span class="line">  create_at: &#123;</span><br><span class="line">    type: <span class="built_in">Date</span>,</span><br><span class="line">    <span class="keyword">default</span>: <span class="built_in">Date</span>.now(),</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">mongoose.model(<span class="string">&#x27;uploads&#x27;</span>, uploadsSchema);</span><br></pre></td></tr></table></figure>
-
 <h2 id="업로드-다운로드-route"><a href="#업로드-다운로드-route" class="headerlink" title="업로드, 다운로드 route"></a>업로드, 다운로드 route</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">const</span> router = <span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>).Router();</span><br><span class="line"><span class="keyword">const</span> mongoose = <span class="built_in">require</span>(<span class="string">&#x27;mongoose&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> upload = <span class="built_in">require</span>(<span class="string">&#x27;../lib/local_upload_util&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> UploadModel = mongoose.model(<span class="string">&#x27;uploads&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="function">(<span class="params">app</span>) =&gt;</span> &#123;</span><br><span class="line">  app.use(<span class="string">&#x27;/&#x27;</span>, router);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">router.get(<span class="string">&#x27;/&#x27;</span>, <span class="function">(<span class="params">req, res, next</span>) =&gt;</span> &#123;</span><br><span class="line">  UploadModel.find(<span class="function">(<span class="params">err, lists</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (err) <span class="keyword">return</span> next(err);</span><br><span class="line">    <span class="keyword">return</span> res.render(<span class="string">&#x27;list&#x27;</span>, &#123;</span><br><span class="line">      title: <span class="string">&#x27;업로드한 리스트&#x27;</span>,</span><br><span class="line">      lists,</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 이미지 1개 업로드 (싱글)</span></span><br><span class="line">router.get(<span class="string">&#x27;/single&#x27;</span>, <span class="function">(<span class="params">req, res, next</span>) =&gt;</span> &#123;</span><br><span class="line">  res.render(<span class="string">&#x27;single&#x27;</span>, &#123;</span><br><span class="line">    title: <span class="string">&#x27;이미지 1개 업로드 form&#x27;</span>,</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 이미지 1개 업로드 (싱글) 처리</span></span><br><span class="line">router.post(<span class="string">&#x27;/single&#x27;</span>, <span class="function">(<span class="params">req, res, next</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> uploadInit = upload.multerInit(<span class="string">&#x27;images&#x27;</span>).single(<span class="string">&#x27;attachment&#x27;</span>);</span><br><span class="line">  uploadInit(req, res, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (err) <span class="keyword">return</span> next(err);</span><br><span class="line">    <span class="keyword">const</span> uploadData = <span class="keyword">new</span> UploadModel(&#123;</span><br><span class="line">      title: req.body.title,</span><br><span class="line">      uploadImagePath: [upload.changeDBPath(req.file.path)],</span><br><span class="line">      uploadImageName: [req.file.filename],</span><br><span class="line">      imageOriginalName: [req.file.originalname],</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> uploadData.save(<span class="function">(<span class="params">saveErr</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (saveErr) <span class="keyword">return</span> next(saveErr);</span><br><span class="line">      <span class="keyword">return</span> res.redirect(<span class="string">&#x27;/&#x27;</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 이미지 여러개 업로드 (Array)</span></span><br><span class="line">router.get(<span class="string">&#x27;/array&#x27;</span>, <span class="function">(<span class="params">req, res, next</span>) =&gt;</span> &#123;</span><br><span class="line">  res.render(<span class="string">&#x27;array&#x27;</span>, &#123;</span><br><span class="line">    title: <span class="string">&#x27;이미지 여러개 업로드 form&#x27;</span>,</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 이미지 여러개 업로드 (Array) 처리</span></span><br><span class="line">router.post(<span class="string">&#x27;/array&#x27;</span>, <span class="function">(<span class="params">req, res, next</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> uploadInit = upload.multerInit(<span class="string">&#x27;images&#x27;</span>).array(<span class="string">&#x27;attachment&#x27;</span>);</span><br><span class="line">  uploadInit(req, res, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (err) <span class="keyword">return</span> next(err);</span><br><span class="line">    <span class="keyword">const</span> convertMulterData = upload.convertMulterData(req.files);</span><br><span class="line">    <span class="keyword">if</span> (!convertMulterData) <span class="keyword">return</span> next(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;업로드된 파일들의 정보를 변환할 수 업음&#x27;</span>));</span><br><span class="line">    <span class="keyword">const</span> uploadData = <span class="keyword">new</span> UploadModel(&#123;</span><br><span class="line">      title: req.body.title,</span><br><span class="line">      uploadImagePath: convertMulterData.uploadPaths,</span><br><span class="line">      uploadImageName: convertMulterData.fileName,</span><br><span class="line">      imageOriginalName: convertMulterData.fileOriginalName,</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> uploadData.save(<span class="function">(<span class="params">saveErr</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (saveErr) <span class="keyword">return</span> next(saveErr);</span><br><span class="line">      <span class="keyword">return</span> res.redirect(<span class="string">&#x27;/&#x27;</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 지정된 이미지 input 업로드 (fields)</span></span><br><span class="line">router.get(<span class="string">&#x27;/fields&#x27;</span>, <span class="function">(<span class="params">req, res, next</span>) =&gt;</span> &#123;</span><br><span class="line">  res.render(<span class="string">&#x27;fields&#x27;</span>, &#123;</span><br><span class="line">    title: <span class="string">&#x27;이미지 각각 테스트 form&#x27;</span>,</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 이미지 각각 업로드 (fields) 처리</span></span><br><span class="line">router.post(<span class="string">&#x27;/fields&#x27;</span>, <span class="function">(<span class="params">req, res, next</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> uploadInit = upload.multerInit(<span class="string">&#x27;images&#x27;</span>).fields([&#123; <span class="attr">name</span>: <span class="string">&#x27;attachment1&#x27;</span>, <span class="attr">maxCount</span>: <span class="number">1</span> &#125;, &#123; <span class="attr">name</span>: <span class="string">&#x27;attachment2&#x27;</span>, <span class="attr">maxCount</span>: <span class="number">1</span> &#125;]);</span><br><span class="line">  uploadInit(req, res, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (err) <span class="keyword">return</span> next(err);</span><br><span class="line">    <span class="keyword">const</span> uploadData = <span class="keyword">new</span> UploadModel(&#123;</span><br><span class="line">      title: req.body.title,</span><br><span class="line">      uploadImagePath: [upload.changeDBPath(req.files.attachment1[<span class="number">0</span>].path), upload.changeDBPath(req.files.attachment2[<span class="number">0</span>].path)],</span><br><span class="line">      uploadImageName: [req.files.attachment1[<span class="number">0</span>].filename, req.files.attachment2[<span class="number">0</span>].filename],</span><br><span class="line">      imageOriginalName: [req.files.attachment1[<span class="number">0</span>].originalname, req.files.attachment2[<span class="number">0</span>].originalname],</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> uploadData.save(<span class="function">(<span class="params">saveErr</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (saveErr) <span class="keyword">return</span> next(saveErr);</span><br><span class="line">      <span class="keyword">return</span> res.redirect(<span class="string">&#x27;/&#x27;</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">router.get(<span class="string">&#x27;/download&#x27;</span>, <span class="function">(<span class="params">req, res, next</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// eslint-disable-next-line no-underscore-dangle</span></span><br><span class="line">  UploadModel.findOne(&#123; <span class="attr">_id</span>: req.query._id &#125;, <span class="function">(<span class="params">err, data</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (err) <span class="keyword">return</span> next(err);</span><br><span class="line">    <span class="keyword">if</span> (data.uploadImagePath.length === <span class="number">1</span>) &#123; <span class="comment">// <span class="doctag">NOTE:</span> 업로드 한개는 그냥 바로 다운로드.</span></span><br><span class="line">      res.cookie(<span class="string">&#x27;isDownload&#x27;</span>, <span class="string">&#x27;complete&#x27;</span>, &#123; <span class="comment">// <span class="doctag">NOTE:</span> 로딩 바를 위한 쿠키 값.</span></span><br><span class="line">        maxAge: <span class="number">10000</span>,</span><br><span class="line">      &#125;);</span><br><span class="line">      res.setHeader(<span class="string">&#x27;Content-disposition&#x27;</span>, <span class="string">&#x27;attachment&#x27;</span>); <span class="comment">// <span class="doctag">NOTE:</span> 컨텐츠 타입 첨부파일로 설정.</span></span><br><span class="line">      <span class="keyword">return</span> res.download(upload.changeUploadPath(data.uploadImagePath[<span class="number">0</span>]), data.imageOriginalName[<span class="number">0</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> upload.zipDownload(data.uploadImagePath, data.imageOriginalName).then(<span class="function">(<span class="params">result</span>) =&gt;</span> &#123;</span><br><span class="line">      res.cookie(<span class="string">&#x27;isDownload&#x27;</span>, <span class="string">&#x27;complete&#x27;</span>, &#123; <span class="comment">// <span class="doctag">NOTE:</span> 로딩 바를 위한 쿠키 값.</span></span><br><span class="line">        maxAge: <span class="number">10000</span>,</span><br><span class="line">      &#125;);</span><br><span class="line">      res.setHeader(<span class="string">&#x27;Content-disposition&#x27;</span>, <span class="string">&#x27;attachment&#x27;</span>); <span class="comment">// <span class="doctag">NOTE:</span> 컨텐츠 타입 첨부파일로 설정.</span></span><br><span class="line">      <span class="keyword">return</span> res.download(result);</span><br><span class="line">    &#125;).catch(<span class="function">(<span class="params">zipDownloadErr</span>) =&gt;</span> next(zipDownloadErr));</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
 <p>싱글(하나의 파일)인 경우엔 req.file, 나머지는 req.files에 파일 정보가 넘어 온다.</p>
 <ul>
 <li>fieldname: input file 태그 이름</li>
@@ -190,153 +180,331 @@
 </ul>
 <p><img src="https://res.cloudinary.com/ddebpn43q/image/upload/v1568264595/ezgif.com-video-to-gif_ae3dpi.gif" alt="동작 짤"></p>
 
-  </div>
-</article>
-
-<script src="https://utteranc.es/client.js" repo="hidelryn/blog-comment" issue-term="title" label="Comment" theme="github-dark-orange" crossorigin="anonymous" async>
-  </script>
-
-
-        
-          <div id="footer-post-container">
-  <div id="footer-post">
-
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a href="/tags/">tags</a></li>
-         
-          <li><a href="/search/">Search</a></li>
-        
-      </ul>
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2018/06/18/nodejs-express-use-mongoose-2/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2018-06-20 13:03:40
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Node-js/" title="Node.js">
+                        <b>#</b> Node.js
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Express/" title="Express">
+                        <b>#</b> Express
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2018/06/24/nodejs-paging/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
     </div>
-
-    <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EA%B0%9C%EC%9A%94"><span class="toc-number">1.</span> <span class="toc-text">개요</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8"><span class="toc-number">2.</span> <span class="toc-text">클라이언트</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%97%85%EB%A1%9C%EB%93%9C-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C-%EB%A1%9C%EC%A7%81"><span class="toc-number">3.</span> <span class="toc-text">업로드, 다운로드 로직</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#db"><span class="toc-number">4.</span> <span class="toc-text">db</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%97%85%EB%A1%9C%EB%93%9C-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C-route"><span class="toc-number">5.</span> <span class="toc-text">업로드, 다운로드 route</span></a></li></ol>
-    </div>
-
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2018/06/20/nodejs-upload/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2018/06/20/nodejs-upload/&text=Express에서 multer를 이용한 업로드, 다운로드 구현"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2018/06/20/nodejs-upload/&title=Express에서 multer를 이용한 업로드, 다운로드 구현"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2018/06/20/nodejs-upload/&is_video=false&description=Express에서 multer를 이용한 업로드, 다운로드 구현"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Express에서 multer를 이용한 업로드, 다운로드 구현&body=Check out this article: https://hidelryn.github.io/2018/06/20/nodejs-upload/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2018/06/20/nodejs-upload/&title=Express에서 multer를 이용한 업로드, 다운로드 구현"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2018/06/20/nodejs-upload/&title=Express에서 multer를 이용한 업로드, 다운로드 구현"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2018/06/20/nodejs-upload/&title=Express에서 multer를 이용한 업로드, 다운로드 구현"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2018/06/20/nodejs-upload/&title=Express에서 multer를 이용한 업로드, 다운로드 구현"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2018/06/20/nodejs-upload/&name=Express에서 multer를 이용한 업로드, 다운로드 구현&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2018/06/20/nodejs-upload/&t=Express에서 multer를 이용한 업로드, 다운로드 구현"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
-        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
-    </div>
-
-  </div>
-</div>
-
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy;
     
-    
-    2018-2021
-    delryn
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a href="/tags/">tags</a></li>
-         
-          <li><a href="/search/">Search</a></li>
-        
-      </ul>
-    </nav>
-  </div>
-</footer>
-
+  <div class="post-catalog" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EA%B0%9C%EC%9A%94"><span class="toc-text">개요</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8"><span class="toc-text">클라이언트</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%97%85%EB%A1%9C%EB%93%9C-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C-%EB%A1%9C%EC%A7%81"><span class="toc-text">업로드, 다운로드 로직</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#db"><span class="toc-text">db</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%97%85%EB%A1%9C%EB%93%9C-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C-route"><span class="toc-text">업로드, 다운로드 route</span></a></li></ol>
     </div>
-    <!-- styles -->
-
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-
-
-<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
-
-
-    <!-- jquery -->
-
-<script src="/lib/jquery/jquery.min.js"></script>
-
-
-<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
-
-<!-- clipboard -->
+  </div>
 
   
-<script src="/lib/clipboard/clipboard.min.js"></script>
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+  <script src="https://utteranc.es/client.js" repo="hidelryn/blog-comment" issue-term="title" label="Comment" theme="github-light" crossorigin="anonymous" async>
+    </script>
+  
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/hidelryn/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="mailto:hidelryn@gmail.com" rel="external nofollow noopener noreferrer" target="_blank">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="/atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+  
+    <div class="footer-more">
+      
+        <span style="color: #666;">Copyright © Delryn 2021</span>
+        
+        
+    </div>
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+      
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
 
   <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
-    btn += '<i class="far fa-clone"></i>';
-    btn += '</span>'; 
-    // mount it!
-    $(".highlight table").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      text: function(trigger) {
-        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
       }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "Copied!");
-      e.clearSelection();
-    })
-  })
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
   </script>
 
 
-<script src="/js/main.js"></script>
-
-<!-- search -->
-
-<!-- Google Analytics -->
-
-    <script type="text/javascript">
-        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-        ga('create', 'UA-104148803-2', 'auto');
-        ga('send', 'pageview');
-    </script>
-
-<!-- Baidu Analytics -->
-
-<!-- Disqus Comments -->
 
 
-</body>
+    </div>
+  </body>
 </html>

@@ -1,168 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="description" content="설정예제 가이드대로 td-agent.conf를 바꿔본다. 123&lt;match fluentd.test.**&gt;  @type stdout&lt;&#x2F;match&gt;   그리고 나서 td-agent를 종료 후 다시 켜 주면 된다. 근데 match랑 source가 뭔지 보고 가자. match “match” 지시문은 일치하는 태그가 있는 이벤트를 찾아">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Node.js app log를 Fluentd에 저장하기">
-<meta property="og:url" content="https://hidelryn.github.io/2020/05/09/etc-fluentd-2/index.html">
-<meta property="og:site_name" content="Delryn&#39;s Blog">
-<meta property="og:description" content="설정예제 가이드대로 td-agent.conf를 바꿔본다. 123&lt;match fluentd.test.**&gt;  @type stdout&lt;&#x2F;match&gt;   그리고 나서 td-agent를 종료 후 다시 켜 주면 된다. 근데 match랑 source가 뭔지 보고 가자. match “match” 지시문은 일치하는 태그가 있는 이벤트를 찾아">
-<meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://res.cloudinary.com/dwmywmqv6/image/upload/v1589013864/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-05-09_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_5.43.33_mklnlf.png">
-<meta property="og:image" content="https://res.cloudinary.com/dwmywmqv6/image/upload/v1589191562/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-05-11_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_7.05.35_nkj3cy.png">
-<meta property="article:published_time" content="2020-05-09T05:29:43.000Z">
-<meta property="article:modified_time" content="2020-09-01T09:34:27.000Z">
-<meta property="article:author" content="delryn">
-<meta property="article:tag" content="Fluentd">
-<meta property="article:tag" content="Log">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://res.cloudinary.com/dwmywmqv6/image/upload/v1589013864/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-05-09_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_5.43.33_mklnlf.png">
-    
-    
-        
-          
-              <link rel="shortcut icon" href="/images/favicon.ico">
-          
-        
-        
-          
-            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-          
-        
-        
-          
-            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-          
-        
-    
-    <!-- title -->
-    <title>Node.js app log를 Fluentd에 저장하기</title>
-    <!-- styles -->
-    
-<link rel="stylesheet" href="/css/style.css">
 
-    <!-- persian styles -->
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="keywords" content>
+  <meta name="author" content="delryn">
+  <meta name="description" content="나의 개발 노트 ʕ •ᴥ• ʔ">
+  
+  
+  <title>
     
+      Node.js app log를 Fluentd에 저장하기 
       
-<link rel="stylesheet" href="/css/rtl.css">
-
-    
-    <!-- rss -->
-    
-    
-    <link rel="canonical" href="https://hidelryn.github.io/2020/05/09/etc-fluentd-2/">
-<meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="Delryn's Blog" type="application/atom+xml">
-</head>
-
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a href="/tags/">tags</a></li>
-         
-          <li><a href="/search/">Search</a></li>
-        
-      </ul>
-    </span>
-    <br>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" href="/2020/09/01/nodejs-vue-study-1/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" href="/2020/05/08/etc-fluentd-1/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">Previous post</span>
-      <span id="i-next" class="info" style="display:none;">Next post</span>
-      <span id="i-top" class="info" style="display:none;">Back to top</span>
-      <span id="i-share" class="info" style="display:none;">Share post</span>
-    </span>
-    <br>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2020/05/09/etc-fluentd-2/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2020/05/09/etc-fluentd-2/&text=Node.js app log를 Fluentd에 저장하기"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2020/05/09/etc-fluentd-2/&title=Node.js app log를 Fluentd에 저장하기"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2020/05/09/etc-fluentd-2/&is_video=false&description=Node.js app log를 Fluentd에 저장하기"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Node.js app log를 Fluentd에 저장하기&body=Check out this article: https://hidelryn.github.io/2020/05/09/etc-fluentd-2/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2020/05/09/etc-fluentd-2/&title=Node.js app log를 Fluentd에 저장하기"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2020/05/09/etc-fluentd-2/&title=Node.js app log를 Fluentd에 저장하기"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2020/05/09/etc-fluentd-2/&title=Node.js app log를 Fluentd에 저장하기"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2020/05/09/etc-fluentd-2/&title=Node.js app log를 Fluentd에 저장하기"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2020/05/09/etc-fluentd-2/&name=Node.js app log를 Fluentd에 저장하기&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2020/05/09/etc-fluentd-2/&t=Node.js app log를 Fluentd에 저장하기"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%84%A4%EC%A0%95"><span class="toc-number">1.</span> <span class="toc-text">설정</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#match"><span class="toc-number">2.</span> <span class="toc-text">match</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#source"><span class="toc-number">3.</span> <span class="toc-text">source</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%A0%84%EC%86%A1%ED%95%98%EA%B8%B0"><span class="toc-number">4.</span> <span class="toc-text">전송하기</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%8C%A8%ED%82%A4%EC%A7%80-%EC%84%A4%EC%B9%98"><span class="toc-number">4.1.</span> <span class="toc-text">패키지 설치</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%BD%94%EB%93%9C"><span class="toc-number">4.2.</span> <span class="toc-text">코드</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#winston-morgan%EC%9C%BC%EB%A1%9C-%EC%97%B0%EB%8F%99"><span class="toc-number">5.</span> <span class="toc-text">winston, morgan으로 연동</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%84%A4%EC%A0%95-%EC%B6%94%EA%B0%80"><span class="toc-number">5.1.</span> <span class="toc-text">설정 추가</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%BD%94%EB%93%9C-%EC%9E%91%EC%84%B1"><span class="toc-number">5.2.</span> <span class="toc-text">코드 작성</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#logger-js"><span class="toc-number">5.2.1.</span> <span class="toc-text">logger.js</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#index-js"><span class="toc-number">5.2.2.</span> <span class="toc-text">index.js</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#s3-%EC%97%B0%EB%8F%99"><span class="toc-number">6.</span> <span class="toc-text">s3 연동</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%84%A4%EC%A0%95-%EB%B3%80%EA%B2%BD"><span class="toc-number">6.1.</span> <span class="toc-text">설정 변경</span></a></li></ol></li></ol>
-    </div>
-  </span>
-</div>
-
-    
-    <div class="content index py4">
-        
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        Node.js app log를 Fluentd에 저장하기
-    </h1>
-
-
-
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">Delryn's Blog</span>
-      </span>
       
-    <div class="postdate">
-      
-        <time datetime="2020-05-09T05:29:43.000Z" itemprop="datePublished">2020-05-09</time>
-        
-      
-    </div>
+    
+  </title>
 
-
-      
-
-      
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link-link" href="/tags/Fluentd/" rel="tag">Fluentd</a>, <a class="tag-link-link" href="/tags/Log/" rel="tag">Log</a>
-    </div>
-
-
-    </div>
-  </header>
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
   
 
-  <div class="content" itemprop="articleBody">
-    <h2 id="설정"><a href="#설정" class="headerlink" title="설정"></a>설정</h2><p>예제 가이드대로 td-agent.conf를 바꿔본다.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;match fluentd.test.**&gt;</span><br><span class="line">  @type stdout</span><br><span class="line">&lt;&#x2F;match&gt;</span><br></pre></td></tr></table></figure>
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
 
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-104148803-2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-104148803-2');
+    </script>
+  
+
+<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Delryn's Blog" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt>
+      
+    </a>
+    <div class="nickname"><a href="/">Delryn</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+<!-- LaTex Display -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Node.js app log를 Fluentd에 저장하기</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2020-05-09 14:29:43
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/Fluentd/" title="Fluentd">
+                    <b>#</b> Fluentd
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Log/" title="Log">
+                    <b>#</b> Log
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="설정"><a href="#설정" class="headerlink" title="설정"></a>설정</h2><p>예제 가이드대로 td-agent.conf를 바꿔본다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;match fluentd.test.**&gt;</span><br><span class="line">  @type stdout</span><br><span class="line">&lt;&#x2F;match&gt;</span><br></pre></td></tr></table></figure>
 <p><img src="https://res.cloudinary.com/dwmywmqv6/image/upload/v1589013864/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-05-09_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_5.43.33_mklnlf.png" alt="설정추가"></p>
 <p>그리고 나서 td-agent를 종료 후 다시 켜 주면 된다. 근데 match랑 source가 뭔지 보고 가자.</p>
 <h2 id="match"><a href="#match" class="headerlink" title="match"></a>match</h2><blockquote>
@@ -173,187 +165,355 @@
 <p>입력 소스는 소스 지시문을 사용하여 원하는 입력 플러그인을 선택하고 구성하여 활성화됩니다.</p>
 </blockquote>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;source&gt;</span><br><span class="line">  @type forward</span><br><span class="line">  @id input_forward</span><br><span class="line">&lt;&#x2F;source&gt;</span><br><span class="line">&lt;source&gt;</span><br><span class="line">  @type http</span><br><span class="line">  @id input_http</span><br><span class="line">  port 8888</span><br><span class="line">&lt;&#x2F;source&gt;</span><br></pre></td></tr></table></figure>
-
 <p>아 여기로 로그를 보내는건가 보군! 이란 생각이 들었음. 여러 개 추가 된다고 한다.</p>
 <h2 id="전송하기"><a href="#전송하기" class="headerlink" title="전송하기"></a>전송하기</h2><p>예제 코드를 따라가 보며 해 본다.</p>
 <h3 id="패키지-설치"><a href="#패키지-설치" class="headerlink" title="패키지 설치"></a>패키지 설치</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i fluent-logger -S</span><br></pre></td></tr></table></figure>
-
 <h3 id="코드"><a href="#코드" class="headerlink" title="코드"></a>코드</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> logger = <span class="built_in">require</span>(<span class="string">&#x27;fluent-logger&#x27;</span>);</span><br><span class="line"></span><br><span class="line">logger.configure(<span class="string">&#x27;fluentd.test&#x27;</span>, &#123; <span class="comment">// <span class="doctag">NOTE:</span> tag</span></span><br><span class="line">  host: <span class="string">&#x27;localhost&#x27;</span>,</span><br><span class="line">  port: <span class="number">24224</span>, <span class="comment">// <span class="doctag">NOTE:</span> td-agent 실행 시 log에 port 24224로 뜸.</span></span><br><span class="line">  timeout: <span class="number">3.0</span>,</span><br><span class="line">  reconnectInterval: <span class="number">600000</span>, <span class="comment">// 10 minutes, <span class="doctag">NOTE:</span> 연결 실패 시 재연결 쿨 타임</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">logger.emit(<span class="string">&#x27;join&#x27;</span>, &#123;<span class="attr">id</span>: <span class="string">&#x27;a&#x27;</span>, <span class="attr">name</span>: <span class="string">&#x27;delryn&#x27;</span>, <span class="attr">age</span>: <span class="number">32</span>&#125;);</span><br></pre></td></tr></table></figure>
-
 <p>실행 결과는 아래 명령어를 쳐 보면 나온다.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tail -n 1 /var/<span class="built_in">log</span>/td-agent/td-agent.log</span><br><span class="line">2020-05-09 17:45:47.000000000 +0900 fluentd.test.join: &#123;<span class="string">&quot;id&quot;</span>:<span class="string">&quot;a&quot;</span>,<span class="string">&quot;name&quot;</span>:<span class="string">&quot;delryn&quot;</span>,<span class="string">&quot;age&quot;</span>:32&#125;</span><br></pre></td></tr></table></figure>
-
 <p>어플리케이션 -&gt; agent 연결된 상태이기 때문에 agent를 종료하면 연결이 끊기는 메세지를 볼수 있다.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Fluentd error &#123; Error: connect ECONNREFUSED 127.0.0.1:24224</span><br><span class="line">    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1106:14)</span><br><span class="line">  errno: <span class="string">&#x27;ECONNREFUSED&#x27;</span>,</span><br><span class="line">  code: <span class="string">&#x27;ECONNREFUSED&#x27;</span>,</span><br><span class="line">  syscall: <span class="string">&#x27;connect&#x27;</span>,</span><br><span class="line">  address: <span class="string">&#x27;127.0.0.1&#x27;</span>,</span><br><span class="line">  port: 24224 &#125;</span><br><span class="line">Fluentd will reconnect after 600 seconds</span><br></pre></td></tr></table></figure>
-
 <h2 id="winston-morgan으로-연동"><a href="#winston-morgan으로-연동" class="headerlink" title="winston, morgan으로 연동"></a>winston, morgan으로 연동</h2><p>이전에 해본 winston + morgan 로그를 fluentd로 보내서 파일을 생성하게 해 보자.</p>
 <h3 id="설정-추가"><a href="#설정-추가" class="headerlink" title="설정 추가"></a>설정 추가</h3><p>기존 conf를 참조해서 한번 추가 해보았다.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;match myproject.app.**&gt;</span><br><span class="line"> @type file</span><br><span class="line"> path &#x2F;var&#x2F;log&#x2F;td-agent&#x2F;myproject&#x2F;app</span><br><span class="line">&lt;&#x2F;match&gt;</span><br><span class="line"></span><br><span class="line">&lt;match myproject.http.**&gt;</span><br><span class="line"> @type file</span><br><span class="line"> path &#x2F;var&#x2F;log&#x2F;td-agent&#x2F;myproject&#x2F;http</span><br><span class="line">&lt;&#x2F;match&gt;</span><br></pre></td></tr></table></figure>
-
 <h3 id="코드-작성"><a href="#코드-작성" class="headerlink" title="코드 작성"></a>코드 작성</h3><p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/hidelryn/morgan-winston-example">이전</a>에 작성한 코드에 추가 해 본다.</p>
 <h4 id="logger-js"><a href="#logger-js" class="headerlink" title="logger.js"></a><strong><code>logger.js</code></strong></h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; createLogger, format, transports &#125; = <span class="built_in">require</span>(<span class="string">&#x27;winston&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> fluentTransport = <span class="built_in">require</span>(<span class="string">&#x27;fluent-logger&#x27;</span>).support.winstonTransport();</span><br><span class="line"><span class="keyword">const</span> mt = <span class="built_in">require</span>(<span class="string">&#x27;moment-timezone&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> &#123; combine, label, printf &#125; = format;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> date = mt().tz(<span class="string">&#x27;Asia/Seoul&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> myFormat = printf(<span class="function"><span class="params">info</span> =&gt;</span> <span class="string">`<span class="subst">$&#123;info.timestamp&#125;</span> [<span class="subst">$&#123;info.level&#125;</span>]: <span class="subst">$&#123;info.label&#125;</span> - <span class="subst">$&#123;info.message&#125;</span>`</span>);</span><br><span class="line"><span class="keyword">const</span> koreaTime = format(<span class="function">(<span class="params">info</span>) =&gt;</span> &#123;</span><br><span class="line">  info.timestamp = date.format();</span><br><span class="line">  <span class="keyword">return</span> info;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> fluentConfig = &#123;</span><br><span class="line">  host: <span class="string">&#x27;localhost&#x27;</span>,</span><br><span class="line">  port: <span class="number">24224</span>,</span><br><span class="line">  timeout: <span class="number">3.0</span>,</span><br><span class="line">  requireAckResponse: <span class="literal">false</span>, <span class="comment">// <span class="doctag">NOTE:</span> true로 설졍하면 fluentd의 응답을 기다린다라고 번역기로 나오는데 난 false로 해봤다.</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> fluentInit = <span class="function">(<span class="params">tag</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> init = <span class="keyword">new</span> fluentTransport(tag, fluentConfig);</span><br><span class="line">  <span class="keyword">return</span> init;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> appLogger = <span class="function">(<span class="params">category</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> init = createLogger(&#123;</span><br><span class="line">    format: combine(</span><br><span class="line">      label(&#123; <span class="attr">label</span>: category &#125;),</span><br><span class="line">      koreaTime(),</span><br><span class="line">      myFormat,</span><br><span class="line">    ),</span><br><span class="line">    transports: [fluentInit(<span class="string">&#x27;myproject.app&#x27;</span>)],</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> init;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> httpLogger = createLogger(&#123;</span><br><span class="line">  format: combine(</span><br><span class="line">    label(&#123; <span class="attr">label</span>: <span class="string">&#x27;http&#x27;</span> &#125;),</span><br><span class="line">    koreaTime(),</span><br><span class="line">    myFormat,</span><br><span class="line">  ),</span><br><span class="line">  transports: [fluentInit(<span class="string">&#x27;myproject.http&#x27;</span>)],</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> httpLogStream = &#123;</span><br><span class="line">  write: <span class="function">(<span class="params">message</span>) =&gt;</span> &#123;</span><br><span class="line">    httpLogger.log(&#123;</span><br><span class="line">      level: <span class="string">&#x27;info&#x27;</span>,</span><br><span class="line">      message: message,</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">exports</span>.appLogger = appLogger;</span><br><span class="line"><span class="built_in">exports</span>.httpLogStream = httpLogStream;</span><br></pre></td></tr></table></figure>
-
 <h4 id="index-js"><a href="#index-js" class="headerlink" title="index.js"></a><strong><code>index.js</code></strong></h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> morgan = <span class="built_in">require</span>(<span class="string">&quot;morgan&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> logger = <span class="built_in">require</span>(<span class="string">&#x27;./logger&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> app = express();</span><br><span class="line"><span class="keyword">const</span> PORT = process.env.PORT || <span class="number">3000</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> morganFormat = process.env.NODE_ENV !== <span class="string">&quot;production&quot;</span> ? <span class="string">&quot;dev&quot;</span> : <span class="string">&quot;combined&quot;</span>;</span><br><span class="line"></span><br><span class="line">app.use(morgan(morganFormat, &#123; <span class="attr">stream</span>: logger.httpLogStream &#125;));</span><br><span class="line"></span><br><span class="line">app.get(<span class="string">&#x27;/&#x27;</span>, <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">  res.send(<span class="string">&#x27;hihi&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.get(<span class="string">&#x27;/set-item&#x27;</span>, <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; id, name, item_id &#125; = req.query;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> id === <span class="string">&#x27;undefined&#x27;</span> || <span class="keyword">typeof</span> name === <span class="string">&#x27;undefined&#x27;</span> || <span class="keyword">typeof</span> item_id === <span class="string">&#x27;undefined&#x27;</span>) &#123;</span><br><span class="line">    logger.appLogger(<span class="string">&#x27;spend_item&#x27;</span>).log(&#123;</span><br><span class="line">      level: <span class="string">&#x27;warn&#x27;</span>,</span><br><span class="line">      message: <span class="string">&#x27;파라미터 누락&#x27;</span>,</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> res.status(<span class="number">200</span>).json(&#123; <span class="attr">statusCode</span>: <span class="number">403</span>, <span class="attr">message</span>: <span class="string">&#x27;파라미터 누락&#x27;</span> &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> item_id !== <span class="string">&#x27;string&#x27;</span> || !item_id.includes(<span class="string">&#x27;item_&#x27;</span>)) &#123;</span><br><span class="line">    logger.appLogger(<span class="string">&#x27;spend_item&#x27;</span>).log(&#123;</span><br><span class="line">      level: <span class="string">&#x27;error&#x27;</span>,</span><br><span class="line">      message: <span class="string">&#x27;잘못된 아이템 타입&#x27;</span>,</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> res.status(<span class="number">200</span>).json(&#123; <span class="attr">statusCode</span>: <span class="number">500</span>, <span class="attr">message</span>: <span class="string">&#x27;잘못된 아이템 타입&#x27;</span> &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  logger.appLogger(<span class="string">&#x27;spend_item&#x27;</span>).log(&#123;</span><br><span class="line">    level: <span class="string">&#x27;info&#x27;</span>,</span><br><span class="line">    message: <span class="string">`user_id: <span class="subst">$&#123;id&#125;</span>, name: <span class="subst">$&#123;name&#125;</span>, 획득 아이템: <span class="subst">$&#123;item_id&#125;</span>`</span>,</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> res.status(<span class="number">200</span>).json(&#123; <span class="attr">statusCode</span>: <span class="number">200</span>, <span class="attr">message</span>: <span class="string">&#x27;처리 성공&#x27;</span> &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.listen(PORT, <span class="function">() =&gt;</span> <span class="built_in">console</span>.log(<span class="string">`app listening on port <span class="subst">$&#123;PORT&#125;</span>`</span>));</span><br></pre></td></tr></table></figure>
-
 <p>실행을 해서 테스트를 하고 내가 설정한 경로에서 로그를 찾아보면 기록이 남아 있다.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2020-05-09T19:35:19+09:00       myproject.app   &#123;<span class="string">&quot;level&quot;</span>:<span class="string">&quot;info&quot;</span>,<span class="string">&quot;message&quot;</span>:<span class="string">&quot;user_id: abc, name: 123, 획득 아이템: item_123&quot;</span>,<span class="string">&quot;label&quot;</span>:<span class="string">&quot;spend_item&quot;</span>,<span class="string">&quot;timestamp&quot;</span>:<span class="string">&quot;2020-05-09T19:35:17+09:00&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line">2020-05-09T19:35:19+09:00       myproject.http  &#123;<span class="string">&quot;level&quot;</span>:<span class="string">&quot;info&quot;</span>,<span class="string">&quot;message&quot;</span>:<span class="string">&quot;\u001B[0mGET /set-item?id=abc&amp;name=123&amp;item_id=item_123 \u001B[32m200\u001B[0m 8.309 ms - 44\u001B[0m\n&quot;</span>,<span class="string">&quot;label&quot;</span>:<span class="string">&quot;http&quot;</span>,<span class="string">&quot;timestamp&quot;</span>:<span class="string">&quot;2020-05-09T19:35:17+09:00&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
-
 <h2 id="s3-연동"><a href="#s3-연동" class="headerlink" title="s3 연동"></a>s3 연동</h2><p>로컬 파일이 아닌 s3에 파일을 업로드하도록 바꿔보자</p>
 <h3 id="설정-변경"><a href="#설정-변경" class="headerlink" title="설정 변경"></a>설정 변경</h3><p>이전 설정은 주석으로 해두고 새 설정을 추가 하자.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">&lt;match myproject.app.**&gt;</span><br><span class="line">  @type s3</span><br><span class="line"></span><br><span class="line">  aws_key_id AWS 키</span><br><span class="line">  aws_sec_key AWS 시크릿 키</span><br><span class="line">  s3_bucket s3 버켓명</span><br><span class="line">  s3_region 리전</span><br><span class="line">  path logs&#x2F;$&#123;tag&#125;&#x2F;%Y&#x2F;%m&#x2F;%d&#x2F; # 저장할 s3 디렉토리</span><br><span class="line">  &lt;buffer tag,time&gt;</span><br><span class="line">    @type file</span><br><span class="line">    path &#x2F;var&#x2F;log&#x2F;fluent&#x2F;s3&#x2F;app # 버퍼로 갖고 있을 디텍토리 설정</span><br><span class="line">    timekey 0 # timekey는 시간</span><br><span class="line">    timekey_wait 10s # timekey_wait는 초 또는 분 (s, m)</span><br><span class="line">    timekey_use_utc true # use utc</span><br><span class="line">    chunk_limit_size 256m # 버퍼 파일 크기 지정</span><br><span class="line">  &lt;&#x2F;buffer&gt;</span><br><span class="line">&lt;&#x2F;match&gt;</span><br><span class="line"></span><br><span class="line">&lt;match myproject.http.**&gt;</span><br><span class="line">  @type s3</span><br><span class="line"></span><br><span class="line">  aws_key_id AWS 키</span><br><span class="line">  aws_sec_key AWS 시크릿 키</span><br><span class="line">  s3_bucket s3 버켓명</span><br><span class="line">  s3_region 리전</span><br><span class="line">  path logs&#x2F;$&#123;tag&#125;&#x2F;%Y&#x2F;%m&#x2F;%d&#x2F;</span><br><span class="line">  &lt;buffer tag,time&gt;</span><br><span class="line">    @type file</span><br><span class="line">    path &#x2F;var&#x2F;log&#x2F;fluent&#x2F;s3&#x2F;http</span><br><span class="line">    timekey 0</span><br><span class="line">    timekey_wait 10s</span><br><span class="line">    timekey_use_utc true</span><br><span class="line">    chunk_limit_size 256m </span><br><span class="line">  &lt;&#x2F;buffer&gt;</span><br><span class="line">&lt;&#x2F;match&gt;</span><br></pre></td></tr></table></figure>
-
 <p>timekey, timekey_wait에 설정한 시간단위 별로 버퍼에 담아둔 로그를 s3에 업로드한다.</p>
 <p>지금은 10초마다 업로드해놓게끔 해놨고 실제 어플리케이션에서 테스트를 해봤을 시</p>
 <p><img src="https://res.cloudinary.com/dwmywmqv6/image/upload/v1589191562/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-05-11_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_7.05.35_nkj3cy.png" alt="s3업로드"></p>
 <p>gzip으로 압축 되서 올라 간다.</p>
 
-  </div>
-</article>
-
-<script src="https://utteranc.es/client.js" repo="hidelryn/blog-comment" issue-term="title" label="Comment" theme="github-dark-orange" crossorigin="anonymous" async>
-  </script>
-
-
-        
-          <div id="footer-post-container">
-  <div id="footer-post">
-
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a href="/tags/">tags</a></li>
-         
-          <li><a href="/search/">Search</a></li>
-        
-      </ul>
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2020/05/08/etc-fluentd-1/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2020-05-09 14:29:43
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Fluentd/" title="Fluentd">
+                        <b>#</b> Fluentd
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Log/" title="Log">
+                        <b>#</b> Log
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2020/09/01/nodejs-vue-study-1/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
     </div>
-
-    <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%84%A4%EC%A0%95"><span class="toc-number">1.</span> <span class="toc-text">설정</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#match"><span class="toc-number">2.</span> <span class="toc-text">match</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#source"><span class="toc-number">3.</span> <span class="toc-text">source</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%A0%84%EC%86%A1%ED%95%98%EA%B8%B0"><span class="toc-number">4.</span> <span class="toc-text">전송하기</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%8C%A8%ED%82%A4%EC%A7%80-%EC%84%A4%EC%B9%98"><span class="toc-number">4.1.</span> <span class="toc-text">패키지 설치</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%BD%94%EB%93%9C"><span class="toc-number">4.2.</span> <span class="toc-text">코드</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#winston-morgan%EC%9C%BC%EB%A1%9C-%EC%97%B0%EB%8F%99"><span class="toc-number">5.</span> <span class="toc-text">winston, morgan으로 연동</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%84%A4%EC%A0%95-%EC%B6%94%EA%B0%80"><span class="toc-number">5.1.</span> <span class="toc-text">설정 추가</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%BD%94%EB%93%9C-%EC%9E%91%EC%84%B1"><span class="toc-number">5.2.</span> <span class="toc-text">코드 작성</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#logger-js"><span class="toc-number">5.2.1.</span> <span class="toc-text">logger.js</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#index-js"><span class="toc-number">5.2.2.</span> <span class="toc-text">index.js</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#s3-%EC%97%B0%EB%8F%99"><span class="toc-number">6.</span> <span class="toc-text">s3 연동</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%84%A4%EC%A0%95-%EB%B3%80%EA%B2%BD"><span class="toc-number">6.1.</span> <span class="toc-text">설정 변경</span></a></li></ol></li></ol>
-    </div>
-
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2020/05/09/etc-fluentd-2/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2020/05/09/etc-fluentd-2/&text=Node.js app log를 Fluentd에 저장하기"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2020/05/09/etc-fluentd-2/&title=Node.js app log를 Fluentd에 저장하기"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2020/05/09/etc-fluentd-2/&is_video=false&description=Node.js app log를 Fluentd에 저장하기"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Node.js app log를 Fluentd에 저장하기&body=Check out this article: https://hidelryn.github.io/2020/05/09/etc-fluentd-2/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2020/05/09/etc-fluentd-2/&title=Node.js app log를 Fluentd에 저장하기"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2020/05/09/etc-fluentd-2/&title=Node.js app log를 Fluentd에 저장하기"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2020/05/09/etc-fluentd-2/&title=Node.js app log를 Fluentd에 저장하기"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2020/05/09/etc-fluentd-2/&title=Node.js app log를 Fluentd에 저장하기"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2020/05/09/etc-fluentd-2/&name=Node.js app log를 Fluentd에 저장하기&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2020/05/09/etc-fluentd-2/&t=Node.js app log를 Fluentd에 저장하기"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
-        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
-    </div>
-
-  </div>
-</div>
-
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy;
     
-    
-    2018-2021
-    delryn
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a href="/tags/">tags</a></li>
-         
-          <li><a href="/search/">Search</a></li>
-        
-      </ul>
-    </nav>
-  </div>
-</footer>
-
+  <div class="post-catalog" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%84%A4%EC%A0%95"><span class="toc-text">설정</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#match"><span class="toc-text">match</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#source"><span class="toc-text">source</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%A0%84%EC%86%A1%ED%95%98%EA%B8%B0"><span class="toc-text">전송하기</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%8C%A8%ED%82%A4%EC%A7%80-%EC%84%A4%EC%B9%98"><span class="toc-text">패키지 설치</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%BD%94%EB%93%9C"><span class="toc-text">코드</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#winston-morgan%EC%9C%BC%EB%A1%9C-%EC%97%B0%EB%8F%99"><span class="toc-text">winston, morgan으로 연동</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%84%A4%EC%A0%95-%EC%B6%94%EA%B0%80"><span class="toc-text">설정 추가</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%BD%94%EB%93%9C-%EC%9E%91%EC%84%B1"><span class="toc-text">코드 작성</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#logger-js"><span class="toc-text">logger.js</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#index-js"><span class="toc-text">index.js</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#s3-%EC%97%B0%EB%8F%99"><span class="toc-text">s3 연동</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%84%A4%EC%A0%95-%EB%B3%80%EA%B2%BD"><span class="toc-text">설정 변경</span></a></li></ol></li></ol>
     </div>
-    <!-- styles -->
-
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-
-
-<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
-
-
-    <!-- jquery -->
-
-<script src="/lib/jquery/jquery.min.js"></script>
-
-
-<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
-
-<!-- clipboard -->
+  </div>
 
   
-<script src="/lib/clipboard/clipboard.min.js"></script>
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+  <script src="https://utteranc.es/client.js" repo="hidelryn/blog-comment" issue-term="title" label="Comment" theme="github-light" crossorigin="anonymous" async>
+    </script>
+  
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/hidelryn/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="mailto:hidelryn@gmail.com" rel="external nofollow noopener noreferrer" target="_blank">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="/atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+  
+    <div class="footer-more">
+      
+        <span style="color: #666;">Copyright © Delryn 2021</span>
+        
+        
+    </div>
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+      
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
 
   <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
-    btn += '<i class="far fa-clone"></i>';
-    btn += '</span>'; 
-    // mount it!
-    $(".highlight table").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      text: function(trigger) {
-        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
       }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "Copied!");
-      e.clearSelection();
-    })
-  })
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
   </script>
 
 
-<script src="/js/main.js"></script>
-
-<!-- search -->
-
-<!-- Google Analytics -->
-
-    <script type="text/javascript">
-        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-        ga('create', 'UA-104148803-2', 'auto');
-        ga('send', 'pageview');
-    </script>
-
-<!-- Baidu Analytics -->
-
-<!-- Disqus Comments -->
 
 
-</body>
+    </div>
+  </body>
 </html>

@@ -3,15 +3,57 @@
 
 
     <url>
-        <loc>https://hidelryn.github.io/tags/Spring/</loc>
-        <lastmod>2021-01-24T13:34:15.391Z</lastmod>
+        <loc>https://hidelryn.github.io/tags/Queue/</loc>
+        <lastmod>2021-02-06T14:16:40.134Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>https://hidelryn.github.io/tags/Java/</loc>
-        <lastmod>2021-01-24T13:34:15.391Z</lastmod>
+        <loc>https://hidelryn.github.io/tags/Redis/</loc>
+        <lastmod>2021-02-06T14:16:40.134Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://hidelryn.github.io/tags/NoSQL/</loc>
+        <lastmod>2021-02-06T14:16:40.134Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://hidelryn.github.io/tags/SMS/</loc>
+        <lastmod>2021-02-06T14:16:08.197Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://hidelryn.github.io/tags/AWS/</loc>
+        <lastmod>2021-02-06T14:16:08.197Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://hidelryn.github.io/tags/MySQL/</loc>
+        <lastmod>2021-02-06T14:14:17.827Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://hidelryn.github.io/tags/Node-js/</loc>
+        <lastmod>2021-02-06T14:14:17.827Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://hidelryn.github.io/tags/ETC/</loc>
+        <lastmod>2021-02-05T14:21:22.366Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
@@ -19,34 +61,6 @@
     <url>
         <loc>https://hidelryn.github.io/tags/HomeBrew/</loc>
         <lastmod>2021-01-20T14:17:41.089Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://hidelryn.github.io/tags/ETC/</loc>
-        <lastmod>2021-01-20T14:17:41.089Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://hidelryn.github.io/tags/mysql/</loc>
-        <lastmod>2021-01-20T14:12:41.200Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://hidelryn.github.io/tags/node-js/</loc>
-        <lastmod>2021-01-20T14:12:41.200Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://hidelryn.github.io/tags/Node-js/</loc>
-        <lastmod>2020-12-06T13:40:59.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
@@ -75,13 +89,6 @@
     <url>
         <loc>https://hidelryn.github.io/tags/Vue/</loc>
         <lastmod>2020-09-17T08:31:45.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://hidelryn.github.io/tags/MessageQueue/</loc>
-        <lastmod>2020-09-07T05:52:43.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
@@ -129,20 +136,6 @@
     </url>
 
     <url>
-        <loc>https://hidelryn.github.io/tags/AWS/</loc>
-        <lastmod>2020-09-01T09:34:02.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://hidelryn.github.io/tags/NoSQL/</loc>
-        <lastmod>2020-09-01T09:33:37.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>https://hidelryn.github.io/tags/Auth/</loc>
         <lastmod>2020-09-01T06:37:54.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -152,13 +145,6 @@
     <url>
         <loc>https://hidelryn.github.io/tags/ORM/</loc>
         <lastmod>2020-09-01T06:37:46.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://hidelryn.github.io/tags/SMS/</loc>
-        <lastmod>2020-09-01T06:36:26.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>

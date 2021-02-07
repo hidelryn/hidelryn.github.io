@@ -1,167 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="description" content="mailtrapmailtrap은 email 발송, 수신이 제대로 되었는지 테스트를 해볼 수 잇는 SMTP를 제공하는 서비스다. 가입 할 때 크레딧 카드 등록 같은 거 업어서 부담이 업음.  대시보드에서 저 보라색 표시한 부분을 클릭해서 들어가게 되면 다음과 같은 화면을 본다.  서비스의 장점 중 하나가 여러 언어의 샘플 코드도 보여준다는 점. nodemai">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Node.js에서 Email 발송해보기">
-<meta property="og:url" content="https://hidelryn.github.io/2018/07/13/nodejs-send-email/index.html">
-<meta property="og:site_name" content="Delryn&#39;s Blog">
-<meta property="og:description" content="mailtrapmailtrap은 email 발송, 수신이 제대로 되었는지 테스트를 해볼 수 잇는 SMTP를 제공하는 서비스다. 가입 할 때 크레딧 카드 등록 같은 거 업어서 부담이 업음.  대시보드에서 저 보라색 표시한 부분을 클릭해서 들어가게 되면 다음과 같은 화면을 본다.  서비스의 장점 중 하나가 여러 언어의 샘플 코드도 보여준다는 점. nodemai">
-<meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://res.cloudinary.com/ddebpn43q/image/upload/v1552833110/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2019-03-17_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_11.24.49_lhx7cl.png">
-<meta property="og:image" content="https://res.cloudinary.com/ddebpn43q/image/upload/v1552834511/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2019-03-17_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_11.24.15_oazyui.png">
-<meta property="og:image" content="https://res.cloudinary.com/ddebpn43q/image/upload/v1552833575/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2019-03-17_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_11.38.51_lg0nml.png">
-<meta property="article:published_time" content="2018-07-13T08:38:38.000Z">
-<meta property="article:modified_time" content="2020-09-01T06:36:26.000Z">
-<meta property="article:author" content="delryn">
-<meta property="article:tag" content="Node.js">
-<meta property="article:tag" content="SMS">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://res.cloudinary.com/ddebpn43q/image/upload/v1552833110/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2019-03-17_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_11.24.49_lhx7cl.png">
-    
-    
-        
-          
-              <link rel="shortcut icon" href="/images/favicon.ico">
-          
-        
-        
-          
-            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-          
-        
-        
-          
-            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-          
-        
-    
-    <!-- title -->
-    <title>Node.js에서 Email 발송해보기</title>
-    <!-- styles -->
-    
-<link rel="stylesheet" href="/css/style.css">
 
-    <!-- persian styles -->
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="keywords" content>
+  <meta name="author" content="delryn">
+  <meta name="description" content="나의 개발 노트 ʕ •ᴥ• ʔ">
+  
+  
+  <title>
     
+      Node.js에서 Email 발송해보기 
       
-<link rel="stylesheet" href="/css/rtl.css">
-
-    
-    <!-- rss -->
-    
-    
-    <link rel="canonical" href="https://hidelryn.github.io/2018/07/13/nodejs-send-email/">
-<meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="Delryn's Blog" type="application/atom+xml">
-</head>
-
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a href="/tags/">tags</a></li>
-         
-          <li><a href="/search/">Search</a></li>
-        
-      </ul>
-    </span>
-    <br>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" href="/2018/07/22/nodejs-json-array-to-csv/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" href="/2018/07/13/nodejs-cheerio/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">Previous post</span>
-      <span id="i-next" class="info" style="display:none;">Next post</span>
-      <span id="i-top" class="info" style="display:none;">Back to top</span>
-      <span id="i-share" class="info" style="display:none;">Share post</span>
-    </span>
-    <br>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2018/07/13/nodejs-send-email/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2018/07/13/nodejs-send-email/&text=Node.js에서 Email 발송해보기"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2018/07/13/nodejs-send-email/&title=Node.js에서 Email 발송해보기"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2018/07/13/nodejs-send-email/&is_video=false&description=Node.js에서 Email 발송해보기"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Node.js에서 Email 발송해보기&body=Check out this article: https://hidelryn.github.io/2018/07/13/nodejs-send-email/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2018/07/13/nodejs-send-email/&title=Node.js에서 Email 발송해보기"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2018/07/13/nodejs-send-email/&title=Node.js에서 Email 발송해보기"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2018/07/13/nodejs-send-email/&title=Node.js에서 Email 발송해보기"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2018/07/13/nodejs-send-email/&title=Node.js에서 Email 발송해보기"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2018/07/13/nodejs-send-email/&name=Node.js에서 Email 발송해보기&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2018/07/13/nodejs-send-email/&t=Node.js에서 Email 발송해보기"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#mailtrap"><span class="toc-number">1.</span> <span class="toc-text">mailtrap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nodemailer"><span class="toc-number">2.</span> <span class="toc-text">nodemailer</span></a></li></ol>
-    </div>
-  </span>
-</div>
-
-    
-    <div class="content index py4">
-        
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        Node.js에서 Email 발송해보기
-    </h1>
-
-
-
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">Delryn's Blog</span>
-      </span>
       
-    <div class="postdate">
-      
-        <time datetime="2018-07-13T08:38:38.000Z" itemprop="datePublished">2018-07-13</time>
-        
-      
-    </div>
+    
+  </title>
 
-
-      
-
-      
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link-link" href="/tags/Node-js/" rel="tag">Node.js</a>, <a class="tag-link-link" href="/tags/SMS/" rel="tag">SMS</a>
-    </div>
-
-
-    </div>
-  </header>
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
   
 
-  <div class="content" itemprop="articleBody">
-    <h2 id="mailtrap"><a href="#mailtrap" class="headerlink" title="mailtrap"></a>mailtrap</h2><p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://mailtrap.io/">mailtrap</a>은 email 발송, 수신이 제대로 되었는지 테스트를 해볼 수 잇는 SMTP를 제공하는 서비스다.</p>
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-104148803-2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-104148803-2');
+    </script>
+  
+
+<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Delryn's Blog" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt>
+      
+    </a>
+    <div class="nickname"><a href="/">Delryn</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+<!-- LaTex Display -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Node.js에서 Email 발송해보기</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2018-07-13 17:38:38
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/SMS/" title="SMS">
+                    <b>#</b> SMS
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Node-js/" title="Node.js">
+                    <b>#</b> Node.js
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="mailtrap"><a href="#mailtrap" class="headerlink" title="mailtrap"></a>mailtrap</h2><p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://mailtrap.io/">mailtrap</a>은 email 발송, 수신이 제대로 되었는지 테스트를 해볼 수 잇는 SMTP를 제공하는 서비스다.</p>
 <p>가입 할 때 크레딧 카드 등록 같은 거 업어서 부담이 업음.</p>
 <p><img src="https://res.cloudinary.com/ddebpn43q/image/upload/v1552833110/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2019-03-17_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_11.24.49_lhx7cl.png" alt="mailtrap"></p>
 <p>대시보드에서 저 보라색 표시한 부분을 클릭해서 들어가게 되면 다음과 같은 화면을 본다.</p>
@@ -169,159 +161,335 @@
 <p>서비스의 장점 중 하나가 여러 언어의 샘플 코드도 보여준다는 점.</p>
 <h2 id="nodemailer"><a href="#nodemailer" class="headerlink" title="nodemailer"></a>nodemailer</h2><p>이제 프로그램 상에서 메일 클라이언트 모듈을 받아서 전송을 해보자.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add nodemailer <span class="comment"># 또는 npm i nodemailer -S</span></span><br></pre></td></tr></table></figure>
-
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> nodemailer = <span class="built_in">require</span>(<span class="string">&#x27;nodemailer&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> transporter = nodemailer.createTransport(&#123;</span><br><span class="line">    host: <span class="string">&#x27;smtp.mailtrap.io&#x27;</span>,</span><br><span class="line">    port: <span class="number">2525</span>,</span><br><span class="line">    secure: <span class="literal">false</span>, <span class="comment">// <span class="doctag">NOTE:</span> port 가 465일 때만 true</span></span><br><span class="line">    auth: &#123;</span><br><span class="line">        user: <span class="string">&#x27;발급 받은 Username&#x27;</span>,</span><br><span class="line">        pass: <span class="string">&#x27;발급 받은 Password&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> title = <span class="string">`현재 메일은 테스트 입니다.`</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> contents = <span class="string">`아무말 대잔치 ㅎㅎㅎ`</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> html = <span class="string">`</span></span><br><span class="line"><span class="string">&lt;!doctype html&gt;</span></span><br><span class="line"><span class="string">&lt;html&gt;</span></span><br><span class="line"><span class="string">&lt;head&gt;</span></span><br><span class="line"><span class="string">    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;</span></span><br><span class="line"><span class="string">    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;/&gt;</span></span><br><span class="line"><span class="string">    &lt;title&gt;안내 메일&lt;/title&gt;</span></span><br><span class="line"><span class="string">    &lt;style type=&quot;text/css&quot;&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        #outlook a &#123;padding:0;&#125;</span></span><br><span class="line"><span class="string">        body&#123;width:100% !important; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; margin:0; padding:0;&#125;</span></span><br><span class="line"><span class="string">        .ExternalClass &#123;width:100%;&#125;</span></span><br><span class="line"><span class="string">        .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div &#123;line-height: 100%;&#125;</span></span><br><span class="line"><span class="string">        #backgroundTable &#123;margin:0; padding:0; width:100% !important; line-height: 100% !important;&#125;</span></span><br><span class="line"><span class="string">        img &#123;outline:none; text-decoration:none; -ms-interpolation-mode: bicubic;&#125;</span></span><br><span class="line"><span class="string">        a img &#123;border:none;display:inline-block;&#125;</span></span><br><span class="line"><span class="string">        .image_fix &#123;display:block;&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        h1, h2, h3, h4, h5, h6 &#123;color: black !important;&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        h1 a, h2 a, h3 a, h4 a, h5 a, h6 a &#123;color: blue !important;&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        h1 a:active, h2 a:active,  h3 a:active, h4 a:active, h5 a:active, h6 a:active &#123;</span></span><br><span class="line"><span class="string">            color: red !important;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        h1 a:visited, h2 a:visited,  h3 a:visited, h4 a:visited, h5 a:visited, h6 a:visited &#123;</span></span><br><span class="line"><span class="string">            color: purple !important;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        table td &#123;border-collapse: collapse;&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        table &#123; border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt; &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        a &#123;color: #000;&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        @media only screen and (max-device-width: 480px) &#123;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">            a[href^=&quot;tel&quot;], a[href^=&quot;sms&quot;] &#123;</span></span><br><span class="line"><span class="string">                text-decoration: none;</span></span><br><span class="line"><span class="string">                color: black; /* or whatever your want */</span></span><br><span class="line"><span class="string">                pointer-events: none;</span></span><br><span class="line"><span class="string">                cursor: default;</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">            .mobile_link a[href^=&quot;tel&quot;], .mobile_link a[href^=&quot;sms&quot;] &#123;</span></span><br><span class="line"><span class="string">                text-decoration: default;</span></span><br><span class="line"><span class="string">                color: orange !important; /* or whatever your want */</span></span><br><span class="line"><span class="string">                pointer-events: auto;</span></span><br><span class="line"><span class="string">                cursor: default;</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) &#123;</span></span><br><span class="line"><span class="string">            a[href^=&quot;tel&quot;], a[href^=&quot;sms&quot;] &#123;</span></span><br><span class="line"><span class="string">                text-decoration: none;</span></span><br><span class="line"><span class="string">                color: blue; /* or whatever your want */</span></span><br><span class="line"><span class="string">                pointer-events: none;</span></span><br><span class="line"><span class="string">                cursor: default;</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">            .mobile_link a[href^=&quot;tel&quot;], .mobile_link a[href^=&quot;sms&quot;] &#123;</span></span><br><span class="line"><span class="string">                text-decoration: default;</span></span><br><span class="line"><span class="string">                color: orange !important;</span></span><br><span class="line"><span class="string">                pointer-events: auto;</span></span><br><span class="line"><span class="string">                cursor: default;</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        p &#123;</span></span><br><span class="line"><span class="string">            margin:0;</span></span><br><span class="line"><span class="string">            color:#555;</span></span><br><span class="line"><span class="string">            font-family:Helvetica, Arial, sans-serif;</span></span><br><span class="line"><span class="string">            font-size:16px;</span></span><br><span class="line"><span class="string">            line-height:160%;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">        a.link2&#123;</span></span><br><span class="line"><span class="string">            text-decoration:none;</span></span><br><span class="line"><span class="string">            font-family:Helvetica, Arial, sans-serif;</span></span><br><span class="line"><span class="string">            font-size:16px;</span></span><br><span class="line"><span class="string">            color:#fff;</span></span><br><span class="line"><span class="string">            border-radius:4px;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">        h2&#123;</span></span><br><span class="line"><span class="string">            color:#181818;</span></span><br><span class="line"><span class="string">            font-family:Helvetica, Arial, sans-serif;</span></span><br><span class="line"><span class="string">            font-size:22px;</span></span><br><span class="line"><span class="string">            font-weight: normal;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        .bgItem&#123;</span></span><br><span class="line"><span class="string">            background:#F4A81C;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">        .bgBody&#123;</span></span><br><span class="line"><span class="string">            background:#ffffff;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    &lt;/style&gt;</span></span><br><span class="line"><span class="string">&lt;/head&gt;</span></span><br><span class="line"><span class="string">&lt;body&gt;</span></span><br><span class="line"><span class="string">&lt;!-- Wrapper/Container Table: Use a wrapper table to control the width and the background color consistently of your email. Use this approach instead of setting attributes on the body tag. --&gt;</span></span><br><span class="line"><span class="string">  &lt;table cellpadding=&quot;0&quot; width=&quot;100%&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; id=&quot;backgroundTable&quot; class=&#x27;bgBody&#x27;&gt;</span></span><br><span class="line"><span class="string">      &lt;tr&gt;</span></span><br><span class="line"><span class="string">          &lt;td&gt;</span></span><br><span class="line"><span class="string">    &lt;!-- Tables are the most common way to format your email consistently. Set your table widths inside cells and in most cases reset cellpadding, cellspacing, and border to zero. Use nested tables as a way to space effectively in your message. --&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    &lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; align=&quot;center&quot; width=&quot;100%&quot; style=&quot;border-collapse:collapse;&quot;&gt;</span></span><br><span class="line"><span class="string">      &lt;tr&gt;</span></span><br><span class="line"><span class="string">        &lt;td class=&#x27;movableContentContainer&#x27;&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">          &lt;div class=&#x27;movableContent&#x27;&gt;</span></span><br><span class="line"><span class="string">            &lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; align=&quot;center&quot; width=&quot;600&quot;&gt;</span></span><br><span class="line"><span class="string">              &lt;tr height=&quot;40&quot;&gt;</span></span><br><span class="line"><span class="string">                &lt;td width=&quot;200&quot;&gt;&amp;nbsp;&lt;/td&gt;</span></span><br><span class="line"><span class="string">                &lt;td width=&quot;200&quot;&gt;&amp;nbsp;&lt;/td&gt;</span></span><br><span class="line"><span class="string">                &lt;td width=&quot;200&quot;&gt;&amp;nbsp;&lt;/td&gt;</span></span><br><span class="line"><span class="string">              &lt;/tr&gt;</span></span><br><span class="line"><span class="string">              &lt;tr&gt;</span></span><br><span class="line"><span class="string">                &lt;td width=&quot;200&quot; valign=&quot;top&quot;&gt;&amp;nbsp;&lt;/td&gt;</span></span><br><span class="line"><span class="string">                &lt;td width=&quot;200&quot; valign=&quot;top&quot; align=&quot;center&quot;&gt;</span></span><br><span class="line"><span class="string">                  &lt;div class=&quot;contentEditableContainer contentTextEditable&quot;&gt;</span></span><br><span class="line"><span class="string">                    &lt;div class=&quot;contentEditable&quot; &gt;</span></span><br><span class="line"><span class="string">                      &lt;img src=&quot;https://avatars1.githubusercontent.com/u/29791348?s=460&amp;v=4&quot; width=&quot;155&quot; height=&#x27;155&#x27; alt=&#x27;Logo&#x27;/&gt;</span></span><br><span class="line"><span class="string">                    &lt;/div&gt;</span></span><br><span class="line"><span class="string">                  &lt;/div&gt;</span></span><br><span class="line"><span class="string">                &lt;/td&gt;</span></span><br><span class="line"><span class="string">                &lt;td width=&quot;200&quot; valign=&quot;top&quot;&gt;&amp;nbsp;&lt;/td&gt;</span></span><br><span class="line"><span class="string">              &lt;/tr&gt;</span></span><br><span class="line"><span class="string">              &lt;tr height=&quot;25&quot;&gt;</span></span><br><span class="line"><span class="string">                &lt;td width=&quot;200&quot;&gt;&amp;nbsp;&lt;/td&gt;</span></span><br><span class="line"><span class="string">                &lt;td width=&quot;200&quot;&gt;&amp;nbsp;&lt;/td&gt;</span></span><br><span class="line"><span class="string">                &lt;td width=&quot;200&quot;&gt;&amp;nbsp;&lt;/td&gt;</span></span><br><span class="line"><span class="string">              &lt;/tr&gt;</span></span><br><span class="line"><span class="string">            &lt;/table&gt;</span></span><br><span class="line"><span class="string">          &lt;/div&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">          &lt;div class=&#x27;movableContent&#x27;&gt;</span></span><br><span class="line"><span class="string">            &lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; align=&quot;center&quot; width=&quot;600&quot;&gt;</span></span><br><span class="line"><span class="string">              &lt;tr&gt;</span></span><br><span class="line"><span class="string">                &lt;td width=&quot;100%&quot; colspan=&quot;3&quot; align=&quot;center&quot; style=&quot;padding-bottom:10px;padding-top:25px;&quot;&gt;</span></span><br><span class="line"><span class="string">                  &lt;div class=&quot;contentEditableContainer contentTextEditable&quot;&gt;</span></span><br><span class="line"><span class="string">                    &lt;div class=&quot;contentEditable&quot; &gt;</span></span><br><span class="line"><span class="string">                      &lt;h2 &gt;`</span>+ title + <span class="string">`&lt;/h2&gt;</span></span><br><span class="line"><span class="string">                    &lt;/div&gt;</span></span><br><span class="line"><span class="string">                  &lt;/div&gt;</span></span><br><span class="line"><span class="string">                &lt;/td&gt;</span></span><br><span class="line"><span class="string">              &lt;/tr&gt;</span></span><br><span class="line"><span class="string">              &lt;tr&gt;</span></span><br><span class="line"><span class="string">                &lt;td width=&quot;100&quot;&gt;&amp;nbsp;&lt;/td&gt;</span></span><br><span class="line"><span class="string">                &lt;td width=&quot;400&quot; align=&quot;center&quot; style=&quot;padding-bottom:5px;&quot;&gt;</span></span><br><span class="line"><span class="string">                  &lt;div class=&quot;contentEditableContainer contentTextEditable&quot;&gt;</span></span><br><span class="line"><span class="string">                    &lt;div class=&quot;contentEditable&quot; &gt;</span></span><br><span class="line"><span class="string">                      &lt;p &gt;`</span>+ contents + <span class="string">`&lt;/p&gt;</span></span><br><span class="line"><span class="string">                    &lt;/div&gt;</span></span><br><span class="line"><span class="string">                  &lt;/div&gt;</span></span><br><span class="line"><span class="string">                &lt;/td&gt;</span></span><br><span class="line"><span class="string">                &lt;td width=&quot;100&quot;&gt;&amp;nbsp;&lt;/td&gt;</span></span><br><span class="line"><span class="string">              &lt;/tr&gt;</span></span><br><span class="line"><span class="string">            &lt;/table&gt;</span></span><br><span class="line"><span class="string">          &lt;/div&gt;</span></span><br><span class="line"><span class="string">          &lt;div class=&#x27;movableContent&#x27;&gt;</span></span><br><span class="line"><span class="string">            &lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; align=&quot;center&quot; width=&quot;600&quot;&gt;</span></span><br><span class="line"><span class="string">              &lt;tr&gt;</span></span><br><span class="line"><span class="string">                &lt;td width=&quot;100%&quot; colspan=&quot;2&quot; style=&quot;padding-top:65px;&quot;&gt;</span></span><br><span class="line"><span class="string">                  &lt;hr style=&quot;height:1px;border:none;color:#333;background-color:#ddd;&quot; /&gt;</span></span><br><span class="line"><span class="string">                &lt;/td&gt;</span></span><br><span class="line"><span class="string">              &lt;/tr&gt;</span></span><br><span class="line"><span class="string">              &lt;tr&gt;</span></span><br><span class="line"><span class="string">                &lt;td width=&quot;60%&quot; height=&quot;70&quot; valign=&quot;middle&quot; style=&quot;padding-bottom:20px;&quot;&gt;</span></span><br><span class="line"><span class="string">                  &lt;div class=&quot;contentEditableContainer contentTextEditable&quot;&gt;</span></span><br><span class="line"><span class="string">                    &lt;div class=&quot;contentEditable&quot; &gt;</span></span><br><span class="line"><span class="string">                      &lt;span style=&quot;font-size:13px;color:#181818;font-family:Helvetica, Arial, sans-serif;line-height:200%;&quot;&gt;Copyright © 2019 delryn&lt;/span&gt;</span></span><br><span class="line"><span class="string">                    &lt;/div&gt;</span></span><br><span class="line"><span class="string">                  &lt;/div&gt;</span></span><br><span class="line"><span class="string">                &lt;/td&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">              &lt;/tr&gt;</span></span><br><span class="line"><span class="string">            &lt;/table&gt;</span></span><br><span class="line"><span class="string">          &lt;/div&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        &lt;/td&gt;</span></span><br><span class="line"><span class="string">      &lt;/tr&gt;</span></span><br><span class="line"><span class="string">    &lt;/table&gt;</span></span><br><span class="line"><span class="string">&lt;!-- END BODY --&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  &lt;/td&gt;</span></span><br><span class="line"><span class="string">&lt;/tr&gt;</span></span><br><span class="line"><span class="string">&lt;/table&gt;</span></span><br><span class="line"><span class="string">&lt;!-- End of wrapper table --&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&lt;/body&gt;</span></span><br><span class="line"><span class="string">&lt;/html&gt;</span></span><br><span class="line"><span class="string">`</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mailOptions = &#123;</span><br><span class="line">    <span class="keyword">from</span>: <span class="string">&#x27;&quot;delryn 😊&quot; &lt;admin@hidelryn.github.io&gt;&#x27;</span>, <span class="comment">// 보내는 사람</span></span><br><span class="line">    to: <span class="string">&quot;hidelryn@gmail.com&quot;</span>, <span class="comment">// <span class="doctag">NOTE:</span> 받는 사람들 여러 명인 경우 aa@gmail.com, bb@gmail.com 이렇게 ,로 이어서.</span></span><br><span class="line">    subject: title, <span class="comment">// 제목</span></span><br><span class="line">    <span class="comment">// text: &quot;Hello world?&quot;, // <span class="doctag">NOTE:</span> 단순히 텍스트만 보낼 경우.</span></span><br><span class="line">    html: html <span class="comment">// <span class="doctag">NOTE:</span> HTML 보낼 경우.</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">transporter.sendMail(mailOptions, <span class="function">(<span class="params">err, res</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (err) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(err);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(res);</span><br><span class="line">    &#125;</span><br><span class="line">    transporter.close();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
 <p>별로 어려운게 업다. 코드를 실행을 해보면 아래처럼 mailtrap에서 결과를 볼 수 있다.</p>
 <p><img src="https://res.cloudinary.com/ddebpn43q/image/upload/v1552833575/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2019-03-17_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_11.38.51_lg0nml.png" alt="mailtrap - 3"></p>
 
-  </div>
-</article>
-
-<script src="https://utteranc.es/client.js" repo="hidelryn/blog-comment" issue-term="title" label="Comment" theme="github-dark-orange" crossorigin="anonymous" async>
-  </script>
-
-
-        
-          <div id="footer-post-container">
-  <div id="footer-post">
-
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a href="/tags/">tags</a></li>
-         
-          <li><a href="/search/">Search</a></li>
-        
-      </ul>
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2018/07/13/nodejs-cheerio/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2018-07-13 17:38:38
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/SMS/" title="SMS">
+                        <b>#</b> SMS
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Node-js/" title="Node.js">
+                        <b>#</b> Node.js
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2018/07/22/nodejs-json-array-to-csv/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
     </div>
-
-    <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#mailtrap"><span class="toc-number">1.</span> <span class="toc-text">mailtrap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nodemailer"><span class="toc-number">2.</span> <span class="toc-text">nodemailer</span></a></li></ol>
-    </div>
-
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2018/07/13/nodejs-send-email/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2018/07/13/nodejs-send-email/&text=Node.js에서 Email 발송해보기"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2018/07/13/nodejs-send-email/&title=Node.js에서 Email 발송해보기"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2018/07/13/nodejs-send-email/&is_video=false&description=Node.js에서 Email 발송해보기"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Node.js에서 Email 발송해보기&body=Check out this article: https://hidelryn.github.io/2018/07/13/nodejs-send-email/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2018/07/13/nodejs-send-email/&title=Node.js에서 Email 발송해보기"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2018/07/13/nodejs-send-email/&title=Node.js에서 Email 발송해보기"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2018/07/13/nodejs-send-email/&title=Node.js에서 Email 발송해보기"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2018/07/13/nodejs-send-email/&title=Node.js에서 Email 발송해보기"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2018/07/13/nodejs-send-email/&name=Node.js에서 Email 발송해보기&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2018/07/13/nodejs-send-email/&t=Node.js에서 Email 발송해보기"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
-        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
-    </div>
-
-  </div>
-</div>
-
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy;
     
-    
-    2018-2021
-    delryn
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a href="/tags/">tags</a></li>
-         
-          <li><a href="/search/">Search</a></li>
-        
-      </ul>
-    </nav>
-  </div>
-</footer>
-
+  <div class="post-catalog" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#mailtrap"><span class="toc-text">mailtrap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nodemailer"><span class="toc-text">nodemailer</span></a></li></ol>
     </div>
-    <!-- styles -->
-
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-
-
-<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
-
-
-    <!-- jquery -->
-
-<script src="/lib/jquery/jquery.min.js"></script>
-
-
-<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
-
-<!-- clipboard -->
+  </div>
 
   
-<script src="/lib/clipboard/clipboard.min.js"></script>
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+  <script src="https://utteranc.es/client.js" repo="hidelryn/blog-comment" issue-term="title" label="Comment" theme="github-light" crossorigin="anonymous" async>
+    </script>
+  
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/hidelryn/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="mailto:hidelryn@gmail.com" rel="external nofollow noopener noreferrer" target="_blank">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="/atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+  
+    <div class="footer-more">
+      
+        <span style="color: #666;">Copyright © Delryn 2021</span>
+        
+        
+    </div>
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+      
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
 
   <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
-    btn += '<i class="far fa-clone"></i>';
-    btn += '</span>'; 
-    // mount it!
-    $(".highlight table").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      text: function(trigger) {
-        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
       }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "Copied!");
-      e.clearSelection();
-    })
-  })
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
   </script>
 
 
-<script src="/js/main.js"></script>
-
-<!-- search -->
-
-<!-- Google Analytics -->
-
-    <script type="text/javascript">
-        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-        ga('create', 'UA-104148803-2', 'auto');
-        ga('send', 'pageview');
-    </script>
-
-<!-- Baidu Analytics -->
-
-<!-- Disqus Comments -->
 
 
-</body>
+    </div>
+  </body>
 </html>

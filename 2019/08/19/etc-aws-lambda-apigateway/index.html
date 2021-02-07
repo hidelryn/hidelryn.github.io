@@ -1,173 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="description" content="Lambda란?서버리스, 이벤트 처리 방식의 컴퓨팅 서비스  서버리스(serverless)란 애플리케이션 개발자가 서버를 프로비저닝하거나 애플리케이션의 확장을 관리할 필요가 없는 클라우드 컴퓨팅 모델  이벤트 처리 방식은 내가 해본 건 아래와 같다.  직접 Lambda를 동기&#x2F;비동기식으로 호출 CloudWatch Event를 통한 호출 API GateWay">
-<meta property="og:type" content="article">
-<meta property="og:title" content="AWS Lambda 사용해보기">
-<meta property="og:url" content="https://hidelryn.github.io/2019/08/19/etc-aws-lambda-apigateway/index.html">
-<meta property="og:site_name" content="Delryn&#39;s Blog">
-<meta property="og:description" content="Lambda란?서버리스, 이벤트 처리 방식의 컴퓨팅 서비스  서버리스(serverless)란 애플리케이션 개발자가 서버를 프로비저닝하거나 애플리케이션의 확장을 관리할 필요가 없는 클라우드 컴퓨팅 모델  이벤트 처리 방식은 내가 해본 건 아래와 같다.  직접 Lambda를 동기&#x2F;비동기식으로 호출 CloudWatch Event를 통한 호출 API GateWay">
-<meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://res.cloudinary.com/ddebpn43q/image/upload/v1597837406/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-08-19_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_8.33.58_qgqnep.png">
-<meta property="og:image" content="https://res.cloudinary.com/ddebpn43q/image/upload/v1597839698/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-08-19_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_9.21.15_f1rw7m.png">
-<meta property="og:image" content="https://res.cloudinary.com/ddebpn43q/image/upload/v1597842973/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-08-19_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_10.15.43_dczmlh.png">
-<meta property="og:image" content="https://res.cloudinary.com/ddebpn43q/image/upload/v1597895265/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-08-20_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_12.47.27_wsb3rz.png">
-<meta property="og:image" content="https://res.cloudinary.com/ddebpn43q/image/upload/v1597896931/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-08-20_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_1.14.17_vysq89.png">
-<meta property="og:image" content="https://res.cloudinary.com/ddebpn43q/image/upload/v1597896955/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-08-20_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_1.14.40_desklm.png">
-<meta property="og:image" content="https://res.cloudinary.com/ddebpn43q/image/upload/v1597897221/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-08-20_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_1.20.03_ll8xka.png">
-<meta property="og:image" content="https://res.cloudinary.com/ddebpn43q/image/upload/v1597897439/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-08-20_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_1.23.27_tnauuq.png">
-<meta property="og:image" content="https://res.cloudinary.com/ddebpn43q/image/upload/v1597898614/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-08-20_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_1.43.04_xox40w.png">
-<meta property="og:image" content="https://res.cloudinary.com/ddebpn43q/image/upload/v1597898614/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-08-20_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_1.42.45_ndlmmj.png">
-<meta property="article:published_time" content="2019-08-19T12:24:39.000Z">
-<meta property="article:modified_time" content="2020-09-01T09:34:02.000Z">
-<meta property="article:author" content="delryn">
-<meta property="article:tag" content="AWS">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://res.cloudinary.com/ddebpn43q/image/upload/v1597837406/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-08-19_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_8.33.58_qgqnep.png">
-    
-    
-        
-          
-              <link rel="shortcut icon" href="/images/favicon.ico">
-          
-        
-        
-          
-            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-          
-        
-        
-          
-            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-          
-        
-    
-    <!-- title -->
-    <title>AWS Lambda 사용해보기</title>
-    <!-- styles -->
-    
-<link rel="stylesheet" href="/css/style.css">
 
-    <!-- persian styles -->
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="keywords" content>
+  <meta name="author" content="delryn">
+  <meta name="description" content="나의 개발 노트 ʕ •ᴥ• ʔ">
+  
+  
+  <title>
     
+      AWS Lambda 사용해보기 
       
-<link rel="stylesheet" href="/css/rtl.css">
-
-    
-    <!-- rss -->
-    
-    
-    <link rel="canonical" href="https://hidelryn.github.io/2019/08/19/etc-aws-lambda-apigateway/">
-<meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="Delryn's Blog" type="application/atom+xml">
-</head>
-
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a href="/tags/">tags</a></li>
-         
-          <li><a href="/search/">Search</a></li>
-        
-      </ul>
-    </span>
-    <br>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" href="/2019/09/24/nodejs-use-sequelize-1/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" href="/2019/08/17/etc-npm-yarn-permission-err/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">Previous post</span>
-      <span id="i-next" class="info" style="display:none;">Next post</span>
-      <span id="i-top" class="info" style="display:none;">Back to top</span>
-      <span id="i-share" class="info" style="display:none;">Share post</span>
-    </span>
-    <br>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2019/08/19/etc-aws-lambda-apigateway/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2019/08/19/etc-aws-lambda-apigateway/&text=AWS Lambda 사용해보기"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2019/08/19/etc-aws-lambda-apigateway/&title=AWS Lambda 사용해보기"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2019/08/19/etc-aws-lambda-apigateway/&is_video=false&description=AWS Lambda 사용해보기"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=AWS Lambda 사용해보기&body=Check out this article: https://hidelryn.github.io/2019/08/19/etc-aws-lambda-apigateway/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2019/08/19/etc-aws-lambda-apigateway/&title=AWS Lambda 사용해보기"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2019/08/19/etc-aws-lambda-apigateway/&title=AWS Lambda 사용해보기"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2019/08/19/etc-aws-lambda-apigateway/&title=AWS Lambda 사용해보기"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2019/08/19/etc-aws-lambda-apigateway/&title=AWS Lambda 사용해보기"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2019/08/19/etc-aws-lambda-apigateway/&name=AWS Lambda 사용해보기&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2019/08/19/etc-aws-lambda-apigateway/&t=AWS Lambda 사용해보기"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Lambda%EB%9E%80"><span class="toc-number">1.</span> <span class="toc-text">Lambda란?</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4%EC%84%9C-%EB%8A%90%EA%BC%88%EB%8D%98-%EC%9E%A5%EC%A0%90"><span class="toc-number">1.1.</span> <span class="toc-text">사용하면서 느꼈던 장점</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4%EC%84%9C-%EB%8A%90%EA%BC%88%EB%8D%98-%EB%8B%A8%EC%A0%90"><span class="toc-number">1.2.</span> <span class="toc-text">사용하면서 느꼈던 단점</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Lambda-%ED%95%A8%EC%88%98-%EC%83%9D%EC%84%B1"><span class="toc-number">1.3.</span> <span class="toc-text">Lambda 함수 생성</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%9D%B4%EB%B2%A4%ED%8A%B8-%ED%98%B8%EC%B6%9C"><span class="toc-number">1.4.</span> <span class="toc-text">이벤트 호출</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%EC%A7%81%EC%A0%91-%ED%98%B8%EC%B6%9C"><span class="toc-number">1.4.1.</span> <span class="toc-text">직접 호출</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%EB%8F%99%EA%B8%B0%EC%8B%9D-%ED%98%B8%EC%B6%9C"><span class="toc-number">1.4.1.1.</span> <span class="toc-text">동기식 호출</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%EB%B9%84%EB%8F%99%EA%B8%B0%EC%8B%9D-%ED%98%B8%EC%B6%9C"><span class="toc-number">1.4.1.2.</span> <span class="toc-text">비동기식 호출</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CloudWatch-Event%EB%A5%BC-%ED%86%B5%ED%95%9C-%ED%98%B8%EC%B6%9C"><span class="toc-number">1.5.</span> <span class="toc-text">CloudWatch Event를 통한 호출</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#API-GateWay%EB%9E%80"><span class="toc-number">2.</span> <span class="toc-text">API GateWay란?</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%83%9D%EC%84%B1"><span class="toc-number">2.1.</span> <span class="toc-text">생성</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EA%B2%BD%EB%A1%9C-%EC%84%A4%EC%A0%95"><span class="toc-number">2.2.</span> <span class="toc-text">경로 설정</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%98%B8%EC%B6%9C"><span class="toc-number">2.3.</span> <span class="toc-text">호출</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%B0%B8%EA%B3%A0"><span class="toc-number">3.</span> <span class="toc-text">참고</span></a></li></ol>
-    </div>
-  </span>
-</div>
-
-    
-    <div class="content index py4">
-        
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        AWS Lambda 사용해보기
-    </h1>
-
-
-
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">Delryn's Blog</span>
-      </span>
       
-    <div class="postdate">
-      
-        <time datetime="2019-08-19T12:24:39.000Z" itemprop="datePublished">2019-08-19</time>
-        
-      
-    </div>
+    
+  </title>
 
-
-      
-
-      
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link-link" href="/tags/AWS/" rel="tag">AWS</a>
-    </div>
-
-
-    </div>
-  </header>
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
   
 
-  <div class="content" itemprop="articleBody">
-    <h2 id="Lambda란"><a href="#Lambda란" class="headerlink" title="Lambda란?"></a>Lambda란?</h2><p>서버리스, 이벤트 처리 방식의 컴퓨팅 서비스</p>
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-104148803-2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-104148803-2');
+    </script>
+  
+
+<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Delryn's Blog" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt>
+      
+    </a>
+    <div class="nickname"><a href="/">Delryn</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+<!-- LaTex Display -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">AWS Lambda 사용해보기</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2019-08-19 21:24:39
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/AWS/" title="AWS">
+                    <b>#</b> AWS
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="Lambda란"><a href="#Lambda란" class="headerlink" title="Lambda란?"></a>Lambda란?</h2><p>서버리스, 이벤트 처리 방식의 컴퓨팅 서비스</p>
 <blockquote>
 <p>서버리스(serverless)란 애플리케이션 개발자가 서버를 프로비저닝하거나 애플리케이션의 확장을 관리할 필요가 없는 클라우드 컴퓨팅 모델</p>
 </blockquote>
@@ -202,12 +182,9 @@
 <p>그 외 나머지는 설정을 해 본적이 없어서 일단 패스 하겠다.</p>
 <h3 id="이벤트-호출"><a href="#이벤트-호출" class="headerlink" title="이벤트 호출"></a>이벤트 호출</h3><p>기존 lambda의 코드를 살짝 바꾼다.</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">exports</span>.handler = <span class="keyword">async</span> (event) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> name = event.name || <span class="string">&#x27;world&#x27;</span>;</span><br><span class="line">    <span class="keyword">const</span> response = &#123;</span><br><span class="line">        statusCode: <span class="number">200</span>,</span><br><span class="line">        body: <span class="string">`Hello! <span class="subst">$&#123;name&#125;</span>`</span>,</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;response&#x27;</span>, response)</span><br><span class="line">    <span class="keyword">return</span> response;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
 <h4 id="직접-호출"><a href="#직접-호출" class="headerlink" title="직접 호출"></a>직접 호출</h4><p>aws-sdk를 이용하여 로컬에서나 다른 환경에서 사용이 가능 하다.</p>
 <h5 id="동기식-호출"><a href="#동기식-호출" class="headerlink" title="동기식 호출"></a>동기식 호출</h5><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> AWS = <span class="built_in">require</span>(<span class="string">&#x27;aws-sdk&#x27;</span>);</span><br><span class="line"></span><br><span class="line">AWS.config.update(&#123;</span><br><span class="line">  region: <span class="string">&#x27;ap-northeast-2&#x27;</span>, <span class="comment">// 서울 리전</span></span><br><span class="line">  accessKeyId: <span class="string">&#x27;IAM 엑세스 키&#x27;</span>,</span><br><span class="line">  secretAccessKey: <span class="string">&#x27;IAM 시크릿 엑세스 키&#x27;</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> lambda = <span class="keyword">new</span> AWS.Lambda();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> params = &#123;</span><br><span class="line">  FunctionName: <span class="string">&#x27;test&#x27;</span>,</span><br><span class="line">  InvocationType: <span class="string">&#x27;RequestResponse&#x27;</span>, <span class="comment">// <span class="doctag">NOTE:</span> 해당 부분은 주석해도 된다 lambda의 default type</span></span><br><span class="line">  Payload: <span class="built_in">JSON</span>.stringify(&#123; <span class="attr">name</span>: <span class="string">&#x27;delryn&#x27;</span> &#125;),</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">lambda.invoke(params).promise().then(<span class="function">(<span class="params">result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result);</span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">    &#123;</span></span><br><span class="line"><span class="comment">      StatusCode: 200,</span></span><br><span class="line"><span class="comment">      ExecutedVersion: &#x27;$LATEST&#x27;,</span></span><br><span class="line"><span class="comment">      Payload: &#x27;&#123;&quot;statusCode&quot;:200,&quot;body&quot;:&quot;Hello! delryn&quot;&#125;&#x27;</span></span><br><span class="line"><span class="comment">    &#125;</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">&#125;).catch(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(e);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
 <h5 id="비동기식-호출"><a href="#비동기식-호출" class="headerlink" title="비동기식 호출"></a>비동기식 호출</h5><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> AWS = <span class="built_in">require</span>(<span class="string">&#x27;aws-sdk&#x27;</span>);</span><br><span class="line"></span><br><span class="line">AWS.config.update(&#123;</span><br><span class="line">  region: <span class="string">&#x27;ap-northeast-2&#x27;</span>, <span class="comment">// 서울 리전</span></span><br><span class="line">  accessKeyId: <span class="string">&#x27;IAM 엑세스 키&#x27;</span>,</span><br><span class="line">  secretAccessKey: <span class="string">&#x27;IAM 시크릿 엑세스 키&#x27;</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> lambda = <span class="keyword">new</span> AWS.Lambda();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> params = &#123;</span><br><span class="line">  FunctionName: <span class="string">&#x27;test&#x27;</span>,</span><br><span class="line">  InvocationType: <span class="string">&#x27;Event&#x27;</span>,</span><br><span class="line">  Payload: <span class="built_in">JSON</span>.stringify(&#123; <span class="attr">name</span>: <span class="string">&#x27;lunacy&#x27;</span> &#125;),</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">lambda.invoke(params).promise().then(<span class="function">(<span class="params">result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result); <span class="comment">// &#123; StatusCode: 202, Payload: &#x27;&#x27; &#125;</span></span><br><span class="line">&#125;).catch(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(e);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
 <p>실제 호출 되었는지 CloudWatch Log를 보면 알 수가 있다.</p>
 <p><img src="https://res.cloudinary.com/ddebpn43q/image/upload/v1597842973/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-08-19_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_10.15.43_dczmlh.png" alt="cloudwatch"></p>
 <h3 id="CloudWatch-Event를-통한-호출"><a href="#CloudWatch-Event를-통한-호출" class="headerlink" title="CloudWatch Event를 통한 호출"></a>CloudWatch Event를 통한 호출</h3><p>화면에서 트리거를 누르고 EventBridge(CloudWatch Events)를 선택 한다.</p>
@@ -228,14 +205,12 @@
 <p><img src="https://res.cloudinary.com/ddebpn43q/image/upload/v1597897439/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-08-20_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_1.23.27_tnauuq.png" alt="통합 연결"></p>
 <p>기존에 쓰던 Lambda 함수를 연결하면 끝, 파라미터를 잘 받는지 확인하기 위해 코드를 수정</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">exports</span>.handler = <span class="keyword">async</span> (event) =&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> param;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> event.queryStringParameters !== <span class="string">&#x27;undefined&#x27;</span>) &#123;</span><br><span class="line">        param = <span class="string">&#x27;GET&#x27;</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">typeof</span> event.body !== <span class="string">&#x27;undefined&#x27;</span>) &#123;</span><br><span class="line">        param = <span class="string">&#x27;POST&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">const</span> response = &#123;</span><br><span class="line">        statusCode: <span class="number">200</span>,</span><br><span class="line">        body: <span class="string">`Hello! <span class="subst">$&#123;param&#125;</span>`</span>,</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;response&#x27;</span>, response)</span><br><span class="line">    <span class="keyword">return</span> response;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
 <h3 id="호출"><a href="#호출" class="headerlink" title="호출"></a>호출</h3><p>호출할 URL은 메뉴에서 API:이름 (VPC 링크 밑)을 누르면 나온다.</p>
 <p>HTTP Client를 이용해 확인을 해 본다.</p>
 <p><img src="https://res.cloudinary.com/ddebpn43q/image/upload/v1597898614/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-08-20_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_1.43.04_xox40w.png" alt="GET"></p>
 <p><img src="https://res.cloudinary.com/ddebpn43q/image/upload/v1597898614/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2020-08-20_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_1.42.45_ndlmmj.png" alt="POST"></p>
 <p>실제 데이터를 받기 위해서는 아래처럼 접근 하면 된다.</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">event.queryStringParameters.param <span class="comment">// GET</span></span><br><span class="line">event.body.param <span class="comment">// POST</span></span><br></pre></td></tr></table></figure>
-
 <p>그 외에도 event 내에 헤더에 대한 정보도 포함 하고 있으므로 필요할 때 확인</p>
 <h2 id="참고"><a href="#참고" class="headerlink" title="참고"></a>참고</h2><ul>
 <li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.redhat.com/ko/topics/cloud-native-apps/what-is-serverless">서버리스 아키텍처</a></li>
@@ -243,153 +218,325 @@
 <li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.aws.amazon.com/ko_kr/AmazonCloudWatch/latest/events/ScheduledEvents.html">규칙에 대한 예약 표현식</a></li>
 </ul>
 
-  </div>
-</article>
-
-<script src="https://utteranc.es/client.js" repo="hidelryn/blog-comment" issue-term="title" label="Comment" theme="github-dark-orange" crossorigin="anonymous" async>
-  </script>
-
-
-        
-          <div id="footer-post-container">
-  <div id="footer-post">
-
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a href="/tags/">tags</a></li>
-         
-          <li><a href="/search/">Search</a></li>
-        
-      </ul>
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2019/08/17/etc-npm-yarn-permission-err/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2019-08-19 21:24:39
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/AWS/" title="AWS">
+                        <b>#</b> AWS
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2019/09/24/nodejs-use-sequelize-1/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
     </div>
-
-    <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Lambda%EB%9E%80"><span class="toc-number">1.</span> <span class="toc-text">Lambda란?</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4%EC%84%9C-%EB%8A%90%EA%BC%88%EB%8D%98-%EC%9E%A5%EC%A0%90"><span class="toc-number">1.1.</span> <span class="toc-text">사용하면서 느꼈던 장점</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4%EC%84%9C-%EB%8A%90%EA%BC%88%EB%8D%98-%EB%8B%A8%EC%A0%90"><span class="toc-number">1.2.</span> <span class="toc-text">사용하면서 느꼈던 단점</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Lambda-%ED%95%A8%EC%88%98-%EC%83%9D%EC%84%B1"><span class="toc-number">1.3.</span> <span class="toc-text">Lambda 함수 생성</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%9D%B4%EB%B2%A4%ED%8A%B8-%ED%98%B8%EC%B6%9C"><span class="toc-number">1.4.</span> <span class="toc-text">이벤트 호출</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%EC%A7%81%EC%A0%91-%ED%98%B8%EC%B6%9C"><span class="toc-number">1.4.1.</span> <span class="toc-text">직접 호출</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%EB%8F%99%EA%B8%B0%EC%8B%9D-%ED%98%B8%EC%B6%9C"><span class="toc-number">1.4.1.1.</span> <span class="toc-text">동기식 호출</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%EB%B9%84%EB%8F%99%EA%B8%B0%EC%8B%9D-%ED%98%B8%EC%B6%9C"><span class="toc-number">1.4.1.2.</span> <span class="toc-text">비동기식 호출</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CloudWatch-Event%EB%A5%BC-%ED%86%B5%ED%95%9C-%ED%98%B8%EC%B6%9C"><span class="toc-number">1.5.</span> <span class="toc-text">CloudWatch Event를 통한 호출</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#API-GateWay%EB%9E%80"><span class="toc-number">2.</span> <span class="toc-text">API GateWay란?</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%83%9D%EC%84%B1"><span class="toc-number">2.1.</span> <span class="toc-text">생성</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EA%B2%BD%EB%A1%9C-%EC%84%A4%EC%A0%95"><span class="toc-number">2.2.</span> <span class="toc-text">경로 설정</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%98%B8%EC%B6%9C"><span class="toc-number">2.3.</span> <span class="toc-text">호출</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%B0%B8%EA%B3%A0"><span class="toc-number">3.</span> <span class="toc-text">참고</span></a></li></ol>
-    </div>
-
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.facebook.com/sharer.php?u=https://hidelryn.github.io/2019/08/19/etc-aws-lambda-apigateway/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://twitter.com/share?url=https://hidelryn.github.io/2019/08/19/etc-aws-lambda-apigateway/&text=AWS Lambda 사용해보기"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.linkedin.com/shareArticle?url=https://hidelryn.github.io/2019/08/19/etc-aws-lambda-apigateway/&title=AWS Lambda 사용해보기"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hidelryn.github.io/2019/08/19/etc-aws-lambda-apigateway/&is_video=false&description=AWS Lambda 사용해보기"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=AWS Lambda 사용해보기&body=Check out this article: https://hidelryn.github.io/2019/08/19/etc-aws-lambda-apigateway/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://getpocket.com/save?url=https://hidelryn.github.io/2019/08/19/etc-aws-lambda-apigateway/&title=AWS Lambda 사용해보기"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://reddit.com/submit?url=https://hidelryn.github.io/2019/08/19/etc-aws-lambda-apigateway/&title=AWS Lambda 사용해보기"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.stumbleupon.com/submit?url=https://hidelryn.github.io/2019/08/19/etc-aws-lambda-apigateway/&title=AWS Lambda 사용해보기"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://digg.com/submit?url=https://hidelryn.github.io/2019/08/19/etc-aws-lambda-apigateway/&title=AWS Lambda 사용해보기"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="http://www.tumblr.com/share/link?url=https://hidelryn.github.io/2019/08/19/etc-aws-lambda-apigateway/&name=AWS Lambda 사용해보기&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="external nofollow noopener noreferrer" href="https://news.ycombinator.com/submitlink?u=https://hidelryn.github.io/2019/08/19/etc-aws-lambda-apigateway/&t=AWS Lambda 사용해보기"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
-        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
-    </div>
-
-  </div>
-</div>
-
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy;
     
-    
-    2018-2021
-    delryn
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a href="/tags/">tags</a></li>
-         
-          <li><a href="/search/">Search</a></li>
-        
-      </ul>
-    </nav>
-  </div>
-</footer>
-
+  <div class="post-catalog" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Lambda%EB%9E%80"><span class="toc-text">Lambda란?</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4%EC%84%9C-%EB%8A%90%EA%BC%88%EB%8D%98-%EC%9E%A5%EC%A0%90"><span class="toc-text">사용하면서 느꼈던 장점</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4%EC%84%9C-%EB%8A%90%EA%BC%88%EB%8D%98-%EB%8B%A8%EC%A0%90"><span class="toc-text">사용하면서 느꼈던 단점</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Lambda-%ED%95%A8%EC%88%98-%EC%83%9D%EC%84%B1"><span class="toc-text">Lambda 함수 생성</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%9D%B4%EB%B2%A4%ED%8A%B8-%ED%98%B8%EC%B6%9C"><span class="toc-text">이벤트 호출</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%EC%A7%81%EC%A0%91-%ED%98%B8%EC%B6%9C"><span class="toc-text">직접 호출</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%EB%8F%99%EA%B8%B0%EC%8B%9D-%ED%98%B8%EC%B6%9C"><span class="toc-text">동기식 호출</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%EB%B9%84%EB%8F%99%EA%B8%B0%EC%8B%9D-%ED%98%B8%EC%B6%9C"><span class="toc-text">비동기식 호출</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CloudWatch-Event%EB%A5%BC-%ED%86%B5%ED%95%9C-%ED%98%B8%EC%B6%9C"><span class="toc-text">CloudWatch Event를 통한 호출</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#API-GateWay%EB%9E%80"><span class="toc-text">API GateWay란?</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%83%9D%EC%84%B1"><span class="toc-text">생성</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EA%B2%BD%EB%A1%9C-%EC%84%A4%EC%A0%95"><span class="toc-text">경로 설정</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%98%B8%EC%B6%9C"><span class="toc-text">호출</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%B0%B8%EA%B3%A0"><span class="toc-text">참고</span></a></li></ol>
     </div>
-    <!-- styles -->
-
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-
-
-<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
-
-
-    <!-- jquery -->
-
-<script src="/lib/jquery/jquery.min.js"></script>
-
-
-<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
-
-<!-- clipboard -->
+  </div>
 
   
-<script src="/lib/clipboard/clipboard.min.js"></script>
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+  <script src="https://utteranc.es/client.js" repo="hidelryn/blog-comment" issue-term="title" label="Comment" theme="github-light" crossorigin="anonymous" async>
+    </script>
+  
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/hidelryn/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="mailto:hidelryn@gmail.com" rel="external nofollow noopener noreferrer" target="_blank">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="/atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+  
+    <div class="footer-more">
+      
+        <span style="color: #666;">Copyright © Delryn 2021</span>
+        
+        
+    </div>
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+      
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
 
   <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
-    btn += '<i class="far fa-clone"></i>';
-    btn += '</span>'; 
-    // mount it!
-    $(".highlight table").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      text: function(trigger) {
-        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
       }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "Copied!");
-      e.clearSelection();
-    })
-  })
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
   </script>
 
 
-<script src="/js/main.js"></script>
-
-<!-- search -->
-
-<!-- Google Analytics -->
-
-    <script type="text/javascript">
-        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-        ga('create', 'UA-104148803-2', 'auto');
-        ga('send', 'pageview');
-    </script>
-
-<!-- Baidu Analytics -->
-
-<!-- Disqus Comments -->
 
 
-</body>
+    </div>
+  </body>
 </html>
