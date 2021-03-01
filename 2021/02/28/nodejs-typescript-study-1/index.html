@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="keywords" content>
+  <meta name="author" content="delryn">
+  <meta name="description" content="나의 개발 노트 ʕ •ᴥ• ʔ">
+  
+  
+  <title>
+    
+      타입스크립트 기초 학습 정리 - 1 
+      
+      
+    
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-104148803-2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-104148803-2');
+    </script>
+  
+
+<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Delryn's Blog" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt>
+      
+    </a>
+    <div class="nickname"><a href="/">Delryn</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+<!-- LaTex Display -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">타입스크립트 기초 학습 정리 - 1</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2021-02-28 19:29:33
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/TypeScript/" title="TypeScript">
+                    <b>#</b> TypeScript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="타입스크립트란"><a href="#타입스크립트란" class="headerlink" title="타입스크립트란"></a>타입스크립트란</h2><ul>
+<li>마이크로소프트에서 개발하고 관리하는 오픈 소스이다.</li>
+<li>정적 타입의 언어 이다. (데이터 타입이 존재)</li>
+<li>별도의 컴파일러가 존재 하여 컴파일을 하게 되면 자바스크립트 파일로 변환 된다.</li>
+<li>자주 쓰는 VsCode의 경우가 타입스크립트로 개발되어 있다.</li>
+</ul>
+<h2 id="장점-amp-단점"><a href="#장점-amp-단점" class="headerlink" title="장점 &amp; 단점"></a>장점 &amp; 단점</h2><ul>
+<li>데이터 타입을 명시 하여 코드의 가독성이 좋아 진다.</li>
+<li>생산성도 좋다고 하는데 아직 숙달 레벨이 아니라 체감을 못하는 중..😓</li>
+<li>여러 사람이 쓰는 코드의 경우 JS보다 관리 레벨이 더 좋을 듯..?</li>
+<li>단점이라면 사용하기 위해서는 구성원들이 학습을 해야 한다.</li>
+</ul>
+<h2 id="설치"><a href="#설치" class="headerlink" title="설치"></a>설치</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm i typescript -g <span class="comment"># 타입스크립트 컴파일러</span></span><br><span class="line">npm i ts-node -g <span class="comment"># ts 파일 실행, 개발때는 매번 컴파일 하기 귀찮으므로..</span></span><br></pre></td></tr></table></figure>
+<h2 id="기본-문법"><a href="#기본-문법" class="headerlink" title="기본 문법"></a>기본 문법</h2><ul>
+<li>string, number, boolean등 데이터 타입을 선언할 수 있다.</li>
+<li>any는 어떤 타입의 데이터도 쓸 수 있는데 가능 하면 안 쓰기 (이러면 JS와 다를 게 뭐가 있나 😤)</li>
+<li>never는 절대 리턴이 없는 케이스 (throw 같은 경우)</li>
+<li>void는 undefined 리턴인 경우에 쓴다.</li>
+<li>배열도 마찬가지로 다른 데이터 타입이 들어 오면 에러가 난다.</li>
+<li>튜플은 아마 안 쓸 거 같음..</li>
+<li>함수에서는 매개변수, 리턴 타입을 적어주는 게 관례</li>
+<li>?를 붙이는 건 선택형 매개변수</li>
+<li>프로미스의 경우 tsconfig에서 es2015이상이여야 사용 가능</li>
+<li>프로미스의 리턴 타입의 경우 resolve의 데이터 타입을 적어주어야 하며 에러의 경우는 any로 잡힘</li>
+</ul>
+<p>특이한 타입으로 any, never라는 게 있는데 any는 말 그대로 어떤 데이터의 타입</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 변수 선언</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">let</span> age: <span class="built_in">number</span> = <span class="number">33</span>;</span><br><span class="line"><span class="keyword">let</span> age2 = <span class="number">34</span>; <span class="comment">// 숫자로 인식</span></span><br><span class="line"><span class="keyword">let</span> name: <span class="built_in">string</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&#x27;age&#x27;</span>, age);</span><br><span class="line">name = <span class="string">&#x27;delryn&#x27;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&#x27;name&#x27;</span>, name);</span><br><span class="line"><span class="comment">// age2 = &#x27;str&#x27;; // type err</span></span><br><span class="line"><span class="comment">// name = 33; // type err</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> check: <span class="built_in">boolean</span> = <span class="literal">true</span>;</span><br><span class="line"><span class="keyword">let</span> all: <span class="built_in">any</span> = <span class="number">33</span>;</span><br><span class="line">all = <span class="string">&#x27;omg&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">neverNoneReturn</span>(<span class="params"></span>): <span class="title">never</span> </span>&#123;</span><br><span class="line">  <span class="comment">// return false; // err</span></span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;is error&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// function neverNoneReturn2(): never &#123;</span></span><br><span class="line"><span class="comment">//     console.log(&#x27;never&#x27;);</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">voidReturn</span>(<span class="params"></span>): <span class="title">void</span> </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;undefined return&#x27;</span>);</span><br><span class="line">  <span class="comment">// return false; // type err</span></span><br><span class="line">  <span class="comment">// return undefined; // type ok</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 배열</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> numList: <span class="built_in">number</span>[] = [];</span><br><span class="line"><span class="keyword">const</span> strList: <span class="built_in">Array</span>&lt;<span class="built_in">string</span>&gt; = [<span class="string">&#x27;a&#x27;</span>];</span><br><span class="line">numList.push(<span class="number">1</span>);</span><br><span class="line"><span class="comment">// numList.push(&#x27;2&#x27;); // type err</span></span><br><span class="line">strList.push(<span class="string">&#x27;b&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 튜플</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">let</span> idAndName: [<span class="built_in">number</span>, <span class="built_in">string</span>];</span><br><span class="line">idAndName = [<span class="number">0</span>, <span class="string">&#x27;a&#x27;</span>];</span><br><span class="line">idAndName.push(<span class="string">&#x27;?!&#x27;</span>); <span class="comment">// push가 된다...😤</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&#x27;idAndName&#x27;</span>, idAndName); <span class="comment">// [ 0, &#x27;a&#x27;, &#x27;??&#x27; ]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 함수</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">numAdd</span>(<span class="params">num: <span class="built_in">number</span>, num2?: <span class="built_in">number</span></span>): <span class="title">number</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (num2) <span class="keyword">return</span> num + num2;</span><br><span class="line">  <span class="keyword">return</span> num;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(numAdd(<span class="number">11</span>));</span><br><span class="line"><span class="built_in">console</span>.log(numAdd(<span class="number">88</span>, <span class="number">11</span>));</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">numAddPromise</span>(<span class="params">num: <span class="built_in">number</span>, num2: <span class="built_in">number</span></span>): <span class="title">Promise</span>&lt;<span class="title">number</span>&gt; </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (num + num2 &gt; <span class="number">100</span>) <span class="keyword">return</span> reject(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&quot;너무 큰 수&quot;</span>));</span><br><span class="line">    <span class="keyword">return</span> resolve(num + num2);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">numAddPromise(<span class="number">1</span>, <span class="number">3</span>)</span><br><span class="line">    .then(<span class="function">(<span class="params">result</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">&quot;result&quot;</span>, result);</span><br><span class="line">    &#125;)</span><br><span class="line">    .catch(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">&quot;e&quot;</span>, e);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">numAddPromise(<span class="number">1</span>, <span class="number">100</span>)</span><br><span class="line">    .then(<span class="function">(<span class="params">result</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">&quot;result&quot;</span>, result);</span><br><span class="line">    &#125;)</span><br><span class="line">    .catch(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">&quot;e&quot;</span>, e);</span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="타입-별칭"><a href="#타입-별칭" class="headerlink" title="타입 별칭"></a>타입 별칭</h2><p>Type Alias는 직역 하면 내가 정의한 타입이라는 의미인데 뭔가 구조체 같은 느낌이 나기도 하고..</p>
+<p>주로 Object를 다룰 떄 쓸 꺼 같고 자주 쓰게 될 문법 일 듯 😀</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Text = <span class="built_in">string</span>;</span><br><span class="line"><span class="keyword">let</span> str: Text = <span class="string">&quot;delryn&quot;</span>;</span><br><span class="line"><span class="comment">// let str2: Text = 3; // type err</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> User = &#123;</span><br><span class="line">  id: <span class="built_in">string</span>;</span><br><span class="line">  name: <span class="built_in">string</span>;</span><br><span class="line">  age?: <span class="built_in">number</span>; <span class="comment">// 마찬가지로 Optional</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> aUser: User = &#123;</span><br><span class="line">  id: <span class="string">&quot;a_id&quot;</span>,</span><br><span class="line">  name: <span class="string">&quot;a_name&quot;</span>,</span><br><span class="line">  age: <span class="number">1</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> bUser: User = &#123;</span><br><span class="line">  id: <span class="string">&quot;b_id&quot;</span>,</span><br><span class="line">  name: <span class="string">&quot;b_name&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">setUser</span>(<span class="params">obj: User</span>): <span class="title">User</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> obj;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(setUser(aUser)); <span class="comment">// &#123; id: &#x27;a_id&#x27;, name: &#x27;a_name&#x27;, age: 1 &#125;</span></span><br><span class="line"><span class="built_in">console</span>.log(setUser(bUser)); <span class="comment">// &#123; id: &#x27;b_id&#x27;, name: &#x27;b_name&#x27; &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> numCallback = &#123; <span class="comment">// 숫자 콜백 함수 정의</span></span><br><span class="line">  ( error: <span class="built_in">Error</span> | <span class="literal">null</span>, result?: <span class="built_in">number</span> ) : <span class="built_in">void</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">numCallbackFunc</span>(<span class="params">arg: <span class="built_in">number</span>, arg2: <span class="built_in">number</span>, cb: numCallback</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (arg + arg2 &gt; <span class="number">100</span>) <span class="keyword">return</span> cb(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;계산할 수 없는 수&#x27;</span>));</span><br><span class="line">  <span class="keyword">return</span> cb(<span class="literal">null</span>, arg + arg2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">numCallbackFunc(<span class="number">1</span>, <span class="number">30</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;err&#x27;</span>, err);</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;result&#x27;</span>, result);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">numCallbackFunc(<span class="number">1</span>, <span class="number">100</span>, <span class="function">(<span class="params">err, result</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;err&#x27;</span>, err);</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;result&#x27;</span>, result);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="유니온-amp-인터섹션"><a href="#유니온-amp-인터섹션" class="headerlink" title="유니온 &amp; 인터섹션"></a>유니온 &amp; 인터섹션</h2><ul>
+<li>유니온 = OR (한 타입의 프로퍼티들을 기입 하고 나서 나머지 타입은 넣거나 말거나)</li>
+<li>인터섹션 = AND (모든 프로퍼티를 기입 하여야 함)</li>
+</ul>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Union</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">type</span> User = &#123;</span><br><span class="line">    userId: <span class="built_in">string</span>,</span><br><span class="line">    userName: <span class="built_in">string</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Purchase = &#123;</span><br><span class="line">    goodsId: <span class="built_in">string</span>,</span><br><span class="line">    goodsName: <span class="built_in">string</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> SetPurchase = User | Purchase;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> data: SetPurchase = &#123;</span><br><span class="line">    userId: <span class="string">&#x27;user_id&#x27;</span>,</span><br><span class="line">    userName: <span class="string">&#x27;user_name&#x27;</span>,</span><br><span class="line">    goodsId: <span class="string">&#x27;goods_id&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(data);</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * intersaction</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">type</span> SetPurchase2 = User &amp; Purchase;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> data2: SetPurchase2 = &#123;</span><br><span class="line">    userId: <span class="string">&#x27;user_id2&#x27;</span>,</span><br><span class="line">    goodsId: <span class="string">&#x27;goods_id2&#x27;</span>,</span><br><span class="line">    userName: <span class="string">&#x27;user_name2&#x27;</span>,</span><br><span class="line">    goodsName: <span class="string">&#x27;goods_name&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(data2);</span><br></pre></td></tr></table></figure>
+<h2 id="Enum"><a href="#Enum" class="headerlink" title="Enum"></a>Enum</h2><p>열거형을 지원함</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">enum</span> Season &#123;</span><br><span class="line">    Spring, <span class="comment">// 0부터 시작</span></span><br><span class="line">    Summer,</span><br><span class="line">    Autumn,</span><br><span class="line">    Winter</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> season: Season = Season.Winter;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&#x27;season&#x27;</span>, season); <span class="comment">// 3</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">enum</span> SeasonToString &#123;</span><br><span class="line">    Spring = <span class="string">&quot;SPRING&quot;</span>,</span><br><span class="line">    Summer = <span class="string">&quot;SUMMER&quot;</span>,</span><br><span class="line">    Autumn = <span class="string">&quot;AUTUMN&quot;</span>,</span><br><span class="line">    Winter = <span class="string">&quot;WINTER&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> season2: SeasonToString = SeasonToString.Winter;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&#x27;season2&#x27;</span>, season2); <span class="comment">// WINTER</span></span><br><span class="line"></span><br><span class="line">season2 = SeasonToString.Spring;</span><br></pre></td></tr></table></figure>
+
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2021/01/20/nodejs-mysql2-multiple-query/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2021-02-28 19:29:33
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/TypeScript/" title="TypeScript">
+                        <b>#</b> TypeScript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2021/03/01/nodejs-typescript-study-2/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div class="post-catalog" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%ED%83%80%EC%9E%85%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%EB%9E%80"><span class="toc-text">타입스크립트란</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%9E%A5%EC%A0%90-amp-%EB%8B%A8%EC%A0%90"><span class="toc-text">장점 &amp; 단점</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%84%A4%EC%B9%98"><span class="toc-text">설치</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EA%B8%B0%EB%B3%B8-%EB%AC%B8%EB%B2%95"><span class="toc-text">기본 문법</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%ED%83%80%EC%9E%85-%EB%B3%84%EC%B9%AD"><span class="toc-text">타입 별칭</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%9C%A0%EB%8B%88%EC%98%A8-amp-%EC%9D%B8%ED%84%B0%EC%84%B9%EC%85%98"><span class="toc-text">유니온 &amp; 인터섹션</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Enum"><span class="toc-text">Enum</span></a></li></ol>
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+  <script src="https://utteranc.es/client.js" repo="hidelryn/blog-comment" issue-term="title" label="Comment" theme="github-light" crossorigin="anonymous" async>
+    </script>
+  
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/hidelryn/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="mailto:hidelryn@gmail.com" rel="external nofollow noopener noreferrer" target="_blank">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="/atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+  
+    <div class="footer-more">
+      
+        <span style="color: #666;">Copyright © Delryn 2021</span>
+        
+        
+    </div>
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+      
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+    </div>
+  </body>
+</html>
