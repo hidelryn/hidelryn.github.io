@@ -6,7 +6,7 @@
   <link href="https://hidelryn.github.io/atom.xml" rel="self"/>
   
   <link href="https://hidelryn.github.io/"/>
-  <updated>2021-03-01T13:56:43.415Z</updated>
+  <updated>2021-03-14T09:13:01.083Z</updated>
   <id>https://hidelryn.github.io/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Go Modules 써보기</title>
+    <link href="https://hidelryn.github.io/2021/03/14/go-mod-study/"/>
+    <id>https://hidelryn.github.io/2021/03/14/go-mod-study/</id>
+    <published>2021-03-14T08:04:24.000Z</published>
+    <updated>2021-03-14T09:13:01.083Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Go 1.11버전부터 생겼으며, 더 이상 GOPATH 내에서 프로젝트를 시작하지 않아도 된다 👏🏻&lt;/p&gt;
+&lt;p&gt;사용할 프로젝트 폴더에서 아래의 명령어를 쓰게 되면 go.mod란 파일이 생긴다.&lt;/p&gt;
+&lt;figure</summary>
+        
+      
+    
+    
+    
+    
+    <category term="Go" scheme="https://hidelryn.github.io/tags/Go/"/>
+    
+  </entry>
   
   <entry>
     <title>타입스크립트 기초 학습 정리 - 2</title>
@@ -484,32 +509,6 @@
     <category term="Log" scheme="https://hidelryn.github.io/tags/Log/"/>
     
     <category term="Node.js" scheme="https://hidelryn.github.io/tags/Node-js/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>AWS SQS 사용해보기</title>
-    <link href="https://hidelryn.github.io/2020/03/04/etc-aws-sqs/"/>
-    <id>https://hidelryn.github.io/2020/03/04/etc-aws-sqs/</id>
-    <published>2020-03-04T14:17:51.000Z</published>
-    <updated>2021-02-06T14:15:35.602Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;SQS란&quot;&gt;&lt;a href=&quot;#SQS란&quot; class=&quot;headerlink&quot; title=&quot;SQS란?&quot;&gt;&lt;/a&gt;SQS란?&lt;/h2&gt;&lt;p&gt;서버들끼리 사용할 수 있는 완전관리형 Message Queue 서비스&lt;/p&gt;
-&lt;h3</summary>
-        
-      
-    
-    
-    
-    
-    <category term="AWS" scheme="https://hidelryn.github.io/tags/AWS/"/>
-    
-    <category term="Queue" scheme="https://hidelryn.github.io/tags/Queue/"/>
     
   </entry>
   
