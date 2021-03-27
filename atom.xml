@@ -6,7 +6,7 @@
   <link href="https://hidelryn.github.io/atom.xml" rel="self"/>
   
   <link href="https://hidelryn.github.io/"/>
-  <updated>2021-03-14T09:13:01.083Z</updated>
+  <updated>2021-03-27T14:53:00.655Z</updated>
   <id>https://hidelryn.github.io/</id>
   
   <author>
@@ -17,11 +17,39 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>go-sql-driver-mysql로 CURD 해보기</title>
+    <link href="https://hidelryn.github.io/2021/03/27/go-sql-driver-mysql-study/"/>
+    <id>https://hidelryn.github.io/2021/03/27/go-sql-driver-mysql-study/</id>
+    <published>2021-03-27T13:27:45.000Z</published>
+    <updated>2021-03-27T14:53:00.655Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;소개&quot;&gt;&lt;a href=&quot;#소개&quot; class=&quot;headerlink&quot; title=&quot;소개&quot;&gt;&lt;/a&gt;소개&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;순수 Go로 작성되어 있다.&lt;/li&gt;
+&lt;li&gt;끊어진 커넥션 자동 연결 처리&lt;/li&gt;
+&lt;li&gt;풀링 자동 지원</summary>
+        
+      
+    
+    
+    
+    
+    <category term="RDB" scheme="https://hidelryn.github.io/tags/RDB/"/>
+    
+    <category term="Go" scheme="https://hidelryn.github.io/tags/Go/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Go Modules 써보기</title>
     <link href="https://hidelryn.github.io/2021/03/14/go-mod-study/"/>
     <id>https://hidelryn.github.io/2021/03/14/go-mod-study/</id>
     <published>2021-03-14T08:04:24.000Z</published>
-    <updated>2021-03-14T09:13:01.083Z</updated>
+    <updated>2021-03-14T09:15:56.222Z</updated>
     
     
       
@@ -95,7 +123,7 @@
     <link href="https://hidelryn.github.io/2021/01/20/nodejs-mysql2-multiple-query/"/>
     <id>https://hidelryn.github.io/2021/01/20/nodejs-mysql2-multiple-query/</id>
     <published>2021-01-20T13:45:28.000Z</published>
-    <updated>2021-02-06T14:14:17.827Z</updated>
+    <updated>2021-03-27T14:52:57.760Z</updated>
     
     
       
@@ -110,9 +138,9 @@
     
     
     
-    <category term="Node.js" scheme="https://hidelryn.github.io/tags/Node-js/"/>
+    <category term="RDB" scheme="https://hidelryn.github.io/tags/RDB/"/>
     
-    <category term="MySQL" scheme="https://hidelryn.github.io/tags/MySQL/"/>
+    <category term="Node.js" scheme="https://hidelryn.github.io/tags/Node-js/"/>
     
   </entry>
   
@@ -483,32 +511,6 @@
     <category term="AWS" scheme="https://hidelryn.github.io/tags/AWS/"/>
     
     <category term="SMS" scheme="https://hidelryn.github.io/tags/SMS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Node.js Morgan, Winston 사용해보기</title>
-    <link href="https://hidelryn.github.io/2020/04/12/nodejs-morgan-winston-example/"/>
-    <id>https://hidelryn.github.io/2020/04/12/nodejs-morgan-winston-example/</id>
-    <published>2020-04-12T09:12:27.000Z</published>
-    <updated>2020-09-01T09:36:25.000Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://www.npmjs.com/package/winston&quot;&gt;winston&lt;/a&gt;을 조금만 설정 하면 express 내 로그를 편하게 남길 수 있다.&lt;/p&gt;
-&lt;h2 id=&quot;로그-작성&quot;&gt;&lt;a href=&quot;#로그-작성&quot;</summary>
-        
-      
-    
-    
-    
-    
-    <category term="Log" scheme="https://hidelryn.github.io/tags/Log/"/>
-    
-    <category term="Node.js" scheme="https://hidelryn.github.io/tags/Node-js/"/>
     
   </entry>
   

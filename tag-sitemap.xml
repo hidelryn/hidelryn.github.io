@@ -4,7 +4,21 @@
 
     <url>
         <loc>https://hidelryn.github.io/tags/Go/</loc>
-        <lastmod>2021-03-14T09:13:01.083Z</lastmod>
+        <lastmod>2021-03-27T14:53:00.655Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://hidelryn.github.io/tags/RDB/</loc>
+        <lastmod>2021-03-27T14:53:00.655Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://hidelryn.github.io/tags/Node-js/</loc>
+        <lastmod>2021-03-27T14:52:57.760Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
@@ -52,20 +66,6 @@
     </url>
 
     <url>
-        <loc>https://hidelryn.github.io/tags/MySQL/</loc>
-        <lastmod>2021-02-06T14:14:17.827Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://hidelryn.github.io/tags/Node-js/</loc>
-        <lastmod>2021-02-06T14:14:17.827Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>https://hidelryn.github.io/tags/ETC/</loc>
         <lastmod>2021-02-05T14:21:22.366Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -75,13 +75,6 @@
     <url>
         <loc>https://hidelryn.github.io/tags/HomeBrew/</loc>
         <lastmod>2021-01-20T14:17:41.089Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://hidelryn.github.io/tags/RDB/</loc>
-        <lastmod>2020-11-08T14:31:12.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>

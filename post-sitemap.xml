@@ -9,8 +9,24 @@
 
 
     <url>
+        <loc>https://hidelryn.github.io/2021/03/27/go-sql-driver-mysql-study/</loc>
+        <lastmod>2021-03-27T14:53:00.655Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://hidelryn.github.io/2021/01/20/nodejs-mysql2-multiple-query/</loc>
+        <lastmod>2021-03-27T14:52:57.760Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://hidelryn.github.io/2021/03/14/go-mod-study/</loc>
-        <lastmod>2021-03-14T09:13:01.083Z</lastmod>
+        <lastmod>2021-03-14T09:15:56.222Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
@@ -59,14 +75,6 @@
     <url>
         <loc>https://hidelryn.github.io/2019/12/20/db-redis/</loc>
         <lastmod>2021-02-06T14:15:09.740Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://hidelryn.github.io/2021/01/20/nodejs-mysql2-multiple-query/</loc>
-        <lastmod>2021-02-06T14:14:17.827Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
