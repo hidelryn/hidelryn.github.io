@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="keywords" content>
+  <meta name="author" content="delryn">
+  <meta name="description" content="나의 개발 노트 ʕ •ᴥ• ʔ">
+  
+  
+  <title>
+    
+      Go 포인터 정리 
+      
+      
+    
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-104148803-2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-104148803-2');
+    </script>
+  
+
+<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Delryn's Blog" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt>
+      
+    </a>
+    <div class="nickname"><a href="/">Delryn</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+<!-- LaTex Display -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Go 포인터 정리</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2021-04-18 11:43:08
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/Go/" title="Go">
+                    <b>#</b> Go
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>포인터가 익숙치 않기 때문에.. 다시 정리를 해 보았다 🤔</p>
+<h2 id="변수에서-사용하는-경우"><a href="#변수에서-사용하는-경우" class="headerlink" title="변수에서 사용하는 경우"></a>변수에서 사용하는 경우</h2><h4 id="일반-변수에서-사용하는-경우"><a href="#일반-변수에서-사용하는-경우" class="headerlink" title="일반 변수에서 사용하는 경우"></a>일반 변수에서 사용하는 경우</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> age <span class="keyword">uint16</span> = <span class="number">34</span> <span class="comment">// age에 34라는 값을 할당 하였다.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;age is&quot;</span>, age)               <span class="comment">// age is 34</span></span><br><span class="line">	ageAddr := &amp;age                          <span class="comment">// &amp;기호를 붙여서 age의 주소값을 할당할 수 있다</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;ageAddr is&quot;</span>, ageAddr)       <span class="comment">// ageAddr is 0x1149182</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;ageAddrValue is&quot;</span>, *ageAddr) <span class="comment">// *기호를 붙여서 age 주소에 속해 있는 값을 알 수 있다 ageAddrValue is 34</span></span><br><span class="line">	*ageAddr = <span class="number">19</span>                            <span class="comment">// 주소에 속한 값을 변경 하므로 age 또한 변경 된다</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;age is&quot;</span>, age)               <span class="comment">// age is 19</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="구조체-변수에서-사용하는-경우"><a href="#구조체-변수에서-사용하는-경우" class="headerlink" title="구조체 변수에서 사용하는 경우"></a>구조체 변수에서 사용하는 경우</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span> &#123;</span><br><span class="line">	id   *<span class="keyword">uint</span> <span class="comment">// 구조체의 변수에 *기호를 붙이면 주소값을 할당할 수 있다</span></span><br><span class="line">	name <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> user = User&#123;&#125;</span><br><span class="line">	<span class="keyword">var</span> idAddr <span class="keyword">uint</span> = <span class="number">1</span></span><br><span class="line">	user.id = &amp;idAddr <span class="comment">// id 변수에 주소값 할당</span></span><br><span class="line">	user.name = <span class="string">&quot;delryn&quot;</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;user is&quot;</span>, user)        <span class="comment">// user is &#123;0xc000014080 delryn&#125;</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;user id is&quot;</span>, *user.id) <span class="comment">// user id is 1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="함수에서-사용하는-경우"><a href="#함수에서-사용하는-경우" class="headerlink" title="함수에서 사용하는 경우"></a>함수에서 사용하는 경우</h2><h4 id="매개변수의-경우"><a href="#매개변수의-경우" class="headerlink" title="매개변수의 경우"></a>매개변수의 경우</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span> &#123;</span><br><span class="line">	id   <span class="keyword">uint</span></span><br><span class="line">	name <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> arg <span class="keyword">uint16</span> = <span class="number">10</span></span><br><span class="line">	<span class="keyword">var</span> arg2 <span class="keyword">uint16</span> = <span class="number">100</span></span><br><span class="line">	pointerFunc(&amp;arg)                <span class="comment">// arg의 주소값을 인수로 넘긴다</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;final arg is&quot;</span>, arg) <span class="comment">// final arg is 30</span></span><br><span class="line">	normalFunc(arg2)</span><br><span class="line">	fmt.Println(<span class="string">&quot;final arg2 is&quot;</span>, arg2) <span class="comment">// final arg2 is 100</span></span><br><span class="line"></span><br><span class="line">	user := User&#123;&#125;</span><br><span class="line">	user.id = <span class="number">1</span></span><br><span class="line">	user.name = <span class="string">&quot;delryn&quot;</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;init user is &quot;</span>, user) <span class="comment">// init user is  &#123;1 delryn&#125;</span></span><br><span class="line">	structTest(&amp;user)                  <span class="comment">// 구조체의 주소값을 인수로 넘긴다</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;final user is&quot;</span>, user) <span class="comment">// final user is &#123;2 delryn&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">pointerFunc</span><span class="params">(param *<span class="keyword">uint16</span>)</span></span> &#123; <span class="comment">// 데이터 타입에 *기호를 붙임으로서 주소값을 매개변수로 받는다고 설정</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;pointerFunc paramAddr is&quot;</span>, param) <span class="comment">// pointerFunc paramAddr is 0xc0000ae002</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;paramValue is&quot;</span>, *param)           <span class="comment">// paramValue is 10</span></span><br><span class="line">	*param += <span class="number">20</span>                                   <span class="comment">// 매개변수여도 주소에 속한 값을 변경 하면 원본 arg의 값이 바뀌는 건 변함 없다</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">normalFunc</span><span class="params">(param <span class="keyword">uint16</span>)</span></span> &#123; <span class="comment">// 일반 함수의 경우 매개변수는 복사 되어서 넘어 오기 때문에 값을 변경 해도 원본 값 arg2는 변경이 안 된다</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;normalFunc param is&quot;</span>, param) <span class="comment">// normalFunc param is 100</span></span><br><span class="line">	param += <span class="number">200</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">structTest</span><span class="params">(user *User)</span></span> &#123; <span class="comment">// 구조체의 경우에도 변수와 동일하게 *기호를 붙이면 된다</span></span><br><span class="line">	user.id = <span class="number">2</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;test user is &quot;</span>, user) <span class="comment">// test user is  &amp;&#123;2 delryn&#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="리턴-값의-경우"><a href="#리턴-값의-경우" class="headerlink" title="리턴 값의 경우"></a>리턴 값의 경우</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span> &#123;</span><br><span class="line">	id   <span class="keyword">uint</span></span><br><span class="line">	name <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> arg <span class="keyword">uint16</span> = <span class="number">30</span></span><br><span class="line">	result := receivePointerFunc(arg)</span><br><span class="line">	fmt.Println(<span class="string">&quot;receivePointerFunc result is&quot;</span>, result)       <span class="comment">// receivePointerFunc result is 0xc000122002</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;receivePointerFunc resultValue is&quot;</span>, *result) <span class="comment">// receivePointerFunc resultValue is 40</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;final arg is&quot;</span>, arg)                          <span class="comment">// final arg is 30</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> arg2 <span class="keyword">uint16</span> = <span class="number">10</span></span><br><span class="line">	result = receivePointerFunc2(&amp;arg2)</span><br><span class="line">	fmt.Println(<span class="string">&quot;receivePointerFunc2 result is&quot;</span>, result)       <span class="comment">// receivePointerFunc2 result is 0xc000122004</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;receivePointerFunc2 resultValue is&quot;</span>, *result) <span class="comment">// receivePointerFunc2 resultValue is 110</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;final arg2 is&quot;</span>, arg2)                         <span class="comment">// final arg2 is 110</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> arg3 <span class="keyword">uint16</span> = <span class="number">30</span></span><br><span class="line">	result2 := normalFunc(arg3)</span><br><span class="line">	fmt.Println(<span class="string">&quot;normalFunc result addr is&quot;</span>, &amp;result2) <span class="comment">// normalFunc result addr is 0xc000122006</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> user = User&#123;&#125;</span><br><span class="line">	user.id = <span class="number">1</span></span><br><span class="line">	user.name = <span class="string">&quot;delryn&quot;</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;user is&quot;</span>, user)</span><br><span class="line">	result3 := receiveStructPointerFunc(user)                  <span class="comment">// user is &#123;1 delryn&#125;</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;receiveStructPointerFunc result is&quot;</span>, result3) <span class="comment">// receiveStructPointerFunc result is &amp;&#123;2 delryn&#125;</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;final user is&quot;</span>, user)                         <span class="comment">// final user is &#123;1 delryn&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">receivePointerFunc</span><span class="params">(param <span class="keyword">uint16</span>)</span> *<span class="title">uint16</span></span> &#123; <span class="comment">// 리턴하는 데이터 타입에 *기호를 붙여서 포인터를 리턴한다고 표현</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;receivePointerFunc param is&quot;</span>, param)       <span class="comment">// receivePointerFunc param is 30</span></span><br><span class="line">	param += <span class="number">10</span>                                             <span class="comment">// param의 경우 복사된 값이기 때문에 원본 arg 값에 영향이 없다</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;receivePointerFunc param addr is&quot;</span>, &amp;param) <span class="comment">// receivePointerFunc param addr is 0xc000122002</span></span><br><span class="line">	<span class="keyword">return</span> &amp;param                                           <span class="comment">// 주소값을 리턴 해야 한다</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">receivePointerFunc2</span><span class="params">(param *<span class="keyword">uint16</span>)</span> *<span class="title">uint16</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;receivePointerFunc2 param is&quot;</span>, param) <span class="comment">// receivePointerFunc2 param is 0xc000122004</span></span><br><span class="line">	*param += <span class="number">100</span>                                      <span class="comment">// 주소에 속한 값에 + 100을 해준 거기 때문에 원본 arg2의 값이 변경 된다</span></span><br><span class="line">	<span class="keyword">return</span> param                                       <span class="comment">// 이미 매개변수가 주소값이기 때문에 &amp;기호를 붙일 필요가 없다</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">normalFunc</span><span class="params">(param <span class="keyword">uint16</span>)</span> <span class="title">uint16</span></span> &#123;</span><br><span class="line">	param += <span class="number">10</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;normalFunc param addr is&quot;</span>, &amp;param) <span class="comment">// normalFunc param addr is 0xc000122008</span></span><br><span class="line">	<span class="keyword">return</span> param                                    <span class="comment">// 리턴 값도 복사해서 넘기는거기 때문에 주소 값이 변경되는 걸 확인할 수 있다</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">receiveStructPointerFunc</span><span class="params">(user User)</span> *<span class="title">User</span></span> &#123;</span><br><span class="line">	user.id += <span class="number">1</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;receiveStructPointerFunc user is&quot;</span>, user) <span class="comment">// receiveStructPointerFunc user is &#123;2 delryn&#125;</span></span><br><span class="line">	<span class="keyword">return</span> &amp;user</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="구조체-메서드의-경우"><a href="#구조체-메서드의-경우" class="headerlink" title="구조체 메서드의 경우"></a>구조체 메서드의 경우</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Cal <span class="keyword">struct</span> &#123;</span><br><span class="line">	x      <span class="keyword">int</span></span><br><span class="line">	y      <span class="keyword">int</span></span><br><span class="line">	result <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c Cal)</span> <span class="title">plus</span><span class="params">()</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	c.result += c.x + c.y</span><br><span class="line">	<span class="keyword">return</span> c.result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Cal)</span> <span class="title">plus2</span><span class="params">()</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	c.result += c.x + c.y</span><br><span class="line">	<span class="keyword">return</span> c.result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	a := Cal&#123;x: <span class="number">1</span>, y: <span class="number">1</span>&#125;</span><br><span class="line">	fmt.Println(a.plus()) <span class="comment">// 2</span></span><br><span class="line">	fmt.Println(a.plus()) <span class="comment">// 복사가 되기 때문에 결과값이 누적이 되질 않는다, 2</span></span><br><span class="line">	b := Cal&#123;x: <span class="number">1</span>, y: <span class="number">1</span>&#125;</span><br><span class="line">	fmt.Println(b.plus2()) <span class="comment">// 2</span></span><br><span class="line">	fmt.Println(b.plus2()) <span class="comment">// 주소에 속한 값에 더하기 때문에 누적이 된다, 4</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2021/03/27/go-sql-driver-mysql-study/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2021-04-18 11:43:08
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Go/" title="Go">
+                        <b>#</b> Go
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div class="post-catalog" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%B3%80%EC%88%98%EC%97%90%EC%84%9C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94-%EA%B2%BD%EC%9A%B0"><span class="toc-text">변수에서 사용하는 경우</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%EC%9D%BC%EB%B0%98-%EB%B3%80%EC%88%98%EC%97%90%EC%84%9C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94-%EA%B2%BD%EC%9A%B0"><span class="toc-text">일반 변수에서 사용하는 경우</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EA%B5%AC%EC%A1%B0%EC%B2%B4-%EB%B3%80%EC%88%98%EC%97%90%EC%84%9C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94-%EA%B2%BD%EC%9A%B0"><span class="toc-text">구조체 변수에서 사용하는 경우</span></a></li></ol></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#%ED%95%A8%EC%88%98%EC%97%90%EC%84%9C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94-%EA%B2%BD%EC%9A%B0"><span class="toc-text">함수에서 사용하는 경우</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%EB%A7%A4%EA%B0%9C%EB%B3%80%EC%88%98%EC%9D%98-%EA%B2%BD%EC%9A%B0"><span class="toc-text">매개변수의 경우</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EB%A6%AC%ED%84%B4-%EA%B0%92%EC%9D%98-%EA%B2%BD%EC%9A%B0"><span class="toc-text">리턴 값의 경우</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EA%B5%AC%EC%A1%B0%EC%B2%B4-%EB%A9%94%EC%84%9C%EB%93%9C%EC%9D%98-%EA%B2%BD%EC%9A%B0"><span class="toc-text">구조체 메서드의 경우</span></a></li>
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+  <script src="https://utteranc.es/client.js" repo="hidelryn/blog-comment" issue-term="title" label="Comment" theme="github-light" crossorigin="anonymous" async>
+    </script>
+  
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/hidelryn/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="mailto:hidelryn@gmail.com" rel="external nofollow noopener noreferrer" target="_blank">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="/atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+  
+    <div class="footer-more">
+      
+        <span style="color: #666;">Copyright © Delryn 2021</span>
+        
+        
+    </div>
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+      
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+    </div>
+  </body>
+</html>

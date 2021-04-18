@@ -9,6 +9,62 @@
 
 
     <url>
+        <loc>https://hidelryn.github.io/2021/04/18/go-pointer/</loc>
+        <lastmod>2021-04-18T08:34:59.224Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://hidelryn.github.io/2019/02/21/go-use-json-http/</loc>
+        <lastmod>2021-04-18T02:42:51.252Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://hidelryn.github.io/2019/01/27/go-study-1/</loc>
+        <lastmod>2021-04-18T02:42:29.912Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://hidelryn.github.io/2019/02/17/go-study-5/</loc>
+        <lastmod>2021-04-18T02:42:24.835Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://hidelryn.github.io/2019/02/17/go-study-4/</loc>
+        <lastmod>2021-04-18T02:42:15.938Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://hidelryn.github.io/2019/02/09/go-study-3/</loc>
+        <lastmod>2021-04-18T02:42:12.709Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://hidelryn.github.io/2019/02/03/go-study-2/</loc>
+        <lastmod>2021-04-18T02:42:03.742Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://hidelryn.github.io/2021/03/27/go-sql-driver-mysql-study/</loc>
         <lastmod>2021-03-27T14:53:00.655Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -417,56 +473,8 @@
     </url>
 
     <url>
-        <loc>https://hidelryn.github.io/2019/02/21/go-use-json-http/</loc>
-        <lastmod>2020-09-01T06:31:36.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
         <loc>https://hidelryn.github.io/2019/03/01/go-study-gin/</loc>
         <lastmod>2020-09-01T06:31:10.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://hidelryn.github.io/2019/02/17/go-study-5/</loc>
-        <lastmod>2020-09-01T06:30:58.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://hidelryn.github.io/2019/02/17/go-study-4/</loc>
-        <lastmod>2020-09-01T06:30:48.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://hidelryn.github.io/2019/02/09/go-study-3/</loc>
-        <lastmod>2020-09-01T06:30:39.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://hidelryn.github.io/2019/02/03/go-study-2/</loc>
-        <lastmod>2020-09-01T06:30:35.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://hidelryn.github.io/2019/01/27/go-study-1/</loc>
-        <lastmod>2020-09-01T06:30:30.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 

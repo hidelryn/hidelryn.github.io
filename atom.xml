@@ -6,7 +6,7 @@
   <link href="https://hidelryn.github.io/atom.xml" rel="self"/>
   
   <link href="https://hidelryn.github.io/"/>
-  <updated>2021-03-27T14:53:00.655Z</updated>
+  <updated>2021-04-18T08:34:59.224Z</updated>
   <id>https://hidelryn.github.io/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Go 포인터 정리</title>
+    <link href="https://hidelryn.github.io/2021/04/18/go-pointer/"/>
+    <id>https://hidelryn.github.io/2021/04/18/go-pointer/</id>
+    <published>2021-04-18T02:43:08.000Z</published>
+    <updated>2021-04-18T08:34:59.224Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;포인터가 익숙치 않기 때문에.. 다시 정리를 해 보았다 🤔&lt;/p&gt;
+&lt;h2 id=&quot;변수에서-사용하는-경우&quot;&gt;&lt;a href=&quot;#변수에서-사용하는-경우&quot; class=&quot;headerlink&quot; title=&quot;변수에서 사용하는 경우&quot;&gt;&lt;/a&gt;변수에서</summary>
+        
+      
+    
+    
+    
+    
+    <category term="Go" scheme="https://hidelryn.github.io/tags/Go/"/>
+    
+  </entry>
   
   <entry>
     <title>go-sql-driver-mysql로 CURD 해보기</title>
@@ -485,32 +509,6 @@
     <category term="Node.js" scheme="https://hidelryn.github.io/tags/Node-js/"/>
     
     <category term="Test" scheme="https://hidelryn.github.io/tags/Test/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>AWS SES 사용해보기</title>
-    <link href="https://hidelryn.github.io/2020/04/26/etc-aws-ses/"/>
-    <id>https://hidelryn.github.io/2020/04/26/etc-aws-ses/</id>
-    <published>2020-04-26T06:38:44.000Z</published>
-    <updated>2021-02-06T14:16:08.197Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;SES란&quot;&gt;&lt;a href=&quot;#SES란&quot; class=&quot;headerlink&quot; title=&quot;SES란?&quot;&gt;&lt;/a&gt;SES란?&lt;/h2&gt;&lt;p&gt;이메일을 보낼 수 있는 서비스&lt;/p&gt;
-&lt;h2 id=&quot;사용하면서-느낀-장점&quot;&gt;&lt;a</summary>
-        
-      
-    
-    
-    
-    
-    <category term="AWS" scheme="https://hidelryn.github.io/tags/AWS/"/>
-    
-    <category term="SMS" scheme="https://hidelryn.github.io/tags/SMS/"/>
     
   </entry>
   
