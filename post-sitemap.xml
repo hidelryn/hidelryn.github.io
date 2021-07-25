@@ -9,6 +9,14 @@
 
 
     <url>
+        <loc>https://hidelryn.github.io/2021/07/25/nodejs-nestjs-study-1/</loc>
+        <lastmod>2021-07-25T10:05:06.257Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://hidelryn.github.io/2021/04/18/go-pointer/</loc>
         <lastmod>2021-04-18T08:34:59.224Z</lastmod>
         <changefreq>weekly</changefreq>

@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="keywords" content>
+  <meta name="author" content="delryn">
+  <meta name="description" content="나의 개발 노트 ʕ •ᴥ• ʔ">
+  
+  
+  <title>
+    
+      nestjs 학습하기 - 1 
+      
+      
+    
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-104148803-2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-104148803-2');
+    </script>
+  
+
+<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Delryn's Blog" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt>
+      
+    </a>
+    <div class="nickname"><a href="/">Delryn</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+<!-- LaTex Display -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">nestjs 학습하기 - 1</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2021-07-25 13:41:27
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/Node-js/" title="Node.js">
+                    <b>#</b> Node.js
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/TypeScript/" title="TypeScript">
+                    <b>#</b> TypeScript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="소개"><a href="#소개" class="headerlink" title="소개"></a>소개</h2><p>Node.js 웹프레임워크, 타입스크립트를 지원을 하며 내부는 Express를 기반으로 만든듯 함</p>
+<p>꽤 구조적이고 체계적인 프레임워크 같다 (스프링 프레임워크와 같은 컨셉?)</p>
+<h2 id="프로젝트-생성"><a href="#프로젝트-생성" class="headerlink" title="프로젝트 생성"></a>프로젝트 생성</h2><p>nest cli를 통해 프로젝트를 생성할 수 있고 npm 또는 yarn 으로 관리할지 선택만 하면 된다</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm i -g @nestjs/cli <span class="comment"># cli 설치</span></span><br><span class="line">nest new 프로젝트명 <span class="comment"># 프로젝트명으로 폴더가 생성되고, 필요한 모듈 모두 다운 받는다.</span></span><br><span class="line"><span class="comment"># 이후 npm || yarn 선택하면 생성됨</span></span><br></pre></td></tr></table></figure>
+<p>번외로 프로젝트 생성 시 _(언더스코어)가 포함된 프로젝트명은 -(하이픈)으로 자동 변경 된다 😮</p>
+<h2 id="실행"><a href="#실행" class="headerlink" title="실행"></a>실행</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run start:dev <span class="comment"># 개발 버전으로 실행, 코드 변경점이 있으면 바로 적용 된다.</span></span><br></pre></td></tr></table></figure>
+<p>package.json에 실행 및 유틸 명령어가 존재 한다 개인적으로는 포맷팅 최고 👏🏻</p>
+<p>실행 코드는 main.ts에 bootstrap란 함수인데 지금은 포트번호 말곤 딱히..</p>
+<p>그리고 app.module.ts를 살펴보면 구현된 컨트롤러, 서비스는 여기에 import해줘야 적용이 되는 거 같다</p>
+<h2 id="컨트롤러"><a href="#컨트롤러" class="headerlink" title="컨트롤러"></a>컨트롤러</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nest g controller 컨트롤러명 <span class="comment"># 컨트롤러명의 폴더에 컨트롤러, 테스트 컨트롤러 생성</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Controller &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/common&#x27;</span>;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="meta">@Controller</span>(<span class="string">&#x27;user&#x27;</span>)</span><br><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">UserController</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>컨트롤러는 클라에서 온 요청을 받고, 응답을 처리하는 역할이다</p>
+<p>나는 user라고 명명을 했고 파일은 클래스로 되어 있다</p>
+<p>@Controller(‘user’)라는 어노테이션이 컨트롤러로 인식을 하겠다는 의미인거 같고</p>
+<p>뒤에 ‘’ 내용은 접근할 path를 의미한다 예로 localhost:3000/user</p>
+<h3 id="Get"><a href="#Get" class="headerlink" title="Get"></a>Get</h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Controller, Get &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/common&#x27;</span>; <span class="comment">// 소스 최상단</span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="meta">@Controller</span>(<span class="string">&#x27;user&#x27;</span>)</span><br><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">UserController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Get</span>() <span class="comment">// localhost:3000/user로 접근 시</span></span><br><span class="line">    main(): <span class="built_in">string</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;Hello UserController!&#x27;</span>; <span class="comment">// 해당 문자열을 출력 한다.</span></span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>@Get()이라는 어노테이션을 붙이고 @nestjs/common에서 불러와야 한다</p>
+<p>값이 비어있을 때는 루트로 접근을 하고, 적으면 해당 path로 접근을 한다</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Controller, Get, Query &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/common&#x27;</span>;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="meta">@Get</span>(<span class="string">&#x27;get-user&#x27;</span>) <span class="comment">// localhost:3000/user/get-user</span></span><br><span class="line">  getUser(<span class="meta">@Query</span>(<span class="string">&#x27;id&#x27;</span>) id: <span class="built_in">string</span>): UserDto &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.userService.getUser(<span class="built_in">Number</span>(id));</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>쿼리스트링은 문자열로만 오며 존재하지 않을 시에는 undefined로 넘어온다</p>
+<p>@nestjs/common에서 Query를 불러 오고 @Query 어노테이션을 통해 접근할 수 있다</p>
+<p>그리고 리턴을 객체로 하면 알아서 JSON으로 응답을 한다</p>
+<h3 id="POST"><a href="#POST" class="headerlink" title="POST"></a>POST</h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Controller, Get, Query, Post, Body &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/common&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; DeleteUserDto &#125; <span class="keyword">from</span> <span class="string">&#x27;./user.dto&#x27;</span>;</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="meta">@Post</span>(<span class="string">&#x27;delete-user&#x27;</span>)</span><br><span class="line">  <span class="function"><span class="title">deleteUser</span>(<span class="params"><span class="meta">@Body</span>() deleteUserDto: DeleteUserDto</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> result = <span class="built_in">this</span>.userService.deleteUser(deleteUserDto);</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">DeleteUserDto</span> </span>&#123;</span><br><span class="line">    id: <span class="built_in">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>@Post()이라는 어노테이션을 붙이고 @nestjs/common에서 불러와야 한다</p>
+<p>값이 비어있을 때는 루트로 접근을 하고, 적으면 해당 path로 접근을 한다</p>
+<p>넘겨질 파라미터는 클래스로 작성을 하여 넣으면 @Body를 통해 접근이 가능 하다</p>
+<p>타입이나 인터페이스 대신 클래스로 작성을 하는 이유는 문서에 적혀 있는데</p>
+<p>나중에 JS로 변환 시 뭔가 문제가 있을 수 있음 이란 의미인듯? 걍 룰대로 작성하면 될꺼같다</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Controller, Get, Query, Post, Body, Response &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/common&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Response <span class="keyword">as</span> Res &#125; <span class="keyword">from</span> <span class="string">&#x27;express&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; DeleteUserDto, createUserDto &#125; <span class="keyword">from</span> <span class="string">&#x27;./user.dto&#x27;</span>;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="meta">@Post</span>(<span class="string">&#x27;create-user&#x27;</span>)</span><br><span class="line">  createUser(<span class="meta">@Body</span>() createUserDto: CreateUserDto, <span class="meta">@Response</span>() res): Res &#123;</span><br><span class="line">    <span class="keyword">const</span> accessToken = Common.makeAccessToken();</span><br><span class="line">    <span class="keyword">const</span> result = <span class="built_in">this</span>.userService.createUser(createUserDto);</span><br><span class="line">    <span class="keyword">return</span> res.set(&#123; <span class="string">&#x27;x-access-token&#x27;</span>: accessToken &#125;).json(result);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">CreateUserDto</span> </span>&#123;</span><br><span class="line">    name: Types.Name;</span><br><span class="line">    age: Types.Age;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>헤더에 동적인 데이터를 넣기 위해서는 @nestjs/common에서 Response를 넣어주고</p>
+<p>Express에서도 참조를 해줘야 하며 응답 리턴은 별도로 처리를 해줘야 한다</p>
+<h2 id="서비스"><a href="#서비스" class="headerlink" title="서비스"></a>서비스</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nest g service 서비스명 <span class="comment"># user로 적으면 컨트롤러처럼 user 폴더에 서비스, 테스트 파일이 생성</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Injectable &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/common&#x27;</span>;</span><br><span class="line"><span class="meta">@Injectable</span>()</span><br><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>컨트롤러와 동일하게 클래스로 생성이 되는데 어노테이션만 바뀌었다</p>
+<p>서비스는 로직을 담당하는 부분인데 간단하게 몇개만 작성을 해두고 넘어감</p>
+<h2 id="모듈"><a href="#모듈" class="headerlink" title="모듈"></a>모듈</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nest g module 모듈명</span><br></pre></td></tr></table></figure>
+<p>이부분이 오늘 본 거 중에 제일 흥미로웠음</p>
+<p>예로 유저 모듈이면 유저와 관련된 컨트롤러, 서비스, 모델 등등을 하나로 묶어서</p>
+<p>어플리케이션 모듈(app.module)에 주입 시키면 알아서 잘 동작한다!</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Module &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/common&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123;UserController&#125; <span class="keyword">from</span> <span class="string">&#x27;./user.controller&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123;UserService&#125; <span class="keyword">from</span> <span class="string">&#x27;./user.service&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Module</span>(&#123;</span><br><span class="line">    controllers: [UserController],</span><br><span class="line">    providers: [UserService]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">UserModule</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>생성된 모듈에 작성한 컨트롤러와 서비스 파일을 주입 시켜 주고 나서 app.module에 넣으면 끝</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Module &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/common&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; AppController &#125; <span class="keyword">from</span> <span class="string">&#x27;./app.controller&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; AppService &#125; <span class="keyword">from</span> <span class="string">&#x27;./app.service&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; UserModule &#125; <span class="keyword">from</span> <span class="string">&#x27;./user/user.module&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Module</span>(&#123;</span><br><span class="line">  imports: [UserModule],</span><br><span class="line">  controllers: [AppController],</span><br><span class="line">  providers: [AppService],</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">AppModule</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>개요만 간략하게 몇가지만 살펴봤는데 재미 있는 프레임워크라 생각이 든다 😀</p>
+<p>다음에 다시 이어서 읽고 연습 해봐야겠다</p>
+<h2 id="참고"><a href="#참고" class="headerlink" title="참고"></a>참고</h2><ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.nestjs.com/">nestjs doc</a></li>
+</ul>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2021/04/18/go-pointer/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2021-07-25 13:41:27
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Node-js/" title="Node.js">
+                        <b>#</b> Node.js
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/TypeScript/" title="TypeScript">
+                        <b>#</b> TypeScript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div class="post-catalog" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%86%8C%EA%B0%9C"><span class="toc-text">소개</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EC%83%9D%EC%84%B1"><span class="toc-text">프로젝트 생성</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%8B%A4%ED%96%89"><span class="toc-text">실행</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC"><span class="toc-text">컨트롤러</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Get"><span class="toc-text">Get</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POST"><span class="toc-text">POST</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%84%9C%EB%B9%84%EC%8A%A4"><span class="toc-text">서비스</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%AA%A8%EB%93%88"><span class="toc-text">모듈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%B0%B8%EA%B3%A0"><span class="toc-text">참고</span></a></li></ol>
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+  <script src="https://utteranc.es/client.js" repo="hidelryn/blog-comment" issue-term="title" label="Comment" theme="github-light" crossorigin="anonymous" async>
+    </script>
+  
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/hidelryn/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="mailto:hidelryn@gmail.com" rel="external nofollow noopener noreferrer" target="_blank">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="/atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+  
+    <div class="footer-more">
+      
+        <span style="color: #666;">Copyright © Delryn 2021</span>
+        
+        
+    </div>
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+      
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+    </div>
+  </body>
+</html>
