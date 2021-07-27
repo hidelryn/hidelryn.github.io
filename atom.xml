@@ -6,7 +6,7 @@
   <link href="https://hidelryn.github.io/atom.xml" rel="self"/>
   
   <link href="https://hidelryn.github.io/"/>
-  <updated>2021-07-25T10:05:06.257Z</updated>
+  <updated>2021-07-27T04:23:49.844Z</updated>
   <id>https://hidelryn.github.io/</id>
   
   <author>
@@ -21,14 +21,14 @@
     <link href="https://hidelryn.github.io/2021/07/25/nodejs-nestjs-study-1/"/>
     <id>https://hidelryn.github.io/2021/07/25/nodejs-nestjs-study-1/</id>
     <published>2021-07-25T04:41:27.000Z</published>
-    <updated>2021-07-25T10:05:06.257Z</updated>
+    <updated>2021-07-27T04:23:49.844Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;h2 id=&quot;소개&quot;&gt;&lt;a href=&quot;#소개&quot; class=&quot;headerlink&quot; title=&quot;소개&quot;&gt;&lt;/a&gt;소개&lt;/h2&gt;&lt;p&gt;Node.js 웹프레임워크, 타입스크립트를 지원을 하며 내부는 Express를 기반으로 만든듯 함&lt;/p&gt;
+    <summary type="html">&lt;h2 id=&quot;소개&quot;&gt;&lt;a href=&quot;#소개&quot; class=&quot;headerlink&quot; title=&quot;소개&quot;&gt;&lt;/a&gt;소개&lt;/h2&gt;&lt;p&gt;Node.js 웹프레임워크, 타입스크립트를 지원을 하며 내부는 기본으로 Express를 사용&lt;/p&gt;
 &lt;p&gt;꽤 구조적이고</summary>
         
       
