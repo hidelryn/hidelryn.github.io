@@ -6,7 +6,7 @@
   <link href="https://hidelryn.github.io/atom.xml" rel="self"/>
   
   <link href="https://hidelryn.github.io/"/>
-  <updated>2021-07-27T06:22:27.683Z</updated>
+  <updated>2021-08-01T05:18:26.159Z</updated>
   <id>https://hidelryn.github.io/</id>
   
   <author>
@@ -17,11 +17,38 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>nestjs 학습하기 - 1</title>
+    <title>Nest.js MiddleWare, Interceptor</title>
+    <link href="https://hidelryn.github.io/2021/08/01/nodejs-nestjs-study-2/"/>
+    <id>https://hidelryn.github.io/2021/08/01/nodejs-nestjs-study-2/</id>
+    <published>2021-08-01T03:26:29.000Z</published>
+    <updated>2021-08-01T05:18:26.159Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;미들웨어&quot;&gt;&lt;a href=&quot;#미들웨어&quot; class=&quot;headerlink&quot; title=&quot;미들웨어&quot;&gt;&lt;/a&gt;미들웨어&lt;/h2&gt;&lt;p&gt;&lt;img</summary>
+        
+      
+    
+    
+    
+    
+    <category term="Node.js" scheme="https://hidelryn.github.io/tags/Node-js/"/>
+    
+    <category term="Nest.js" scheme="https://hidelryn.github.io/tags/Nest-js/"/>
+    
+    <category term="TypeScript" scheme="https://hidelryn.github.io/tags/TypeScript/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Nest.js Install, Controller, Provider, Module</title>
     <link href="https://hidelryn.github.io/2021/07/25/nodejs-nestjs-study-1/"/>
     <id>https://hidelryn.github.io/2021/07/25/nodejs-nestjs-study-1/</id>
     <published>2021-07-25T04:41:27.000Z</published>
-    <updated>2021-07-27T06:22:27.683Z</updated>
+    <updated>2021-08-01T05:18:30.098Z</updated>
     
     
       
@@ -37,6 +64,8 @@
     
     
     <category term="Node.js" scheme="https://hidelryn.github.io/tags/Node-js/"/>
+    
+    <category term="Nest.js" scheme="https://hidelryn.github.io/tags/Nest-js/"/>
     
     <category term="TypeScript" scheme="https://hidelryn.github.io/tags/TypeScript/"/>
     
@@ -476,31 +505,6 @@
         
     <summary type="html">&lt;h2 id=&quot;설정&quot;&gt;&lt;a href=&quot;#설정&quot; class=&quot;headerlink&quot; title=&quot;설정&quot;&gt;&lt;/a&gt;설정&lt;/h2&gt;&lt;p&gt;예제 가이드대로 td-agent.conf를 바꿔본다.&lt;/p&gt;
 &lt;figure class=&quot;highlight</summary>
-        
-      
-    
-    
-    
-    
-    <category term="Fluentd" scheme="https://hidelryn.github.io/tags/Fluentd/"/>
-    
-    <category term="Log" scheme="https://hidelryn.github.io/tags/Log/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Fluentd 설치해보기</title>
-    <link href="https://hidelryn.github.io/2020/05/08/etc-fluentd-1/"/>
-    <id>https://hidelryn.github.io/2020/05/08/etc-fluentd-1/</id>
-    <published>2020-05-08T10:07:21.000Z</published>
-    <updated>2020-09-01T06:27:11.000Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;Fluentd란&quot;&gt;&lt;a href=&quot;#Fluentd란&quot; class=&quot;headerlink&quot; title=&quot;Fluentd란?&quot;&gt;&lt;/a&gt;Fluentd란?&lt;/h2&gt;&lt;p&gt;&lt;img</summary>
         
       
     
