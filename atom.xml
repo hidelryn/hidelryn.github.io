@@ -6,7 +6,7 @@
   <link href="https://hidelryn.github.io/atom.xml" rel="self"/>
   
   <link href="https://hidelryn.github.io/"/>
-  <updated>2021-08-01T05:18:26.159Z</updated>
+  <updated>2021-08-03T11:49:11.566Z</updated>
   <id>https://hidelryn.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>타입스크립트 MySQL 사용</title>
+    <link href="https://hidelryn.github.io/2021/08/03/nodejs-ts-mysql/"/>
+    <id>https://hidelryn.github.io/2021/08/03/nodejs-ts-mysql/</id>
+    <published>2021-08-03T12:22:15.000Z</published>
+    <updated>2021-08-03T11:49:11.566Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span</summary>
+        
+      
+    
+    
+    
+    
+    <category term="Node.js" scheme="https://hidelryn.github.io/tags/Node-js/"/>
+    
+    <category term="TypeScript" scheme="https://hidelryn.github.io/tags/TypeScript/"/>
+    
+    <category term="MySQL" scheme="https://hidelryn.github.io/tags/MySQL/"/>
+    
+  </entry>
   
   <entry>
     <title>Nest.js MiddleWare, Interceptor</title>
@@ -488,32 +515,6 @@
     
     
     <category term="Vue" scheme="https://hidelryn.github.io/tags/Vue/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Node.js app log를 Fluentd에 저장하기</title>
-    <link href="https://hidelryn.github.io/2020/05/09/etc-fluentd-2/"/>
-    <id>https://hidelryn.github.io/2020/05/09/etc-fluentd-2/</id>
-    <published>2020-05-09T05:29:43.000Z</published>
-    <updated>2020-09-01T09:34:27.000Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;설정&quot;&gt;&lt;a href=&quot;#설정&quot; class=&quot;headerlink&quot; title=&quot;설정&quot;&gt;&lt;/a&gt;설정&lt;/h2&gt;&lt;p&gt;예제 가이드대로 td-agent.conf를 바꿔본다.&lt;/p&gt;
-&lt;figure class=&quot;highlight</summary>
-        
-      
-    
-    
-    
-    
-    <category term="Fluentd" scheme="https://hidelryn.github.io/tags/Fluentd/"/>
-    
-    <category term="Log" scheme="https://hidelryn.github.io/tags/Log/"/>
     
   </entry>
   

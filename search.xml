@@ -4,6 +4,29 @@
   
     
     <entry>
+      <title>타입스크립트 MySQL 사용</title>
+      <link href="2021/08/03/nodejs-ts-mysql/"/>
+      <url>2021/08/03/nodejs-ts-mysql/</url>
+      
+        <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i mysql2 -S</span><br></pre></td></tr></table></figure><p>여담인데 npm mysql 모듈은 8.X 연결이 안 된다 😤 지원을 안하는듯..</p><p>그래서 자주 쓰는 mysql2로 설치로 테스트 했음</p><p>기본적으로 쿼리 결과는 RowDataPacket 타입(배열)으로 지정이 되어 있다</p><p>그래서 콘솔로그로 볼 수는 있으나 배열 내 오브젝트에는 접근이 안 됨..</p><p>구글링 하니 해결 방법은 인터페이스 확장이였다</p><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createConnection, RowDataPacket, FieldPacket &#125; <span class="keyword">from</span> <span class="string">&quot;mysql2/promise&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> Post <span class="keyword">extends</span> RowDataPacket &#123;</span><br><span class="line">  id: <span class="built_in">number</span>;</span><br><span class="line">  title: <span class="built_in">string</span>;</span><br><span class="line">  content: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">main</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> connection = <span class="keyword">await</span> createConnection(&#123;</span><br><span class="line">    host: <span class="string">&quot;localhost&quot;</span>,</span><br><span class="line">    user: <span class="string">&quot;root&quot;</span>,</span><br><span class="line">    database: <span class="string">&quot;test&quot;</span>,</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> [rows, fields]: [Post[], FieldPacket[]] = <span class="keyword">await</span> connection.query(</span><br><span class="line">      <span class="string">&quot;SELECT id, title, content FROM posts;&quot;</span></span><br><span class="line">    );</span><br><span class="line">    rows.forEach(<span class="function">(<span class="params">row</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">&#x27;id: &#x27;</span>, row.id, <span class="string">&#x27;title&#x27;</span>, row.title, <span class="string">&#x27;content: &#x27;</span>, row.content)</span><br><span class="line">    &#125;);</span><br><span class="line">    fields.forEach(<span class="function">(<span class="params">field</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">&#x27;table: &#x27;</span>, field.table);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="keyword">throw</span> err;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">main();</span><br></pre></td></tr></table></figure><h2 id="참조"><a href="#참조" class="headerlink" title="참조"></a>참조</h2><ul><li><a href="https://stackoverflow.com/questions/54583950/using-typescript-how-do-i-strongly-type-mysql-query-results">Using TypeScript, how do I strongly type mysql query results</a></li></ul>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Node.js </tag>
+            
+            <tag> TypeScript </tag>
+            
+            <tag> MySQL </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Nest.js MiddleWare, Interceptor</title>
       <link href="2021/08/01/nodejs-nestjs-study-2/"/>
       <url>2021/08/01/nodejs-nestjs-study-2/</url>

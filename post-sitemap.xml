@@ -9,6 +9,14 @@
 
 
     <url>
+        <loc>https://hidelryn.github.io/2021/08/03/nodejs-ts-mysql/</loc>
+        <lastmod>2021-08-03T11:49:11.566Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://hidelryn.github.io/2021/07/25/nodejs-nestjs-study-1/</loc>
         <lastmod>2021-08-01T05:18:30.098Z</lastmod>
         <changefreq>weekly</changefreq>
