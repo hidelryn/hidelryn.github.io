@@ -11,7 +11,7 @@
   
   <title>
     
-      타입스크립트 MySQL 사용 
+      MySQL JSON 타입 컬럼 사용 해보기 
       
       
     
@@ -127,15 +127,21 @@ MathJax = {
   <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
   <div class="container post-details" id="post-details">
     <div class="post-content">
-      <div class="post-title">타입스크립트 MySQL 사용</div>
+      <div class="post-title">MySQL JSON 타입 컬럼 사용 해보기</div>
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime" title="Update time"></i>
-          2021-08-03 21:22:15
+          2021-08-07 17:14:25
         </span>
         
               <span class="post-tags">
                 <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/RDB/" title="RDB">
+                    <b>#</b> RDB
+                  </a>
+                </span>
                 
                 <span class="span--tag">
                   <a href="/tags/MySQL/" title="MySQL">
@@ -143,31 +149,33 @@ MathJax = {
                   </a>
                 </span>
                 
-                <span class="span--tag">
-                  <a href="/tags/Node-js/" title="Node.js">
-                    <b>#</b> Node.js
-                  </a>
-                </span>
-                
-                <span class="span--tag">
-                  <a href="/tags/TypeScript/" title="TypeScript">
-                    <b>#</b> TypeScript
-                  </a>
-                </span>
-                
               </span>
           
       </div>
       <div class="markdown-body">
-        <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i mysql2 -S</span><br></pre></td></tr></table></figure>
-<p>여담인데 npm mysql 모듈은 8.X 연결이 안 된다 😤 지원을 안하는듯..</p>
-<p>그래서 자주 쓰는 mysql2로 설치로 테스트 했음</p>
-<p>기본적으로 쿼리 결과는 RowDataPacket 타입(배열)으로 지정이 되어 있다</p>
-<p>그래서 콘솔로그로 볼 수는 있으나 배열 내 오브젝트에는 접근이 안 됨..</p>
-<p>구글링 하니 해결 방법은 인터페이스 확장이였다</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createConnection, RowDataPacket, FieldPacket &#125; <span class="keyword">from</span> <span class="string">&quot;mysql2/promise&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> Post <span class="keyword">extends</span> RowDataPacket &#123;</span><br><span class="line">  id: <span class="built_in">number</span>;</span><br><span class="line">  title: <span class="built_in">string</span>;</span><br><span class="line">  content: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">main</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> connection = <span class="keyword">await</span> createConnection(&#123;</span><br><span class="line">    host: <span class="string">&quot;localhost&quot;</span>,</span><br><span class="line">    user: <span class="string">&quot;root&quot;</span>,</span><br><span class="line">    database: <span class="string">&quot;test&quot;</span>,</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> [rows, fields]: [Post[], FieldPacket[]] = <span class="keyword">await</span> connection.query(</span><br><span class="line">      <span class="string">&quot;SELECT id, title, content FROM posts;&quot;</span></span><br><span class="line">    );</span><br><span class="line">    rows.forEach(<span class="function">(<span class="params">row</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">&#x27;id: &#x27;</span>, row.id, <span class="string">&#x27;title&#x27;</span>, row.title, <span class="string">&#x27;content: &#x27;</span>, row.content)</span><br><span class="line">    &#125;);</span><br><span class="line">    fields.forEach(<span class="function">(<span class="params">field</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">&#x27;table: &#x27;</span>, field.table);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="keyword">throw</span> err;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">main();</span><br></pre></td></tr></table></figure>
+        <p>최근에 MySQL에 컬럼 타입 중 JSON이 있다는 걸 알게 되었다</p>
+<p>나온지는 오래 됫음 5.7후반부터 지원되었다고 함</p>
+<p>NoSQL처럼 컬럼 제한 없이 자유롭게 쓰라는 의미로 만들어진 거 같은데.. 👀</p>
+<p>그래서 10개 키를 가진 JSON 데이터 백만개를 저장 했을 경우 어떤지 비교 해보았다</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;test1&quot;</span>: <span class="string">&quot;랜덤문자&quot;</span>, </span><br><span class="line">    <span class="attr">&quot;test2&quot;</span>: <span class="string">&quot;랜덤문자&quot;</span>, </span><br><span class="line">    <span class="attr">&quot;test3&quot;</span>: <span class="string">&quot;랜덤문자&quot;</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>id(INT), value(JSON) 컬럼에 저장</li>
+<li>id(INT), 키 이름(VARCHAR) 10개를 만들어서 저장</li>
+</ol>
+<h2 id="크기"><a href="#크기" class="headerlink" title="크기"></a>크기</h2><p>저장 후 테이블 사이즈를 확인 해보니 JSON 컬럼 테이블이 꽤 높았다</p>
+<ul>
+<li>JSON -&gt; 246.75MB</li>
+<li>10개 컬럼 -&gt; 146.67MB</li>
+</ul>
+<h2 id="실행속도"><a href="#실행속도" class="headerlink" title="실행속도"></a>실행속도</h2><p>PK로 검색하는건 의미가 없어서 임의의 JSON 키 값을 검색했는데 차이는 거의 없었다</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 0.00052sec</span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> test.none_json_table <span class="keyword">where</span> test1 <span class="operator">=</span> <span class="string">&#x27;랜덤문자&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 0.00053sec</span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> test.json_table <span class="keyword">where</span> json_extract(<span class="keyword">value</span>, <span class="string">&#x27;$.&quot;test1&quot;&#x27;</span>) <span class="operator">=</span> <span class="string">&#x27;랜덤문자&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="타입스크립트에서-써보기"><a href="#타입스크립트에서-써보기" class="headerlink" title="타입스크립트에서 써보기"></a>타입스크립트에서 써보기</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i mysql2 -S</span><br></pre></td></tr></table></figure>
+<p>mysql2를 설치하여 사용, 여담으로 npm mysql은 8.@버전 연결 지원이 안 됨 😭</p>
+<p>인터페이스만 잘 정의해주면 특별한 건 없었다</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createConnection, RowDataPacket, FieldPacket, Connection &#125; <span class="keyword">from</span> <span class="string">&quot;mysql2/promise&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> Value &#123;</span><br><span class="line">  test1: <span class="built_in">string</span>;</span><br><span class="line">  test2: <span class="built_in">string</span>;</span><br><span class="line">  test3: <span class="built_in">string</span>;</span><br><span class="line">  test4: <span class="built_in">string</span>;</span><br><span class="line">  test5: <span class="built_in">string</span>;</span><br><span class="line">  test6: <span class="built_in">string</span>;</span><br><span class="line">  test7: <span class="built_in">string</span>;</span><br><span class="line">  test8: <span class="built_in">string</span>;</span><br><span class="line">  test9: <span class="built_in">string</span>;</span><br><span class="line">  test10: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> JSONTable <span class="keyword">extends</span> RowDataPacket &#123;</span><br><span class="line">  id: <span class="built_in">number</span>;</span><br><span class="line">  value: Value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">main</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> connection = <span class="keyword">await</span> createConnection(&#123;</span><br><span class="line">    host: <span class="string">&quot;localhost&quot;</span>,</span><br><span class="line">    user: <span class="string">&quot;root&quot;</span>,</span><br><span class="line">    database: <span class="string">&quot;test&quot;</span>,</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> [rows, fields]: [JSONTable[], FieldPacket[]] = <span class="keyword">await</span> connection.query(</span><br><span class="line">      <span class="string">&quot;SELECT id, value FROM test.json_table ORDER BY RAND() LIMIT ?&quot;</span>,</span><br><span class="line">      [<span class="number">5</span>]</span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; rows.length; i++) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">&quot;id&quot;</span>, rows[i].id, <span class="string">&quot;test1&quot;</span>, rows[i].value.test1);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;table: &quot;</span>, fields[<span class="number">0</span>].table);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="keyword">throw</span> err;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> [rows, fields]: [JSONTable[], FieldPacket[]] = <span class="keyword">await</span> connection.query(</span><br><span class="line">      <span class="string">`SELECT * from test.json_table where json_extract(value, &#x27;$.&quot;test2&quot;&#x27;) = ?`</span>,</span><br><span class="line">      [<span class="string">&quot;09aeeecb68&quot;</span>]</span><br><span class="line">    );</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;rows&#x27;</span>, rows[<span class="number">0</span>]);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="keyword">throw</span> err;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">await</span> connection.query(</span><br><span class="line">      <span class="string">&quot;UPDATE test.json_table SET value = JSON_SET(value, &#x27;$.test1&#x27;, &#x27;hihi!&#x27;) WHERE id = ?&quot;</span>,</span><br><span class="line">      [<span class="number">1</span>]</span><br><span class="line">    );</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="keyword">throw</span> err;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">main();</span><br></pre></td></tr></table></figure>
 <h2 id="참조"><a href="#참조" class="headerlink" title="참조"></a>참조</h2><ul>
-<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://stackoverflow.com/questions/54583950/using-typescript-how-do-i-strongly-type-mysql-query-results">Using TypeScript, how do I strongly type mysql query results</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://stackoverflow.com/questions/37816269/how-to-get-values-from-mysql5-6-column-if-that-contains-json-document-as-strin">How to get values from MySQL(5.6) column if that contains json document as string</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://stackoverflow.com/questions/34986223/how-to-update-json-data-type-column-in-mysql-5-7-10">How to update JSON data type column in MySQL 5.7.10?</a></li>
 </ul>
 
       </div>
@@ -175,7 +183,7 @@ MathJax = {
         <div class="prev-or-next">
           <div class="post-foot-next">
             
-              <a href="/2021/08/01/nodejs-nestjs-study-2/" target="_self">
+              <a href="/2021/08/03/nodejs-ts-mysql/" target="_self">
                 <i class="iconfont icon-chevronleft"></i>
                 <span>Prev</span>
               </a>
@@ -184,11 +192,17 @@ MathJax = {
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime" title="Update time"></i>
-              2021-08-03 21:22:15
+              2021-08-07 17:14:25
             </span>
             
                   <span class="post-tags">
                     <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/RDB/" title="RDB">
+                        <b>#</b> RDB
+                      </a>
+                    </span>
                     
                     <span class="span--tag">
                       <a href="/tags/MySQL/" title="MySQL">
@@ -196,27 +210,10 @@ MathJax = {
                       </a>
                     </span>
                     
-                    <span class="span--tag">
-                      <a href="/tags/Node-js/" title="Node.js">
-                        <b>#</b> Node.js
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag">
-                      <a href="/tags/TypeScript/" title="TypeScript">
-                        <b>#</b> TypeScript
-                      </a>
-                    </span>
-                    
                   </span>
               
           </div>
           <div class="post-foot-prev">
-            
-              <a href="/2021/08/07/db-mysql-json/" target="_self">
-                <span>Next</span>
-                <i class="iconfont icon-chevronright"></i>
-              </a>
             
           </div>
         </div>
@@ -226,7 +223,7 @@ MathJax = {
   <div class="post-catalog" id="catalog">
     <div class="title">Contents</div>
     <div class="catalog-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%B0%B8%EC%A1%B0"><span class="toc-text">참조</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%ED%81%AC%EA%B8%B0"><span class="toc-text">크기</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%8B%A4%ED%96%89%EC%86%8D%EB%8F%84"><span class="toc-text">실행속도</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%ED%83%80%EC%9E%85%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%EC%97%90%EC%84%9C-%EC%8D%A8%EB%B3%B4%EA%B8%B0"><span class="toc-text">타입스크립트에서 써보기</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%B0%B8%EC%A1%B0"><span class="toc-text">참조</span></a></li></ol>
     </div>
   </div>
 

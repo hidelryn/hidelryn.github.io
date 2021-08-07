@@ -9,6 +9,22 @@
 
 
     <url>
+        <loc>https://hidelryn.github.io/2021/08/07/db-mysql-json/</loc>
+        <lastmod>2021-08-07T11:41:29.861Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://hidelryn.github.io/2020/11/08/db-rdb-explain-plan/</loc>
+        <lastmod>2021-08-04T05:42:48.593Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://hidelryn.github.io/2021/08/03/nodejs-ts-mysql/</loc>
         <lastmod>2021-08-03T11:49:11.566Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -179,14 +195,6 @@
     <url>
         <loc>https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/</loc>
         <lastmod>2020-12-06T13:40:59.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://hidelryn.github.io/2020/11/08/db-rdb-explain-plan/</loc>
-        <lastmod>2020-11-08T14:31:12.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 

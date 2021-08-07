@@ -6,7 +6,7 @@
   <link href="https://hidelryn.github.io/atom.xml" rel="self"/>
   
   <link href="https://hidelryn.github.io/"/>
-  <updated>2021-08-03T11:49:11.566Z</updated>
+  <updated>2021-08-07T11:41:29.861Z</updated>
   <id>https://hidelryn.github.io/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>MySQL JSON 타입 컬럼 사용 해보기</title>
+    <link href="https://hidelryn.github.io/2021/08/07/db-mysql-json/"/>
+    <id>https://hidelryn.github.io/2021/08/07/db-mysql-json/</id>
+    <published>2021-08-07T08:14:25.000Z</published>
+    <updated>2021-08-07T11:41:29.861Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;최근에 MySQL에 컬럼 타입 중 JSON이 있다는 걸 알게 되었다&lt;/p&gt;
+&lt;p&gt;나온지는 오래 됫음 5.7후반부터 지원되었다고 함&lt;/p&gt;
+&lt;p&gt;NoSQL처럼 컬럼 제한 없이 자유롭게 쓰라는 의미로 만들어진 거 같은데.. 👀&lt;/p&gt;
+&lt;p&gt;그래서</summary>
+        
+      
+    
+    
+    
+    
+    <category term="RDB" scheme="https://hidelryn.github.io/tags/RDB/"/>
+    
+    <category term="MySQL" scheme="https://hidelryn.github.io/tags/MySQL/"/>
+    
+  </entry>
   
   <entry>
     <title>타입스크립트 MySQL 사용</title>
@@ -35,11 +63,11 @@
     
     
     
+    <category term="MySQL" scheme="https://hidelryn.github.io/tags/MySQL/"/>
+    
     <category term="Node.js" scheme="https://hidelryn.github.io/tags/Node-js/"/>
     
     <category term="TypeScript" scheme="https://hidelryn.github.io/tags/TypeScript/"/>
-    
-    <category term="MySQL" scheme="https://hidelryn.github.io/tags/MySQL/"/>
     
   </entry>
   
@@ -306,7 +334,7 @@
     <link href="https://hidelryn.github.io/2020/11/08/db-rdb-explain-plan/"/>
     <id>https://hidelryn.github.io/2020/11/08/db-rdb-explain-plan/</id>
     <published>2020-11-08T06:42:36.000Z</published>
-    <updated>2020-11-08T14:31:12.000Z</updated>
+    <updated>2021-08-04T05:42:48.593Z</updated>
     
     
       
@@ -484,30 +512,6 @@
         
         
     <summary type="html">&lt;h2 id=&quot;Project-생성&quot;&gt;&lt;a href=&quot;#Project-생성&quot; class=&quot;headerlink&quot; title=&quot;Project 생성&quot;&gt;&lt;/a&gt;Project 생성&lt;/h2&gt;&lt;p&gt;책에서 보고 설치 했었던 CLI가 현재 버전보다 꽤 많이 낮아서</summary>
-        
-      
-    
-    
-    
-    
-    <category term="Vue" scheme="https://hidelryn.github.io/tags/Vue/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Vue.js 기본 개념 정리</title>
-    <link href="https://hidelryn.github.io/2020/09/01/nodejs-vue-study-1/"/>
-    <id>https://hidelryn.github.io/2020/09/01/nodejs-vue-study-1/</id>
-    <published>2020-09-01T06:41:37.000Z</published>
-    <updated>2020-09-03T07:08:54.000Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;&lt;a href=&quot;http://www.easyspub.co.kr/20_Menu/BookView/PUB/185/PUB&quot;&gt;Do it! Vue.js 입문&lt;/a&gt;을 읽어보면서 정리한 글&lt;/p&gt;
-&lt;h2 id=&quot;Vue-js란&quot;&gt;&lt;a</summary>
         
       
     
