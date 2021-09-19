@@ -6,7 +6,7 @@
   <link href="https://hidelryn.github.io/atom.xml" rel="self"/>
   
   <link href="https://hidelryn.github.io/"/>
-  <updated>2021-08-07T11:41:29.861Z</updated>
+  <updated>2021-09-19T07:53:07.840Z</updated>
   <id>https://hidelryn.github.io/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>프로토콜버퍼 살펴보기</title>
+    <link href="https://hidelryn.github.io/2021/09/19/etc-pb/"/>
+    <id>https://hidelryn.github.io/2021/09/19/etc-pb/</id>
+    <published>2021-09-19T06:59:29.000Z</published>
+    <updated>2021-09-19T07:53:07.840Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;개요&quot;&gt;&lt;a href=&quot;#개요&quot; class=&quot;headerlink&quot; title=&quot;개요&quot;&gt;&lt;/a&gt;개요&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;프로토콜버퍼는 구글에서 만든 구조화된 데이터를 직렬화하는 방식을 의미 한다&lt;/li&gt;
+&lt;li&gt;현재는</summary>
+        
+      
+    
+    
+    
+    
+    <category term="protobuf" scheme="https://hidelryn.github.io/tags/protobuf/"/>
+    
+  </entry>
   
   <entry>
     <title>MySQL JSON 타입 컬럼 사용 해보기</title>
@@ -489,29 +514,6 @@
         
         
     <summary type="html">&lt;h2 id=&quot;일정-등록&quot;&gt;&lt;a href=&quot;#일정-등록&quot; class=&quot;headerlink&quot; title=&quot;일정 등록&quot;&gt;&lt;/a&gt;일정 등록&lt;/h2&gt;&lt;p&gt;일정 등록은 달력의 날짜를 클릭 시 modal창이 나와서 입력을 하게끔 만들고</summary>
-        
-      
-    
-    
-    
-    
-    <category term="Vue" scheme="https://hidelryn.github.io/tags/Vue/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Vue로 나만의 캘린더 만들어보기 - 1</title>
-    <link href="https://hidelryn.github.io/2020/09/03/nodejs-vue-study-2/"/>
-    <id>https://hidelryn.github.io/2020/09/03/nodejs-vue-study-2/</id>
-    <published>2020-09-03T14:14:41.000Z</published>
-    <updated>2020-09-04T14:47:04.000Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;Project-생성&quot;&gt;&lt;a href=&quot;#Project-생성&quot; class=&quot;headerlink&quot; title=&quot;Project 생성&quot;&gt;&lt;/a&gt;Project 생성&lt;/h2&gt;&lt;p&gt;책에서 보고 설치 했었던 CLI가 현재 버전보다 꽤 많이 낮아서</summary>
         
       
     
