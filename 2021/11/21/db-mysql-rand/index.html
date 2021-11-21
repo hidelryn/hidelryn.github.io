@@ -11,7 +11,7 @@
   
   <title>
     
-      프로토콜버퍼 살펴보기 
+      mysql에서 무작위 값 추출 하기 
       
       
     
@@ -127,19 +127,25 @@ MathJax = {
   <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
   <div class="container post-details" id="post-details">
     <div class="post-content">
-      <div class="post-title">프로토콜버퍼 살펴보기</div>
+      <div class="post-title">mysql에서 무작위 값 추출 하기</div>
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime" title="Update time"></i>
-          2021-09-19 15:59:29
+          2021-11-21 21:37:33
         </span>
         
               <span class="post-tags">
                 <i class="iconfont icon-tags" title="Tags"></i>
                 
                 <span class="span--tag">
-                  <a href="/tags/protobuf/" title="protobuf">
-                    <b>#</b> protobuf
+                  <a href="/tags/RDB/" title="RDB">
+                    <b>#</b> RDB
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/MySQL/" title="MySQL">
+                    <b>#</b> MySQL
                   </a>
                 </span>
                 
@@ -147,41 +153,40 @@ MathJax = {
           
       </div>
       <div class="markdown-body">
-        <h2 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h2><ul>
-<li>프로토콜버퍼는 구글에서 만든 구조화된 데이터를 직렬화하는 방식을 의미 한다</li>
-<li>현재는 3(proto3)이 최신 문법이고 다양한 언어를 지원 한다</li>
-<li>파일 확장자는 .proto</li>
-</ul>
-<h2 id="작성"><a href="#작성" class="headerlink" title="작성"></a>작성</h2><p>가볍게 봤으며 아래는 예시</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">syntax &#x3D; &quot;proto3&quot;;</span><br><span class="line"></span><br><span class="line">message ReqPost &#123;</span><br><span class="line">    int64 writerId &#x3D; 1;</span><br><span class="line">    string title &#x3D; 2;</span><br><span class="line">    string content &#x3D; 3;</span><br><span class="line">    string tag &#x3D; 4;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">message ResSinglePost &#123;</span><br><span class="line">    int64 postId &#x3D; 1;</span><br><span class="line">    int64 writerId &#x3D; 2;</span><br><span class="line">    string title &#x3D; 3;</span><br><span class="line">    string content &#x3D; 4;</span><br><span class="line">    string tag &#x3D; 5;</span><br><span class="line">    int64 createAt &#x3D; 6;</span><br><span class="line">    int64 updateAt &#x3D; 7;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">message ResMultiplePost &#123;</span><br><span class="line">    repeated ResSinglePost posts &#x3D; 1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>syntax는 문법 버전을 표기, 현재는 3 이전에는 2 (proto2)</li>
-<li>하나의 메세지가 구조체 또는 Object라 생각하면 됨</li>
-<li>자료형, 키워드, 그리고 고유번호를 기입</li>
-<li>Go 구조체처럼 안에 구조체를 선언하여(ResSinglePost 이 부분) 사용 가능</li>
-<li>repeated는 배열을 의미</li>
-</ul>
-<h2 id="통신"><a href="#통신" class="headerlink" title="통신"></a>통신</h2><ul>
-<li>콘텐츠 헤더는 application/octet-stream</li>
-<li>바이너리 데이터로 통신을 하며 클라, 서버는 해당하는 proto 파일의 메세지로 디코딩</li>
-</ul>
-<h2 id="JSON과-비교"><a href="#JSON과-비교" class="headerlink" title="JSON과 비교"></a>JSON과 비교</h2><p>Express로 서버를 띄웠고 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.npmjs.com/package/protobufjs">protobufjs</a>를 사용하여 간단한 API 테스트를 해보았다</p>
-<h3 id="JSON"><a href="#JSON" class="headerlink" title="JSON"></a>JSON</h3><p><img src="https://res.cloudinary.com/ddebpn43q/image/upload/v1632036877/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2021-09-19_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_4.34.25_grh79k.png" alt="json"></p>
-<p>JSON으로 보냈을 시 서버에서 응답 받은 길이는 96Byte</p>
-<h3 id="protobuf"><a href="#protobuf" class="headerlink" title="protobuf"></a>protobuf</h3><p><img src="https://res.cloudinary.com/ddebpn43q/image/upload/v1632037129/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2021-09-19_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_4.36.30_b38zga.png" alt="protobuf"></p>
-<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/spluxx/Protoman">Protoman</a>을 이용해서 요청을 했고 서버에서 응답 받은 길이는 44Byte</p>
-<h2 id="느낀점"><a href="#느낀점" class="headerlink" title="느낀점"></a>느낀점</h2><ul>
-<li>프로토콜 버퍼를 사용하면 확실히 용량이 줄어든다 (네트워크 비용 절약?)</li>
-<li>크기가 줄었다고 빨라지진 않는다 오히려 인코딩,디코딩으로 인해 추가 시간 소모</li>
-<li>클라와 서버가 같은 언어이면, 예로 TS면 인터페이스를 공유하면 되므로 굳이 쓸?</li>
-<li>반대로 언어가 다르다면 고정해서 공유할 수 있으므로 나쁘지 않을 꺼 같다</li>
-</ul>
+        <p>예시) 응모권 신청 받아서 n명 당첨, 게임에서 친구 찾기에서 무작위 리스트가 필요할떄</p>
+<h2 id="order-by-rand"><a href="#order-by-rand" class="headerlink" title="order by rand()"></a>order by rand()</h2><p>동작 방식은 임의의 값을 각 레코드에 부여 하고 그 값으로 정렬을 한다</p>
+<p>int형 pk(ai on), string col 1개로 구성되어 있고 row 수는 천만개</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">order</span> <span class="keyword">by</span> rand() limit <span class="number">30</span>;</span><br></pre></td></tr></table></figure>
+<p>쿼리의 실행 계획을 살펴 보면 아래와 같다</p>
+<p><img src="https://res.cloudinary.com/ddebpn43q/image/upload/v1637498664/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2021-11-21_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_9.43.32_ztbyhr.png" alt="order by rand"></p>
+<p>테이블 풀 스캔이 나오며 쿼리 코스트 비용을 보니 무시무시하다 😱</p>
+<p>데이터의 수가 적거나 1회성 호출인 경우에는 써보겠으나 수가 많고 잦은 </p>
+<p>호출을 하는 경우에는 기피하는 게 좋을듯..</p>
+<h3 id="Using-filesort"><a href="#Using-filesort" class="headerlink" title="Using filesort"></a>Using filesort</h3><p>order by 절이 인덱스를 사용하지 못할 때 등장 한다 👀</p>
+<p>조회된 레코드를 정렬용 메모리 버퍼에 복사해 다시 퀵 소트 알고리즘으로 정렬 한다</p>
+<h2 id="단순-인덱스를-타기-위한-방법"><a href="#단순-인덱스를-타기-위한-방법" class="headerlink" title="단순 인덱스를 타기 위한 방법?"></a>단순 인덱스를 타기 위한 방법?</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">as</span> t1</span><br><span class="line"><span class="keyword">inner</span> <span class="keyword">join</span></span><br><span class="line">(</span><br><span class="line"><span class="keyword">select</span> id <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">order</span> <span class="keyword">by</span> rand() limit <span class="number">30</span></span><br><span class="line">) <span class="keyword">as</span> t2</span><br><span class="line"><span class="keyword">on</span> t1.id <span class="operator">=</span> t2.id;</span><br></pre></td></tr></table></figure>
+<p><img src="https://res.cloudinary.com/ddebpn43q/image/upload/v1637502442/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2021-11-21_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_10.47.09_xybujd.png" alt="use index"></p>
+<p>스택오버플로우에서 본 방법인데 여전히 filesort이고 풀 인덱스 스캔이여서 그런지</p>
+<p>실행속도는 마찬가지로 매우 느리기 떄문에 큰 메리트가 없음</p>
+<h2 id="정렬-값을-미리-만들어두는-방법"><a href="#정렬-값을-미리-만들어두는-방법" class="headerlink" title="정렬 값을 미리 만들어두는 방법"></a>정렬 값을 미리 만들어두는 방법</h2><p>책에 나온 방법을 그대로 실행해보았음</p>
+<p>테이블의 인서트할 때 하나의 컬럼에 정렬 값(index 설정 ok)를 저장 한다</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">table</span>(col, rand_val) <span class="keyword">values</span>(val, <span class="built_in">floor</span>(rand() <span class="operator">*</span> <span class="number">10000000</span>));</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> <span class="variable">@rnd</span> <span class="operator">=</span> <span class="built_in">floor</span>(rand() <span class="operator">*</span> <span class="number">10000000</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">as</span> t1 <span class="keyword">inner</span> <span class="keyword">join</span></span><br><span class="line">(</span><br><span class="line">(<span class="keyword">select</span> id <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">where</span> rand_val <span class="operator">&gt;=</span> <span class="variable">@rnd</span> limit <span class="number">30</span>)</span><br><span class="line"><span class="keyword">union</span> <span class="keyword">all</span></span><br><span class="line">(<span class="keyword">select</span> id <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">where</span> rand_val <span class="operator">&lt;</span> <span class="variable">@rnd</span> limit <span class="number">30</span>)</span><br><span class="line">) <span class="keyword">as</span> t2</span><br><span class="line"><span class="keyword">on</span> t1.id <span class="operator">=</span> t2.id;</span><br></pre></td></tr></table></figure>
+<p><img src="https://res.cloudinary.com/ddebpn43q/image/upload/v1637504437/explain_itxpdw.png" alt="explain"></p>
+<p>인덱스로 조회된 결과를 합쳐서 나오기 때문에 만족스러운 결과가 나옴</p>
+<h2 id="그-외-방법"><a href="#그-외-방법" class="headerlink" title="그 외 방법?"></a>그 외 방법?</h2><p>정렬 값을 미리 만들지 않고 할 수 있는 방법을 조금 고민해 보았다</p>
+<p>방식은 위와 비슷한데 pk가 (int형 ai)이고 레코드가 삭제되지 않는다는</p>
+<p>전제 조건이여야 가능한듯 😂</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> <span class="variable">@rnd</span> <span class="operator">=</span> <span class="built_in">floor</span>(rand() <span class="operator">*</span> (<span class="keyword">select</span> <span class="built_in">max</span>(id) <span class="keyword">from</span> test.table_1));</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> (</span><br><span class="line">(<span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">where</span> id <span class="operator">&gt;=</span> <span class="variable">@rnd</span></span><br><span class="line">limit <span class="number">30</span>)</span><br><span class="line"><span class="keyword">union</span> <span class="keyword">all</span></span><br><span class="line">(<span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">where</span> id <span class="operator">&lt;</span></span><br><span class="line"><span class="variable">@rnd</span> limit <span class="number">30</span>)</span><br><span class="line">) <span class="keyword">as</span> <span class="keyword">table</span> limit <span class="number">30</span>;</span><br></pre></td></tr></table></figure>
+<p><img src="https://res.cloudinary.com/ddebpn43q/image/upload/v1637506673/explain_o6gum6.png" alt="explain"></p>
+<h2 id="아직-못해본것"><a href="#아직-못해본것" class="headerlink" title="아직 못해본것"></a>아직 못해본것</h2><p>어플리케이션과 조금 나누어서 처리를 했을 때 어떤 게 더 빠른지 확인해볼것</p>
+<p>위의 @rnd값을 먼저 어플리케이션에서 가지고 와서 이후 쿼리 실행 해보기</p>
 <blockquote>
 <p>참조</p>
 </blockquote>
 <ul>
-<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://developers.google.com/protocol-buffers/docs/proto3">구글 문서</a></li>
-<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/hidelryn/protobuf-ts-example">테스트코드</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://stackoverflow.com/questions/2663710/how-does-mysqls-order-by-rand-work">How does MySQL’s ORDER BY RAND() work?</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="http://www.yes24.com/Product/Goods/6960931">Real MySQL</a></li>
 </ul>
 
       </div>
@@ -189,7 +194,7 @@ MathJax = {
         <div class="prev-or-next">
           <div class="post-foot-next">
             
-              <a href="/2021/08/07/db-mysql-json/" target="_self">
+              <a href="/2021/09/19/etc-pb/" target="_self">
                 <i class="iconfont icon-chevronleft"></i>
                 <span>Prev</span>
               </a>
@@ -198,15 +203,21 @@ MathJax = {
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime" title="Update time"></i>
-              2021-09-19 15:59:29
+              2021-11-21 21:37:33
             </span>
             
                   <span class="post-tags">
                     <i class="iconfont icon-tags" title="Tags"></i>
                     
                     <span class="span--tag">
-                      <a href="/tags/protobuf/" title="protobuf">
-                        <b>#</b> protobuf
+                      <a href="/tags/RDB/" title="RDB">
+                        <b>#</b> RDB
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/MySQL/" title="MySQL">
+                        <b>#</b> MySQL
                       </a>
                     </span>
                     
@@ -214,11 +225,6 @@ MathJax = {
               
           </div>
           <div class="post-foot-prev">
-            
-              <a href="/2021/11/21/db-mysql-rand/" target="_self">
-                <span>Next</span>
-                <i class="iconfont icon-chevronright"></i>
-              </a>
             
           </div>
         </div>
@@ -228,7 +234,7 @@ MathJax = {
   <div class="post-catalog" id="catalog">
     <div class="title">Contents</div>
     <div class="catalog-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EA%B0%9C%EC%9A%94"><span class="toc-text">개요</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%9E%91%EC%84%B1"><span class="toc-text">작성</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%ED%86%B5%EC%8B%A0"><span class="toc-text">통신</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JSON%EA%B3%BC-%EB%B9%84%EA%B5%90"><span class="toc-text">JSON과 비교</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JSON"><span class="toc-text">JSON</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#protobuf"><span class="toc-text">protobuf</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%8A%90%EB%82%80%EC%A0%90"><span class="toc-text">느낀점</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#order-by-rand"><span class="toc-text">order by rand()</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Using-filesort"><span class="toc-text">Using filesort</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%8B%A8%EC%88%9C-%EC%9D%B8%EB%8D%B1%EC%8A%A4%EB%A5%BC-%ED%83%80%EA%B8%B0-%EC%9C%84%ED%95%9C-%EB%B0%A9%EB%B2%95"><span class="toc-text">단순 인덱스를 타기 위한 방법?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%A0%95%EB%A0%AC-%EA%B0%92%EC%9D%84-%EB%AF%B8%EB%A6%AC-%EB%A7%8C%EB%93%A4%EC%96%B4%EB%91%90%EB%8A%94-%EB%B0%A9%EB%B2%95"><span class="toc-text">정렬 값을 미리 만들어두는 방법</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EA%B7%B8-%EC%99%B8-%EB%B0%A9%EB%B2%95"><span class="toc-text">그 외 방법?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%95%84%EC%A7%81-%EB%AA%BB%ED%95%B4%EB%B3%B8%EA%B2%83"><span class="toc-text">아직 못해본것</span></a></li></ol>
     </div>
   </div>
 

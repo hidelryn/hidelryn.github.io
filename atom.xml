@@ -6,7 +6,7 @@
   <link href="https://hidelryn.github.io/atom.xml" rel="self"/>
   
   <link href="https://hidelryn.github.io/"/>
-  <updated>2021-09-20T06:36:53.105Z</updated>
+  <updated>2021-11-21T15:08:10.688Z</updated>
   <id>https://hidelryn.github.io/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>mysql에서 무작위 값 추출 하기</title>
+    <link href="https://hidelryn.github.io/2021/11/21/db-mysql-rand/"/>
+    <id>https://hidelryn.github.io/2021/11/21/db-mysql-rand/</id>
+    <published>2021-11-21T12:37:33.000Z</published>
+    <updated>2021-11-21T15:08:10.688Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;예시) 응모권 신청 받아서 n명 당첨, 게임에서 친구 찾기에서 무작위 리스트가 필요할떄&lt;/p&gt;
+&lt;h2 id=&quot;order-by-rand&quot;&gt;&lt;a href=&quot;#order-by-rand&quot; class=&quot;headerlink&quot; title=&quot;order by</summary>
+        
+      
+    
+    
+    
+    
+    <category term="RDB" scheme="https://hidelryn.github.io/tags/RDB/"/>
+    
+    <category term="MySQL" scheme="https://hidelryn.github.io/tags/MySQL/"/>
+    
+  </entry>
   
   <entry>
     <title>프로토콜버퍼 살펴보기</title>
@@ -491,29 +517,6 @@
         
         
     <summary type="html">&lt;h2 id=&quot;내가-등록한-일정-리스트-만들기&quot;&gt;&lt;a href=&quot;#내가-등록한-일정-리스트-만들기&quot; class=&quot;headerlink&quot; title=&quot;내가 등록한 일정 리스트 만들기&quot;&gt;&lt;/a&gt;내가 등록한 일정 리스트</summary>
-        
-      
-    
-    
-    
-    
-    <category term="Vue" scheme="https://hidelryn.github.io/tags/Vue/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Vue로 나만의 캘린더 만들어보기 - 2</title>
-    <link href="https://hidelryn.github.io/2020/09/04/nodejs-vue-study-3/"/>
-    <id>https://hidelryn.github.io/2020/09/04/nodejs-vue-study-3/</id>
-    <published>2020-09-04T04:32:14.000Z</published>
-    <updated>2020-09-04T14:54:00.000Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;일정-등록&quot;&gt;&lt;a href=&quot;#일정-등록&quot; class=&quot;headerlink&quot; title=&quot;일정 등록&quot;&gt;&lt;/a&gt;일정 등록&lt;/h2&gt;&lt;p&gt;일정 등록은 달력의 날짜를 클릭 시 modal창이 나와서 입력을 하게끔 만들고</summary>
         
       
     
