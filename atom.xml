@@ -6,7 +6,7 @@
   <link href="https://hidelryn.github.io/atom.xml" rel="self"/>
   
   <link href="https://hidelryn.github.io/"/>
-  <updated>2021-11-21T15:08:10.688Z</updated>
+  <updated>2022-02-13T08:38:29.780Z</updated>
   <id>https://hidelryn.github.io/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>MYSQL에서 IN 주의점</title>
+    <link href="https://hidelryn.github.io/2022/02/13/db-mysql-in/"/>
+    <id>https://hidelryn.github.io/2022/02/13/db-mysql-in/</id>
+    <published>2022-02-13T08:19:33.000Z</published>
+    <updated>2022-02-13T08:38:29.780Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;in 개수가 성능에 영향을 끼친다는 글을 보고 테스트 해보았다&lt;/p&gt;
+&lt;p&gt;pk(int)하나와 컬럼 2개(varchar,int)로 구성되어있고 row수는 1억&lt;/p&gt;
+&lt;p&gt;in개수가 작을 떄 실행계획은 아래와 같다&lt;/p&gt;
+&lt;p&gt;&lt;img</summary>
+        
+      
+    
+    
+    
+    
+    <category term="RDB" scheme="https://hidelryn.github.io/tags/RDB/"/>
+    
+    <category term="MySQL" scheme="https://hidelryn.github.io/tags/MySQL/"/>
+    
+  </entry>
   
   <entry>
     <title>mysql에서 무작위 값 추출 하기</title>
@@ -494,29 +522,6 @@
         
     <summary type="html">&lt;h2 id=&quot;Vuex란&quot;&gt;&lt;a href=&quot;#Vuex란&quot; class=&quot;headerlink&quot; title=&quot;Vuex란&quot;&gt;&lt;/a&gt;Vuex란&lt;/h2&gt;&lt;p&gt;Vuex는 전역 저장소(data)를 사용하여 상태 관리를 하는 라이브러리&lt;/p&gt;
 &lt;h2</summary>
-        
-      
-    
-    
-    
-    
-    <category term="Vue" scheme="https://hidelryn.github.io/tags/Vue/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Vue로 나만의 캘린더 만들어보기 - 3</title>
-    <link href="https://hidelryn.github.io/2020/09/11/nodejs-vue-study-4/"/>
-    <id>https://hidelryn.github.io/2020/09/11/nodejs-vue-study-4/</id>
-    <published>2020-09-11T05:54:06.000Z</published>
-    <updated>2020-09-11T08:43:23.000Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;내가-등록한-일정-리스트-만들기&quot;&gt;&lt;a href=&quot;#내가-등록한-일정-리스트-만들기&quot; class=&quot;headerlink&quot; title=&quot;내가 등록한 일정 리스트 만들기&quot;&gt;&lt;/a&gt;내가 등록한 일정 리스트</summary>
         
       
     

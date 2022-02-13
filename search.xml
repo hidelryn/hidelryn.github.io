@@ -4,6 +4,27 @@
   
     
     <entry>
+      <title>MYSQL에서 IN 주의점</title>
+      <link href="2022/02/13/db-mysql-in/"/>
+      <url>2022/02/13/db-mysql-in/</url>
+      
+        <content type="html"><![CDATA[<p>in 개수가 성능에 영향을 끼친다는 글을 보고 테스트 해보았다</p><p>pk(int)하나와 컬럼 2개(varchar,int)로 구성되어있고 row수는 1억</p><p>in개수가 작을 떄 실행계획은 아래와 같다</p><p><img src="https://res.cloudinary.com/ddebpn43q/image/upload/v1644741015/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2022-02-13_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_5.29.52_expmny.png" alt="in"></p><p>in개수를 100000개로 했을 때는 아래와 같다</p><p><img src="https://res.cloudinary.com/ddebpn43q/image/upload/v1644741109/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2022-02-13_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_5.31.38_fsqnwx.png" alt="in-many"></p><p>해결방법은 분할해서 실행하는 것 (js의 경우 Promise.all, go는 고루틴으로)</p><p>만약 범위가 1,2,3 … N처럼 고정일 경우 BETWEEN 🤔</p><p><img src="https://res.cloudinary.com/ddebpn43q/image/upload/v1644741269/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2022-02-13_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_5.34.15_fm7wga.png" alt="invspromiseallvsbetween"></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> RDB </tag>
+            
+            <tag> MySQL </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>mysql에서 무작위 값 추출 하기</title>
       <link href="2021/11/21/db-mysql-rand/"/>
       <url>2021/11/21/db-mysql-rand/</url>
