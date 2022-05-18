@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="keywords" content>
+  <meta name="author" content="delryn">
+  <meta name="description" content="나의 개발 노트 ʕ •ᴥ• ʔ">
+  
+  
+  <title>
+    
+      플랫버퍼 찍먹 
+      
+      
+    
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-104148803-2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-104148803-2');
+    </script>
+  
+
+<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Delryn's Blog" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt>
+      
+    </a>
+    <div class="nickname"><a href="/">Delryn</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+<!-- LaTex Display -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">플랫버퍼 찍먹</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2022-05-18 22:23:52
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/Node-js/" title="Node.js">
+                    <b>#</b> Node.js
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/FlatBuffer/" title="FlatBuffer">
+                    <b>#</b> FlatBuffer
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h2><ul>
+<li>플랫버퍼도 전에 본 프로토콜버퍼처럼 구글에서 만든 교차 플랫폼 직렬화 라이브러리</li>
+<li>구글 벤치마크로만 보면 세상 최강급인듯(체감은 모르겠음)</li>
+<li>별도의 파싱없이 위치값?으로만 접근하는듯</li>
+<li>사용자가 실수하면 답이 없을듯</li>
+<li>깃헙에 다른 언어 예시 코드가 잇는데 ts는 현재 기준 업엇음.. 😤</li>
+</ul>
+<h2 id="설치"><a href="#설치" class="headerlink" title="설치"></a>설치</h2><p>brew(m1)로 설치하였음</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">xcode-select --install</span><br><span class="line">arch -arm64 brew install flatbuffers --HEAD</span><br></pre></td></tr></table></figure>
+<h2 id="IDL-작성"><a href="#IDL-작성" class="headerlink" title="IDL 작성"></a>IDL 작성</h2><p>다는 안써봣고 몇가지 주로 써볼만한 거만 써봄</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">namespace FlatBuffer.Users; &#x2F;&#x2F; 네임스페이스를 지정하고 컴파일 하면 그 폴더에 생김</span><br><span class="line"></span><br><span class="line">enum Gender:byte &#123; male &#x3D; 0, female &#125; &#x2F;&#x2F; 흔한 enum</span><br><span class="line"></span><br><span class="line">struct Phone &#123; &#x2F;&#x2F; only scalar(숫자)만 가능하다 주의!</span><br><span class="line">    first: int;</span><br><span class="line">    second: int;</span><br><span class="line">    third: int;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">table ReqUser &#123; &#x2F;&#x2F; 플랫버퍼에서 객체를 정의하는 주요 방법</span><br><span class="line">    name: string;</span><br><span class="line">    gender: Gender;</span><br><span class="line">    phone: Phone;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">table ResUser &#123;</span><br><span class="line">    id: int;</span><br><span class="line">    create_at: long;</span><br><span class="line">    name: string;</span><br><span class="line">    gender: Gender;</span><br><span class="line">    phone: Phone;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">table ResUserList &#123;</span><br><span class="line">    users: [ResUser]; &#x2F;&#x2F; 배열로 보내고 싶을때</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="컴파일"><a href="#컴파일" class="headerlink" title="컴파일"></a>컴파일</h2><p>여러 종류의 언어로 컴파일 가능한데 난 ts로 컴파일함</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flatc --ts -o ./ ./fbs/User.fbs // flatc --사용할 언어 o는 output 지정 그 뒤 경로는 input</span><br></pre></td></tr></table></figure>
+<p><img src="https://res.cloudinary.com/ddebpn43q/image/upload/v1652881035/posts/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2022-05-18_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_10.36.15.png" alt="경로"></p>
+<p>그럼 ts파일 생김</p>
+<h2 id="테스트"><a href="#테스트" class="headerlink" title="테스트"></a>테스트</h2><p>플랫버퍼 쓰기 위해서 해당 프로젝트에 모듈 깔아야함</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i flatbuffers -S</span><br></pre></td></tr></table></figure>
+<p>클라,서버 모두 컴파일된 ts 파일이랑 flatbuffers 모듈 임포트 해야함 아래는 생략</p>
+<h3 id="클라이언트"><a href="#클라이언트" class="headerlink" title="클라이언트"></a>클라이언트</h3><p>데이터를 플랫버퍼를 통해 바이너리로 작성해서 서버에 전달</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> flatbuffers <span class="keyword">from</span> <span class="string">&quot;flatbuffers&quot;</span>; <span class="comment">// 이런식으로 불러올거 선언햇다고 가정</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> builder = <span class="keyword">new</span> flatbuffers.Builder(); <span class="comment">// 플랫버퍼 선언</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">스트링의 경우 아래처럼 빌더를 통해서 만들어야 한다</span></span><br><span class="line"><span class="comment">주의점은 아래처럼 ReqUser 테이블 데이터를 넣기 전에 미리 생성해야 함</span></span><br><span class="line"><span class="comment">안 하면 순서 오류 난다</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">let</span> myName = builder.createString(crypto.randomUUID()); <span class="comment">// 크립토는 무시 걍 아무 문자열 넣을려고 한거</span></span><br><span class="line">ReqUser.startReqUser(builder); <span class="comment">// 테이블 시작한다고 호출</span></span><br><span class="line">ReqUser.addName(builder, myName); <span class="comment">// 뭔가 데이터를 삽입할땐 항상 builder, 데이터</span></span><br><span class="line">ReqUser.addGender(</span><br><span class="line">  builder,</span><br><span class="line">  <span class="built_in">Math</span>.round(<span class="built_in">Math</span>.random()) === <span class="number">0</span> ? Gender.female : Gender.male</span><br><span class="line">);</span><br><span class="line">ReqUser.addPhone(</span><br><span class="line">  builder,</span><br><span class="line">  Phone.createPhone(builder, <span class="number">8210</span>, getRandom(<span class="number">3</span>), getRandom(<span class="number">4</span>)) <span class="comment">// 갯랜덤은 걍 아무숫자 가지고 오는 함수이므로 무시</span></span><br><span class="line">);</span><br><span class="line"><span class="keyword">let</span> end = ReqUser.endReqUser(builder); <span class="comment">// 테이블 다 썻으면 이렇게 닫고 그 위치?를 받아야함</span></span><br><span class="line">builder.finish(end); <span class="comment">// 위치값 저장</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> ab = builder.asUint8Array(); <span class="comment">// 빌더에서 arrayBuffer 만드러줌</span></span><br><span class="line"><span class="keyword">let</span> buf = Buffer.from(ab); <span class="comment">// 버퍼로 변환</span></span><br></pre></td></tr></table></figure>
+<p>아래는 전송 코드 예시 axios 썻음</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; data &#125; = <span class="keyword">await</span> axios(&#123;</span><br><span class="line">      method: <span class="string">&quot;post&quot;</span>,</span><br><span class="line">      url: <span class="string">&quot;http://localhost:3000/save&quot;</span>,</span><br><span class="line">      data: buf,</span><br><span class="line">      headers: &#123; <span class="string">&quot;Content-Type&quot;</span>: <span class="string">&quot;application/octet-stream&quot;</span> &#125;,</span><br><span class="line">      responseType: <span class="string">&quot;arraybuffer&quot;</span>, <span class="comment">// 나중에 데이터 받을때도 바이너리이므로 arraybuffer로</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="서버"><a href="#서버" class="headerlink" title="서버"></a>서버</h3><p>통신으로 바이너리를 받아서 플랫버퍼로 읽어보기</p>
+<p>전에는 바이너리 받는 거 따로 작성했었는대 그럴 필요가 업음</p>
+<p>바디파서에서 아래처럼 쓰면 바이너리 받을 수 있음</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.use(bodyParser.raw());</span><br></pre></td></tr></table></figure>
+<p>예로 Express에서 데이터를 받으면 아래처럼 플랫버퍼에 넣기만 하면 끝임</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> byte = <span class="keyword">new</span> <span class="built_in">Uint8Array</span>(req.body);</span><br><span class="line"><span class="keyword">let</span> buf = <span class="keyword">new</span> flatbuffers.ByteBuffer(byte);</span><br><span class="line"><span class="keyword">let</span> params = ReqUser.getRootAsReqUser(buf);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(params.name());</span><br><span class="line"><span class="built_in">console</span>.log(params.gender());</span><br><span class="line"><span class="built_in">console</span>.log(params.phone().?first);</span><br></pre></td></tr></table></figure>
+<p>배열로 쓰는거 작성 코드 예시</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> builder = <span class="keyword">new</span> flatbuffers.Builder(); <span class="comment">// 빌더 생성</span></span><br><span class="line"><span class="keyword">let</span> userEndList: <span class="built_in">number</span>[] = [];</span><br><span class="line">users.forEach(<span class="function">(<span class="params">user</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> name = builder.createString(user.name); <span class="comment">// 스트링 먼저 생성 필요</span></span><br><span class="line">  ResUser.startResUser(builder); <span class="comment">// 유저 객체 시작</span></span><br><span class="line">  ResUser.addId(builder, user.id); <span class="comment">// 이하 값 삽입</span></span><br><span class="line">  ResUser.addCreateAt(builder, BigInt(user.create_at)); <span class="comment">// long의 경우 BigInt로 감싸줘야 됨 안 그러면 안됨...</span></span><br><span class="line">  ResUser.addGender(</span><br><span class="line">    builder,</span><br><span class="line">    user.gender === <span class="number">0</span> ? Gender.male : Gender.female</span><br><span class="line">  );</span><br><span class="line">  ResUser.addName(builder, name);</span><br><span class="line">  ResUser.addPhone(</span><br><span class="line">    builder,</span><br><span class="line">    Phone.createPhone(</span><br><span class="line">      builder,</span><br><span class="line">      user.first_phone_number,</span><br><span class="line">      user.second_phone_number,</span><br><span class="line">      user.third_phone_number</span><br><span class="line">    )</span><br><span class="line">  );</span><br><span class="line">  <span class="keyword">let</span> resUserEnd = ResUser.endResUser(builder); <span class="comment">// 유저 객체 끝</span></span><br><span class="line">  userEndList.push(resUserEnd); <span class="comment">// 끝난 위치 값 배열로 저장</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">배열 결과를 보낼 테이블(=ResUserList) 시작 전에 createUsersVector</span></span><br><span class="line"><span class="comment">먼저 생성 해줘야 순서 오류 안남 </span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">let</span> userVectorEnd = ResUserList.createUsersVector(builder, userEndList);</span><br><span class="line">ResUserList.startResUserList(builder); <span class="comment">// 테이블 시작</span></span><br><span class="line">ResUserList.addUsers(builder, userVectorEnd); <span class="comment">// 위치 삽입</span></span><br><span class="line"><span class="keyword">let</span> end = ResUserList.endResUserList(builder); <span class="comment">// 닫음</span></span><br><span class="line"></span><br><span class="line">builder.finish(end);</span><br><span class="line"><span class="keyword">let</span> result = builder.asUint8Array(); <span class="comment">// 변환</span></span><br><span class="line"></span><br><span class="line">res.end(Buffer.from(result)); <span class="comment">// 응답</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>참조</p>
+</blockquote>
+<ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://google.github.io/flatbuffers/flatbuffers_guide_tutorial.html">플랫버퍼 공식 가이드</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/hidelryn/flatbuffer-ts-test">테스트 코드</a></li>
+</ul>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2022/02/13/db-mysql-in/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2022-05-18 22:23:52
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Node-js/" title="Node.js">
+                        <b>#</b> Node.js
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/FlatBuffer/" title="FlatBuffer">
+                        <b>#</b> FlatBuffer
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div class="post-catalog" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EA%B0%9C%EC%9A%94"><span class="toc-text">개요</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%84%A4%EC%B9%98"><span class="toc-text">설치</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IDL-%EC%9E%91%EC%84%B1"><span class="toc-text">IDL 작성</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%BB%B4%ED%8C%8C%EC%9D%BC"><span class="toc-text">컴파일</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%ED%85%8C%EC%8A%A4%ED%8A%B8"><span class="toc-text">테스트</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8"><span class="toc-text">클라이언트</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EC%84%9C%EB%B2%84"><span class="toc-text">서버</span></a></li></ol></li></ol>
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+  <script src="https://utteranc.es/client.js" repo="hidelryn/blog-comment" issue-term="title" label="Comment" theme="github-light" crossorigin="anonymous" async>
+    </script>
+  
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/hidelryn/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="mailto:hidelryn@gmail.com" rel="external nofollow noopener noreferrer" target="_blank">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="/atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+  
+    <div class="footer-more">
+      
+        <span style="color: #666;">Copyright © Delryn 2022</span>
+        
+        
+    </div>
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+      
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+    </div>
+  </body>
+</html>
