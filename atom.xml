@@ -6,7 +6,7 @@
   <link href="https://hidelryn.github.io/atom.xml" rel="self"/>
   
   <link href="https://hidelryn.github.io/"/>
-  <updated>2022-05-18T14:21:28.282Z</updated>
+  <updated>2022-05-18T14:25:32.946Z</updated>
   <id>https://hidelryn.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://hidelryn.github.io/2022/05/18/etc-flatbuffer-test/"/>
     <id>https://hidelryn.github.io/2022/05/18/etc-flatbuffer-test/</id>
     <published>2022-05-18T13:23:52.000Z</published>
-    <updated>2022-05-18T14:21:28.282Z</updated>
+    <updated>2022-05-18T14:25:32.946Z</updated>
     
     
       
@@ -40,6 +40,8 @@
     <category term="Node.js" scheme="https://hidelryn.github.io/tags/Node-js/"/>
     
     <category term="FlatBuffer" scheme="https://hidelryn.github.io/tags/FlatBuffer/"/>
+    
+    <category term="TypeScript" scheme="https://hidelryn.github.io/tags/TypeScript/"/>
     
   </entry>
   
@@ -198,9 +200,9 @@
     
     <category term="Node.js" scheme="https://hidelryn.github.io/tags/Node-js/"/>
     
-    <category term="Nest.js" scheme="https://hidelryn.github.io/tags/Nest-js/"/>
-    
     <category term="TypeScript" scheme="https://hidelryn.github.io/tags/TypeScript/"/>
+    
+    <category term="Nest.js" scheme="https://hidelryn.github.io/tags/Nest-js/"/>
     
   </entry>
   
@@ -226,9 +228,9 @@
     
     <category term="Node.js" scheme="https://hidelryn.github.io/tags/Node-js/"/>
     
-    <category term="Nest.js" scheme="https://hidelryn.github.io/tags/Nest-js/"/>
-    
     <category term="TypeScript" scheme="https://hidelryn.github.io/tags/TypeScript/"/>
+    
+    <category term="Nest.js" scheme="https://hidelryn.github.io/tags/Nest-js/"/>
     
   </entry>
   
