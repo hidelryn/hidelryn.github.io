@@ -6,7 +6,7 @@
   <link href="https://hidelryn.github.io/atom.xml" rel="self"/>
   
   <link href="https://hidelryn.github.io/"/>
-  <updated>2022-05-18T14:25:32.946Z</updated>
+  <updated>2022-11-13T14:24:55.963Z</updated>
   <id>https://hidelryn.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>ngrinder에서 protobuf 사용법 정리</title>
+    <link href="https://hidelryn.github.io/2022/11/13/etc-ngrinder-protobuf/"/>
+    <id>https://hidelryn.github.io/2022/11/13/etc-ngrinder-protobuf/</id>
+    <published>2022-11-13T05:41:51.000Z</published>
+    <updated>2022-11-13T14:24:55.963Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;최근에 ngrinder에서 protobuf 예시 코드를 제공할 일이 있어서 정리해봄&lt;/p&gt;
+&lt;p&gt;예시 프로토 파일&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td</summary>
+        
+      
+    
+    
+    
+    
+    <category term="ngrinder" scheme="https://hidelryn.github.io/tags/ngrinder/"/>
+    
+    <category term="protobuf" scheme="https://hidelryn.github.io/tags/protobuf/"/>
+    
+  </entry>
   
   <entry>
     <title>플랫버퍼 찍먹</title>
@@ -511,29 +538,6 @@
     <category term="Node.js" scheme="https://hidelryn.github.io/tags/Node-js/"/>
     
     <category term="Date" scheme="https://hidelryn.github.io/tags/Date/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Vue에서 서버 사이드 렌더링 알아보기</title>
-    <link href="https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/"/>
-    <id>https://hidelryn.github.io/2020/09/17/nodejs-vue-ssr/</id>
-    <published>2020-09-17T07:22:54.000Z</published>
-    <updated>2020-09-17T08:31:45.000Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;서버사이드렌더링-SSR-이란&quot;&gt;&lt;a href=&quot;#서버사이드렌더링-SSR-이란&quot; class=&quot;headerlink&quot; title=&quot;서버사이드렌더링(SSR)이란&quot;&gt;&lt;/a&gt;서버사이드렌더링(SSR)이란&lt;/h2&gt;&lt;p&gt;Vue 컴포넌트를 서버에서</summary>
-        
-      
-    
-    
-    
-    
-    <category term="Vue" scheme="https://hidelryn.github.io/tags/Vue/"/>
     
   </entry>
   

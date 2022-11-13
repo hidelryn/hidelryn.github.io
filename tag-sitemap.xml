@@ -3,6 +3,20 @@
 
 
     <url>
+        <loc>https://hidelryn.github.io/tags/protobuf/</loc>
+        <lastmod>2022-11-13T14:24:55.963Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://hidelryn.github.io/tags/ngrinder/</loc>
+        <lastmod>2022-11-13T14:24:55.963Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>https://hidelryn.github.io/tags/TypeScript/</loc>
         <lastmod>2022-05-18T14:25:32.946Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -33,13 +47,6 @@
     <url>
         <loc>https://hidelryn.github.io/tags/RDB/</loc>
         <lastmod>2022-02-13T08:44:01.398Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://hidelryn.github.io/tags/protobuf/</loc>
-        <lastmod>2021-09-20T06:36:53.105Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
