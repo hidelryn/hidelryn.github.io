@@ -64,9 +64,9 @@
     
     
     
-    <category term="protobuf" scheme="https://hidelryn.github.io/tags/protobuf/"/>
-    
     <category term="ngrinder" scheme="https://hidelryn.github.io/tags/ngrinder/"/>
+    
+    <category term="protobuf" scheme="https://hidelryn.github.io/tags/protobuf/"/>
     
   </entry>
   
