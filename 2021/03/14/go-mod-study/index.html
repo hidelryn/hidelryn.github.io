@@ -149,7 +149,7 @@ MathJax = {
       <div class="markdown-body">
         <p>Go 1.11버전부터 생겼으며, 더 이상 GOPATH 내에서 프로젝트를 시작하지 않아도 된다 👏🏻</p>
 <p>사용할 프로젝트 폴더에서 아래의 명령어를 쓰게 되면 go.mod란 파일이 생긴다.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">go mod 프로젝트명</span><br><span class="line"><span class="built_in">cd</span> 프로젝트명</span><br><span class="line">cat go.mod</span><br><span class="line"><span class="comment"># module github.com/go_mod_study 내가 작성한 프로젝트명</span></span><br><span class="line"><span class="comment"># </span></span><br><span class="line"><span class="comment"># go 1.16 현재 go 버전</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">go mod init 프로젝트명</span><br><span class="line"><span class="built_in">cd</span> 프로젝트명</span><br><span class="line">cat go.mod</span><br><span class="line"><span class="comment"># module github.com/go_mod_study 내가 작성한 프로젝트명</span></span><br><span class="line"><span class="comment"># </span></span><br><span class="line"><span class="comment"># go 1.16 현재 go 버전</span></span><br></pre></td></tr></table></figure>
 <p>아래의 명령어로 필요한 모듈을 받으면 되며 나는 Gin 웹프레임워크를 다운 받았다</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">go get github.com/gin-gonic/gin</span><br><span class="line">cat go.mod</span><br><span class="line"><span class="comment"># 위와 동일</span></span><br><span class="line"><span class="comment"># require github.com/gin-gonic/gin v1.6.3</span></span><br></pre></td></tr></table></figure>
 <p>go.mod 파일에 추가 되었고, go.sum이란 파일이 생겼는데 이건 Node.js에서</p>
@@ -258,7 +258,7 @@ MathJax = {
   
     <div class="footer-more">
       
-        <span style="color: #666;">Copyright © Delryn 2022</span>
+        <span style="color: #666;">Copyright © Delryn 2023</span>
         
         
     </div>

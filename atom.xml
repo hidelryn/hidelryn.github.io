@@ -6,7 +6,7 @@
   <link href="https://hidelryn.github.io/atom.xml" rel="self"/>
   
   <link href="https://hidelryn.github.io/"/>
-  <updated>2022-11-13T14:24:55.963Z</updated>
+  <updated>2023-06-04T15:57:05.488Z</updated>
   <id>https://hidelryn.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>bit로 점수 계산하여 레디스 랭킹 시스템 만들기</title>
+    <link href="https://hidelryn.github.io/2023/06/04/go-bit-ranking/"/>
+    <id>https://hidelryn.github.io/2023/06/04/go-bit-ranking/</id>
+    <published>2023-06-04T14:54:12.000Z</published>
+    <updated>2023-06-04T15:57:05.488Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;랭킹을 구현하다 보면 점수가 동점일 경우 기타 다른 정렬에 의해 상위 랭킹을 매겨야 하는 경우가 있다&lt;/p&gt;
+&lt;p&gt;예로 점수를 획득한 시간순이 상위 랭킹으로 가는 경우 sql이라면&lt;/p&gt;
+&lt;figure class=&quot;highlight</summary>
+        
+      
+    
+    
+    
+    
+    <category term="Redis" scheme="https://hidelryn.github.io/tags/Redis/"/>
+    
+    <category term="Go" scheme="https://hidelryn.github.io/tags/Go/"/>
+    
+  </entry>
   
   <entry>
     <title>ngrinder에서 protobuf 사용법 정리</title>
@@ -37,9 +64,9 @@
     
     
     
-    <category term="ngrinder" scheme="https://hidelryn.github.io/tags/ngrinder/"/>
-    
     <category term="protobuf" scheme="https://hidelryn.github.io/tags/protobuf/"/>
+    
+    <category term="ngrinder" scheme="https://hidelryn.github.io/tags/ngrinder/"/>
     
   </entry>
   
@@ -318,7 +345,7 @@
     <link href="https://hidelryn.github.io/2021/03/14/go-mod-study/"/>
     <id>https://hidelryn.github.io/2021/03/14/go-mod-study/</id>
     <published>2021-03-14T08:04:24.000Z</published>
-    <updated>2021-03-14T09:15:56.222Z</updated>
+    <updated>2023-06-04T14:54:22.422Z</updated>
     
     
       
@@ -511,33 +538,6 @@
     <category term="Node.js" scheme="https://hidelryn.github.io/tags/Node-js/"/>
     
     <category term="Game" scheme="https://hidelryn.github.io/tags/Game/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Node.js luxon 모듈 사용 해보기</title>
-    <link href="https://hidelryn.github.io/2020/10/05/nodejs-luxon/"/>
-    <id>https://hidelryn.github.io/2020/10/05/nodejs-luxon/</id>
-    <published>2020-10-05T13:18:32.000Z</published>
-    <updated>2020-11-01T09:21:55.000Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;이전에 페이스북 그룹에서 Moment 프로젝트가 더 이상 유지 보수를 하지 않는다는 글을 봤었다.&lt;/p&gt;
-&lt;p&gt;실제 프로젝트 상태에 적혀 있었고 신규 프로젝트에서 대체할 모듈을 제시를 하는데 나는 그 중에&lt;/p&gt;
-&lt;p&gt;맨 처음에 적혀있는</summary>
-        
-      
-    
-    
-    
-    
-    <category term="Node.js" scheme="https://hidelryn.github.io/tags/Node-js/"/>
-    
-    <category term="Date" scheme="https://hidelryn.github.io/tags/Date/"/>
     
   </entry>
   

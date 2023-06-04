@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="keywords" content>
+  <meta name="author" content="delryn">
+  <meta name="description" content="나의 개발 노트 ʕ •ᴥ• ʔ">
+  
+  
+  <title>
+    
+      bit로 점수 계산하여 레디스 랭킹 시스템 만들기 
+      
+      
+    
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-104148803-2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-104148803-2');
+    </script>
+  
+
+<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Delryn's Blog" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt>
+      
+    </a>
+    <div class="nickname"><a href="/">Delryn</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+<!-- LaTex Display -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">bit로 점수 계산하여 레디스 랭킹 시스템 만들기</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2023-06-04 23:54:12
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/Redis/" title="Redis">
+                    <b>#</b> Redis
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Go/" title="Go">
+                    <b>#</b> Go
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>랭킹을 구현하다 보면 점수가 동점일 경우 기타 다른 정렬에 의해 상위 랭킹을 매겨야 하는 경우가 있다</p>
+<p>예로 점수를 획득한 시간순이 상위 랭킹으로 가는 경우 sql이라면</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> score <span class="keyword">desc</span>,  dt <span class="keyword">desc</span>;</span><br></pre></td></tr></table></figure>
+<p>이렇게 되겠지만 흔히 랭킹을 구현하는데 사용하는 Redis Sorted Set에선 2개이상의 정렬을 사용할 수 없다 (내가 알기론…)</p>
+<p>그래서 해당 경우에 쓸수 있는 트릭? 1개를 정리 해보고자 한다</p>
+<p>예로 레이드에서 랭킹을 구현하는데 랭킹 매기는 순은 아래로 기획이 되었다고 가정을 하고 구현 한다.</p>
+<ol>
+<li>클리어한 단계 - 단계는 최대 32,767까지 있다고 정의</li>
+<li>전투에 참여한 캐릭터 순 (적은 캐릭로 깰수록 상위) - 전투에는 최대 250개의 캐릭터를 쓸수 있다</li>
+<li>클리어한 시간 - unix sec(32bit)로 비교를 한다고 정의</li>
+</ol>
+<p><strong>주의점으로 해당 방법은 각 정렬 단위의 범위를 확실하게 알아야 하며 최대 단위로 테스트도 필요하다, 특히 nodejs(ts, js) 64비트 정수 범위가 2^53 - 1바께 안되기 때문에 더 각별히 주의해서 써야 한다</strong></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;bytes&quot;</span></span><br><span class="line">	<span class="string">&quot;context&quot;</span></span><br><span class="line">	<span class="string">&quot;encoding/binary&quot;</span></span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;math&quot;</span></span><br><span class="line">	<span class="string">&quot;time&quot;</span></span><br><span class="line"></span><br><span class="line">	<span class="string">&quot;github.com/go-redis/redis/v8&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	MAX_MEMBER_COUNT <span class="keyword">int16</span> = <span class="number">250</span> <span class="comment">// 전투에 참여할 수 있는 최대 전투 캐릭터 순 </span></span><br><span class="line">	MAX_32BIT_INT    <span class="keyword">int32</span> = <span class="keyword">int32</span>(math.MaxInt32) <span class="comment">// 32비트 max, 이건 레이드 종료기간으로 대체해도 되겠군..</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> ScoreInfo <span class="keyword">struct</span> &#123;</span><br><span class="line">	Score       <span class="keyword">int16</span> <span class="comment">// 클리어한 단계 - 2byte</span></span><br><span class="line">	MemberCount <span class="keyword">int16</span> <span class="comment">// 전투에 참여한 캐릭터 순 - 2byte</span></span><br><span class="line">	ClearDt     <span class="keyword">int32</span> <span class="comment">// 클리어한 시간 - 4byte</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    8바이트 (64bit) 버퍼를 만들어서</span></span><br><span class="line"><span class="comment">    점수 2바이트 | 최대 참여 캐릭 수 - 참여한 캐릭터 수 2바이트 | max int32 - 클리어한 시간 4바이트</span></span><br><span class="line"><span class="comment">    를 써서 64비트(uint64) 수로 변환을 한다 (-를 하는 이유는 내림차순이기 때문에 유저마다 큰 수를 구해야 하기 때문)</span></span><br><span class="line"><span class="comment">    Float64frombits를 쓰는 이유는 redis score 타입이 float64이기 때문에 uint64의 비트 패턴 -&gt; float64값으로 변환해줘야 한다</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">    nodejs의 경우라면</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">    const buf = Buffer.allocUnsafe(8);</span></span><br><span class="line"><span class="comment">    buf.writeIntBE(scoreInfo.score, 0, 2);</span></span><br><span class="line"><span class="comment">    buf.writeIntBE(MAX_MEMBER_COUNT - scoreInfo.memberCount, 2, 2);</span></span><br><span class="line"><span class="comment">    buf.writeIntBE(MAX_32BIT_INT - scoreInfo.clearDt, 4, 4);</span></span><br><span class="line"><span class="comment">    return buf.readBigInt64BE(0).toString();</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s ScoreInfo)</span> <span class="title">SaveScore</span><span class="params">()</span> <span class="title">float64</span></span> &#123;</span><br><span class="line">	buf := <span class="built_in">new</span>(bytes.Buffer)</span><br><span class="line"></span><br><span class="line">	binary.Write(buf, binary.BigEndian, s.Score)</span><br><span class="line">	binary.Write(buf, binary.BigEndian, MAX_MEMBER_COUNT-s.MemberCount)</span><br><span class="line">	binary.Write(buf, binary.BigEndian, MAX_32BIT_INT-s.ClearDt)</span><br><span class="line">	<span class="keyword">return</span> math.Float64frombits(binary.BigEndian.Uint64(buf.Bytes()))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    Float64bits을 사용하여 float64 -&gt; uint64로 변환을 한다, uint64(2^64-1)의 범위까지는 손실 없이 변경이 가능하다</span></span><br><span class="line"><span class="comment">    64비트 정수를 이제 다시 2바이트, 2바이트, 4바이트씩 읽으면 다시 원본 점수, 클리어 캐릭터, 시간을 가져올 수 있다</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">    nodejs의 경우라면</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">    const parsedNumber = parseFloat(saveScore);</span></span><br><span class="line"><span class="comment">    const bigintNumber = BigInt(parsedNumber);</span></span><br><span class="line"><span class="comment">    const buf = Buffer.allocUnsafe(8);</span></span><br><span class="line"><span class="comment">    buf.writeBigInt64BE(bigintNumber, 0);</span></span><br><span class="line"><span class="comment">    let score = buf.readIntBE(0, 2);</span></span><br><span class="line"><span class="comment">    let memberCount = buf.readIntBE(2, 2);</span></span><br><span class="line"><span class="comment">    let clearDt = buf.readIntBE(4, 4);</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s ScoreInfo)</span> <span class="title">ReadScore</span><span class="params">(redisScore <span class="keyword">float64</span>)</span> <span class="title">ScoreInfo</span></span> &#123;</span><br><span class="line">	buf := <span class="built_in">new</span>(bytes.Buffer)</span><br><span class="line">	binary.Write(buf, binary.BigEndian, math.Float64bits(redisScore)) <span class="comment">// </span></span><br><span class="line">	s.Score = <span class="keyword">int16</span>(binary.BigEndian.Uint16(buf.Bytes()[<span class="number">0</span>:<span class="number">2</span>]))</span><br><span class="line">	s.MemberCount = MAX_MEMBER_COUNT - <span class="keyword">int16</span>(binary.BigEndian.Uint16(buf.Bytes()[<span class="number">2</span>:<span class="number">4</span>]))</span><br><span class="line">	s.ClearDt = MAX_32BIT_INT - <span class="keyword">int32</span>(binary.BigEndian.Uint32(buf.Bytes()[<span class="number">4</span>:<span class="number">8</span>]))</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> s</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	client := redis.NewClient(&amp;redis.Options&#123;</span><br><span class="line">		Addr:     <span class="string">&quot;localhost:6379&quot;</span>, <span class="comment">// Redis 서버 주소</span></span><br><span class="line">		Password: <span class="string">&quot;&quot;</span>,               <span class="comment">// Redis 인증 비밀번호 (비어있을 경우 없음)</span></span><br><span class="line">		DB:       <span class="number">0</span>,                <span class="comment">// 사용할 Redis 데이터베이스 번호</span></span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Redis 서버에 연결</span></span><br><span class="line">	err := client.Ping(context.Background()).Err()</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="built_in">panic</span>(err)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	scoreInfo := ScoreInfo&#123;</span><br><span class="line">		Score:       <span class="number">23346</span>,</span><br><span class="line">		MemberCount: <span class="number">230</span>,</span><br><span class="line">		ClearDt:     <span class="keyword">int32</span>(time.Now().Unix()),</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	fmt.Println(<span class="string">&quot;prevScoreInfo: &quot;</span>, scoreInfo)</span><br><span class="line"></span><br><span class="line">	saveScore := scoreInfo.SaveScore()</span><br><span class="line"></span><br><span class="line">	err = client.ZAdd(context.Background(), <span class="string">&quot;RankKey4&quot;</span>, &amp;redis.Z&#123;</span><br><span class="line">		Score:  saveScore,</span><br><span class="line">		Member: <span class="string">&quot;a&quot;</span>,</span><br><span class="line">	&#125;).Err()</span><br><span class="line"></span><br><span class="line">	scoreInfo2 := ScoreInfo&#123;</span><br><span class="line">		Score:       <span class="number">32130</span>,</span><br><span class="line">		MemberCount: <span class="number">134</span>,</span><br><span class="line">		ClearDt:     <span class="keyword">int32</span>(time.Date(<span class="number">2023</span>, time.June, <span class="number">2</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, time.UTC).Unix()),</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	fmt.Println(<span class="string">&quot;prevScoreInfo2: &quot;</span>, scoreInfo2)</span><br><span class="line"></span><br><span class="line">	saveScore = scoreInfo2.SaveScore()</span><br><span class="line"></span><br><span class="line">	err = client.ZAdd(context.Background(), <span class="string">&quot;RankKey4&quot;</span>, &amp;redis.Z&#123;</span><br><span class="line">		Score:  saveScore,</span><br><span class="line">		Member: <span class="string">&quot;b&quot;</span>,</span><br><span class="line">	&#125;).Err()</span><br><span class="line"></span><br><span class="line">	result, err := client.ZRevRangeWithScores(context.Background(), <span class="string">&quot;RankKey4&quot;</span>, <span class="number">0</span>, <span class="number">-1</span>).Result() <span class="comment">// redis에서 bigint를 읽을 때는 지수 표기법으로 표기 된다 참고..</span></span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="built_in">panic</span>(err)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> _, z := <span class="keyword">range</span> result &#123;</span><br><span class="line">		updateScoreInfo := scoreInfo.ReadScore(z.Score)</span><br><span class="line">		fmt.Println(<span class="string">&quot;member:&quot;</span>, z.Member, <span class="string">&quot;afterScoreInfo:&quot;</span>, updateScoreInfo)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>실행결과는 아래와 같다</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">prevScoreInfo:  &#123;23346 230 1685892870&#125;</span><br><span class="line">prevScoreInfo2:  &#123;32130 134 1685664000&#125;</span><br><span class="line">member: b afterScoreInfo: &#123;32130 134 1685664000&#125;</span><br><span class="line">member: a afterScoreInfo: &#123;23346 230 1685892870&#125;</span><br></pre></td></tr></table></figure>
+<p>마지막으로 해당 케이스의 경우는 js 예제코드도 적어놨지만 레디스에서 다시 점수를 읽어올 때 지수표기법으로 읽어 오는데</p>
+<p>해당 값을 다시 64비트 정수로 받아오면 오버플로우 나서 부동소수점이 날라가기 때문에 ClearDt 값이 원본 값과 틀어진다</p>
+<p>js는 범위에 따라 다르겠지만 2개정도? 가 적당하게 처리 가능.. 한듯 😭</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2022/11/13/etc-ngrinder-protobuf/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2023-06-04 23:54:12
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Redis/" title="Redis">
+                        <b>#</b> Redis
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Go/" title="Go">
+                        <b>#</b> Go
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+  <script src="https://utteranc.es/client.js" repo="hidelryn/blog-comment" issue-term="title" label="Comment" theme="github-light" crossorigin="anonymous" async>
+    </script>
+  
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/hidelryn/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="mailto:hidelryn@gmail.com" rel="external nofollow noopener noreferrer" target="_blank">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="/atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+  
+    <div class="footer-more">
+      
+        <span style="color: #666;">Copyright © Delryn 2023</span>
+        
+        
+    </div>
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+      
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+    </div>
+  </body>
+</html>
