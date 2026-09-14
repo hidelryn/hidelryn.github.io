@@ -6,7 +6,7 @@
   <link href="https://hidelryn.github.io/atom.xml" rel="self"/>
   
   <link href="https://hidelryn.github.io/"/>
-  <updated>2023-06-04T15:57:05.488Z</updated>
+  <updated>2026-09-14T08:41:07.891Z</updated>
   <id>https://hidelryn.github.io/</id>
   
   <author>
@@ -17,11 +17,34 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>C# 서버 개발자 전환기 1편</title>
+    <link href="https://hidelryn.github.io/2026/09/14/csharp-server-journey-1/"/>
+    <id>https://hidelryn.github.io/2026/09/14/csharp-server-journey-1/</id>
+    <published>2026-09-14T06:09:05.000Z</published>
+    <updated>2026-09-14T08:41:07.891Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;C-동작-방식과-async-await&quot;&gt;&lt;a href=&quot;#C-동작-방식과-async-await&quot; class=&quot;headerlink&quot; title=&quot;C# 동작 방식과 async/await&quot;&gt;&lt;/a&gt;C# 동작 방식과</summary>
+        
+      
+    
+    
+    
+    
+    <category term="C#" scheme="https://hidelryn.github.io/tags/C/"/>
+    
+  </entry>
+  
+  <entry>
     <title>bit로 점수 계산하여 레디스 랭킹 시스템 만들기</title>
     <link href="https://hidelryn.github.io/2023/06/04/go-bit-ranking/"/>
     <id>https://hidelryn.github.io/2023/06/04/go-bit-ranking/</id>
     <published>2023-06-04T14:54:12.000Z</published>
-    <updated>2023-06-04T15:57:05.488Z</updated>
+    <updated>2026-09-14T05:41:24.296Z</updated>
     
     
       
@@ -48,7 +71,7 @@
     <link href="https://hidelryn.github.io/2022/11/13/etc-ngrinder-protobuf/"/>
     <id>https://hidelryn.github.io/2022/11/13/etc-ngrinder-protobuf/</id>
     <published>2022-11-13T05:41:51.000Z</published>
-    <updated>2022-11-13T14:24:55.963Z</updated>
+    <updated>2026-09-14T05:41:24.261Z</updated>
     
     
       
@@ -75,7 +98,7 @@
     <link href="https://hidelryn.github.io/2022/05/18/etc-flatbuffer-test/"/>
     <id>https://hidelryn.github.io/2022/05/18/etc-flatbuffer-test/</id>
     <published>2022-05-18T13:23:52.000Z</published>
-    <updated>2022-05-18T14:25:32.946Z</updated>
+    <updated>2026-09-14T05:41:24.201Z</updated>
     
     
       
@@ -104,7 +127,7 @@
     <link href="https://hidelryn.github.io/2022/02/13/db-mysql-in/"/>
     <id>https://hidelryn.github.io/2022/02/13/db-mysql-in/</id>
     <published>2022-02-13T08:19:33.000Z</published>
-    <updated>2022-02-13T08:44:01.398Z</updated>
+    <updated>2026-09-14T05:41:24.243Z</updated>
     
     
       
@@ -132,7 +155,7 @@
     <link href="https://hidelryn.github.io/2021/11/21/db-mysql-rand/"/>
     <id>https://hidelryn.github.io/2021/11/21/db-mysql-rand/</id>
     <published>2021-11-21T12:37:33.000Z</published>
-    <updated>2021-11-21T15:08:10.688Z</updated>
+    <updated>2026-09-14T05:41:24.223Z</updated>
     
     
       
@@ -158,7 +181,7 @@
     <link href="https://hidelryn.github.io/2021/09/19/etc-pb/"/>
     <id>https://hidelryn.github.io/2021/09/19/etc-pb/</id>
     <published>2021-09-19T06:59:29.000Z</published>
-    <updated>2021-09-20T06:36:53.105Z</updated>
+    <updated>2026-09-14T05:41:24.147Z</updated>
     
     
       
@@ -183,7 +206,7 @@
     <link href="https://hidelryn.github.io/2021/08/07/db-mysql-json/"/>
     <id>https://hidelryn.github.io/2021/08/07/db-mysql-json/</id>
     <published>2021-08-07T08:14:25.000Z</published>
-    <updated>2021-08-07T11:41:29.861Z</updated>
+    <updated>2026-09-14T05:41:24.269Z</updated>
     
     
       
@@ -211,7 +234,7 @@
     <link href="https://hidelryn.github.io/2021/08/03/nodejs-ts-mysql/"/>
     <id>https://hidelryn.github.io/2021/08/03/nodejs-ts-mysql/</id>
     <published>2021-08-03T12:22:15.000Z</published>
-    <updated>2021-08-03T11:49:11.566Z</updated>
+    <updated>2026-09-14T05:41:24.226Z</updated>
     
     
       
@@ -238,7 +261,7 @@
     <link href="https://hidelryn.github.io/2021/08/01/nodejs-nestjs-study-2/"/>
     <id>https://hidelryn.github.io/2021/08/01/nodejs-nestjs-study-2/</id>
     <published>2021-08-01T03:26:29.000Z</published>
-    <updated>2021-08-01T05:18:26.159Z</updated>
+    <updated>2026-09-14T05:41:24.309Z</updated>
     
     
       
@@ -265,7 +288,7 @@
     <link href="https://hidelryn.github.io/2021/07/25/nodejs-nestjs-study-1/"/>
     <id>https://hidelryn.github.io/2021/07/25/nodejs-nestjs-study-1/</id>
     <published>2021-07-25T04:41:27.000Z</published>
-    <updated>2021-08-01T05:18:30.098Z</updated>
+    <updated>2026-09-14T05:41:24.089Z</updated>
     
     
       
@@ -293,7 +316,7 @@
     <link href="https://hidelryn.github.io/2021/04/18/go-pointer/"/>
     <id>https://hidelryn.github.io/2021/04/18/go-pointer/</id>
     <published>2021-04-18T02:43:08.000Z</published>
-    <updated>2021-04-18T08:34:59.224Z</updated>
+    <updated>2026-09-14T05:41:24.306Z</updated>
     
     
       
@@ -317,7 +340,7 @@
     <link href="https://hidelryn.github.io/2021/03/27/go-sql-driver-mysql-study/"/>
     <id>https://hidelryn.github.io/2021/03/27/go-sql-driver-mysql-study/</id>
     <published>2021-03-27T13:27:45.000Z</published>
-    <updated>2021-03-27T14:53:00.655Z</updated>
+    <updated>2026-09-14T05:41:24.106Z</updated>
     
     
       
@@ -345,7 +368,7 @@
     <link href="https://hidelryn.github.io/2021/03/14/go-mod-study/"/>
     <id>https://hidelryn.github.io/2021/03/14/go-mod-study/</id>
     <published>2021-03-14T08:04:24.000Z</published>
-    <updated>2023-06-04T14:54:22.422Z</updated>
+    <updated>2026-09-14T05:41:24.184Z</updated>
     
     
       
@@ -370,7 +393,7 @@
     <link href="https://hidelryn.github.io/2021/03/01/nodejs-typescript-study-2/"/>
     <id>https://hidelryn.github.io/2021/03/01/nodejs-typescript-study-2/</id>
     <published>2021-03-01T07:23:52.000Z</published>
-    <updated>2021-03-01T13:56:43.415Z</updated>
+    <updated>2026-09-14T05:41:24.140Z</updated>
     
     
       
@@ -394,7 +417,7 @@
     <link href="https://hidelryn.github.io/2021/02/28/nodejs-typescript-study-1/"/>
     <id>https://hidelryn.github.io/2021/02/28/nodejs-typescript-study-1/</id>
     <published>2021-02-28T10:29:33.000Z</published>
-    <updated>2021-03-01T13:36:09.807Z</updated>
+    <updated>2026-09-14T05:41:24.286Z</updated>
     
     
       
@@ -419,7 +442,7 @@
     <link href="https://hidelryn.github.io/2021/01/20/nodejs-mysql2-multiple-query/"/>
     <id>https://hidelryn.github.io/2021/01/20/nodejs-mysql2-multiple-query/</id>
     <published>2021-01-20T13:45:28.000Z</published>
-    <updated>2021-03-27T14:52:57.760Z</updated>
+    <updated>2026-09-14T05:41:24.144Z</updated>
     
     
       
@@ -445,7 +468,7 @@
     <link href="https://hidelryn.github.io/2021/01/20/etc-apple-m1-homebrew/"/>
     <id>https://hidelryn.github.io/2021/01/20/etc-apple-m1-homebrew/</id>
     <published>2021-01-20T13:14:54.000Z</published>
-    <updated>2021-01-20T14:17:41.089Z</updated>
+    <updated>2026-09-14T05:41:24.164Z</updated>
     
     
       
@@ -471,7 +494,7 @@
     <link href="https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/"/>
     <id>https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/</id>
     <published>2020-12-06T12:54:02.000Z</published>
-    <updated>2020-12-06T13:40:59.000Z</updated>
+    <updated>2026-09-14T05:41:24.167Z</updated>
     
     
       
@@ -496,7 +519,7 @@
     <link href="https://hidelryn.github.io/2020/11/08/db-rdb-explain-plan/"/>
     <id>https://hidelryn.github.io/2020/11/08/db-rdb-explain-plan/</id>
     <published>2020-11-08T06:42:36.000Z</published>
-    <updated>2021-08-04T05:42:48.593Z</updated>
+    <updated>2026-09-14T05:41:24.320Z</updated>
     
     
       
@@ -511,33 +534,6 @@
     
     
     <category term="RDB" scheme="https://hidelryn.github.io/tags/RDB/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Express에서 게임 행동력 구현 해보기</title>
-    <link href="https://hidelryn.github.io/2020/11/01/nodejs-game-active-point/"/>
-    <id>https://hidelryn.github.io/2020/11/01/nodejs-game-active-point/</id>
-    <published>2020-11-01T09:20:42.000Z</published>
-    <updated>2020-11-01T09:35:13.000Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;예로 애니팡 같은 게임의 하트 등 행동력 채우기 로직 구현 정리&lt;/p&gt;
-&lt;h2 id=&quot;서버&quot;&gt;&lt;a href=&quot;#서버&quot; class=&quot;headerlink&quot; title=&quot;서버&quot;&gt;&lt;/a&gt;서버&lt;/h2&gt;&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;클라에서 소모를 요청 시 그</summary>
-        
-      
-    
-    
-    
-    
-    <category term="Node.js" scheme="https://hidelryn.github.io/tags/Node-js/"/>
-    
-    <category term="Game" scheme="https://hidelryn.github.io/tags/Game/"/>
     
   </entry>
   
