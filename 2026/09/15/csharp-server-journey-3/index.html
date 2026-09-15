@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="keywords" content>
+  <meta name="author" content="delryn">
+  <meta name="description" content="나의 개발 노트 ʕ •ᴥ• ʔ">
+  
+  
+  <title>
+    
+      C# 서버 개발자 전환기 3편 
+      
+      
+    
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-104148803-2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-104148803-2');
+    </script>
+  
+
+<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Delryn's Blog" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt>
+      
+    </a>
+    <div class="nickname"><a href="/">Delryn</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+<!-- LaTex Display -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">C# 서버 개발자 전환기 3편</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="Update time"></i>
+          2026-09-15 10:20:38
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="Tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/CSharp/" title="CSharp">
+                    <b>#</b> CSharp
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h1 id="Interface와-DI"><a href="#Interface와-DI" class="headerlink" title="Interface와 DI"></a>Interface와 DI</h1><h2 id="1-Interface"><a href="#1-Interface" class="headerlink" title="1. Interface"></a>1. Interface</h2><p>IUserRepository를 구현하는 클래스는 GetUser(int id) 메서드를 제공해야 한다는 규약</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IUserRepository</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function">User <span class="title">GetUser</span>(<span class="params"><span class="built_in">int</span> id</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>실제 구현</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    : 뒤에 인터페이스면 구현, 클래스면 상속</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">UserRepository</span> : <span class="title">IUserRepository</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> User <span class="title">GetUser</span>(<span class="params"><span class="built_in">int</span> id</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">// DB에서 조회</span></span><br><span class="line">        <span class="keyword">return</span> ...;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="1-1-Interface를-사용하는-이유"><a href="#1-1-Interface를-사용하는-이유" class="headerlink" title="1.1 Interface를 사용하는 이유"></a>1.1 Interface를 사용하는 이유</h3><p>이러한 서비스가 있다고 가정을 하는 경우</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">UserService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> UserRepository repository;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">UserService</span>(<span class="params"></span>) <span class="comment">// js class constructor</span></span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        repository = <span class="keyword">new</span> UserRepository();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> User <span class="title">GetUser</span>(<span class="params"><span class="built_in">int</span> id</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> repository.GetUser(id);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>이렇게 하면 UserService가 UserRepository라는 구체적인 클래스에 강하게 묶여버림<br>예로 테스트를 위해 UserRepository 대신 TestUserRepository를 사용하려면 UserService 내부의 의존성을 직접 수정해야 한다.</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">UserService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> IUserRepository repository;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">UserService</span>(<span class="params">IUserRepository repository</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>.repository = repository;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> User <span class="title">GetUser</span>(<span class="params"><span class="built_in">int</span> id</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> repository.GetUser(id);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>이제 UserService는 IUserRepository 기능만 확인한다<br>실제 객체가 UserRepository인지 아닌지는 관심 없음</p>
+<h2 id="2-DI"><a href="#2-DI" class="headerlink" title="2. DI"></a>2. DI</h2><p>필요한 의존성을 밖에서 넣어준다.</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> repository = <span class="keyword">new</span> UserRepository();</span><br><span class="line"><span class="keyword">var</span> service = <span class="keyword">new</span> UserService(repository);</span><br></pre></td></tr></table></figure>
+<h3 id="2-1-ASP-NET-Core"><a href="#2-1-ASP-NET-Core" class="headerlink" title="2.1 ASP.NET Core"></a>2.1 ASP.NET Core</h3><p>매번 위처럼 직접 주입하지 않고 DI Container에 등록 하면 된다</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">builder.Services.AddScoped&lt;IUserRepository, UserRepository&gt;();</span><br><span class="line">builder.Services.AddScoped&lt;UserService&gt;();</span><br></pre></td></tr></table></figure>
+<p>누군가 IUserRepository를 필요로 하면 UserRepository를 만들어서 넣어줌</p>
+<h3 id="2-2-생명주기"><a href="#2-2-생명주기" class="headerlink" title="2.2 생명주기"></a>2.2 생명주기</h3><h4 id="2-2-1-Transient"><a href="#2-2-1-Transient" class="headerlink" title="2.2.1 Transient"></a>2.2.1 Transient</h4><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">services.AddTransient&lt;IUserRepository, UserRepository&gt;();</span><br></pre></td></tr></table></figure>
+<p>사용할 때마다 새로운 객체를 만들어줌, 상태를 가지지 않는 가벼운 객체에 많이 사용</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Service A → UserRepository #1</span><br><span class="line">Service B → UserRepository #2</span><br></pre></td></tr></table></figure>
+<p>둘이 같은 IUserRepository를 주입받아도 서로 다른 객체</p>
+<h4 id="2-2-2-Scoped"><a href="#2-2-2-Scoped" class="headerlink" title="2.2.2 Scoped"></a>2.2.2 Scoped</h4><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">services.AddScoped&lt;IUserRepository, UserRepository&gt;();</span><br></pre></td></tr></table></figure>
+<p>ASP.NET Core에서는 일반적으로 HTTP Request 하나 = Scope 하나로 생각하면 됨<br>예를 들어 요청이 2개 들어오면</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Request #1</span><br><span class="line"> ├─ UserService</span><br><span class="line"> └─ UserRepository #1</span><br><span class="line"></span><br><span class="line">Request #2</span><br><span class="line"> ├─ UserService</span><br><span class="line"> └─ UserRepository #2</span><br></pre></td></tr></table></figure>
+<p>Request #1 안에서는 같은 객체를 사용함</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Request #1</span><br><span class="line"> ├─ UserService ──┐</span><br><span class="line"> └─ OrderService ─┴─ UserRepository #1</span><br></pre></td></tr></table></figure>
+<p>둘 다 IUserRepository를 요청하면 같은 객체를 받음</p>
+<h3 id="2-2-3-Singleton"><a href="#2-2-3-Singleton" class="headerlink" title="2.2.3 Singleton"></a>2.2.3 Singleton</h3><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">services.AddSingleton&lt;IUserRepository, UserRepository&gt;();</span><br></pre></td></tr></table></figure>
+<p>앱 전체에서 하나의 인스턴스를 공유 (기본적으로 필요할 때 생성)</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Application</span><br><span class="line"> │</span><br><span class="line"> └─ UserRepository #1</span><br><span class="line">       ↑</span><br><span class="line">       ├─ Request 1</span><br><span class="line">       ├─ Request 2</span><br><span class="line">       ├─ Request 3</span><br><span class="line">       ├─ Request 4</span><br><span class="line">       └─ Request 10000</span><br></pre></td></tr></table></figure>
+<h2 id="2-3-장점"><a href="#2-3-장점" class="headerlink" title="2.3 장점"></a>2.3 장점</h2><h3 id="2-3-1-구현체-변경이-쉬워진다"><a href="#2-3-1-구현체-변경이-쉬워진다" class="headerlink" title="2.3.1 구현체 변경이 쉬워진다"></a>2.3.1 구현체 변경이 쉬워진다</h3><p>위에서 얘기한 UserRepository, TestUserRepository를 변경하려면</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 실제 서버</span></span><br><span class="line">builder.Services.AddScoped&lt;IUserRepository, UserRepository&gt;();</span><br><span class="line"><span class="comment">// 테스트</span></span><br><span class="line">builder.Services.AddScoped&lt;IUserRepository, TestUserRepository&gt;();</span><br></pre></td></tr></table></figure>
+<p>만 바꿔주면 코드 수정을 할 필요가 없어진다</p>
+<h3 id="2-3-2-객체-생성-관리를-한-곳에서-한다"><a href="#2-3-2-객체-생성-관리를-한-곳에서-한다" class="headerlink" title="2.3.2 객체 생성/관리를 한 곳에서 한다"></a>2.3.2 객체 생성/관리를 한 곳에서 한다</h3><p>DI로 관리할 서비스 의존성을 개발자가 직접 생성할 필요 없이<br>DI 컨테이너가 객체 생성과 Lifetime을 관리함</p>
+<h2 id="2-4-조심해야할점"><a href="#2-4-조심해야할점" class="headerlink" title="2.4 조심해야할점"></a>2.4 조심해야할점</h2><h3 id="2-4-1-의존성이-너무-많아질-수-있음"><a href="#2-4-1-의존성이-너무-많아질-수-있음" class="headerlink" title="2.4.1 의존성이 너무 많아질 수 있음"></a>2.4.1 의존성이 너무 많아질 수 있음</h3><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">UserService</span>(<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">    IUserRepository userRepository,</span></span></span><br><span class="line"><span class="function"><span class="params">    IEmailService emailService,</span></span></span><br><span class="line"><span class="function"><span class="params">    ILogger logger,</span></span></span><br><span class="line"><span class="function"><span class="params">    ICache cache,</span></span></span><br><span class="line"><span class="function"><span class="params">    IPaymentService paymentService,</span></span></span><br><span class="line"><span class="function"><span class="params">    IEventPublisher eventPublisher</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>갯수와 상관없이 클래스가 이 의존성들을 필요로 하는 것이 해당 클래스의 책임과 자연스럽게 연결되는가?를 생각해봐야함..</p>
+<h3 id="2-4-2-DI-Container-설정을-잘못하면-런타임-문제가-생김"><a href="#2-4-2-DI-Container-설정을-잘못하면-런타임-문제가-생김" class="headerlink" title="2.4.2 DI Container 설정을 잘못하면 런타임 문제가 생김"></a>2.4.2 DI Container 설정을 잘못하면 런타임 문제가 생김</h3><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">services.AddSingleton&lt;CacheService&gt;();</span><br><span class="line">services.AddScoped&lt;AppDbContext&gt;();</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">CacheService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> AppDbContext db;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CacheService</span>(<span class="params">AppDbContext db</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>.db = db;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>CacheService는 애플리케이션이 살아있는 동안 하나인데, AppDbContext는 HTTP Request마다 새로 만들어지고 Request가 끝나면 폐기되는 객체임<br>Singleton인 CacheService가 Scoped인 AppDbContext를 의존하게 되면, 수명이 긴 객체가 수명이 짧은 객체를 참조하는 구조가 되어버림<br>잘못된 Lifetime 조합이며 ASP.NET Core DI 검증에서 예외가 발생할 수 있음</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2026/09/14/csharp-server-journey-2/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="Update time"></i>
+              2026-09-15 10:20:38
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="Tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/CSharp/" title="CSharp">
+                        <b>#</b> CSharp
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div class="post-catalog" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Interface%EC%99%80-DI"><span class="toc-text">Interface와 DI</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Interface"><span class="toc-text">1. Interface</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-Interface%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94-%EC%9D%B4%EC%9C%A0"><span class="toc-text">1.1 Interface를 사용하는 이유</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-DI"><span class="toc-text">2. DI</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-ASP-NET-Core"><span class="toc-text">2.1 ASP.NET Core</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%EC%83%9D%EB%AA%85%EC%A3%BC%EA%B8%B0"><span class="toc-text">2.2 생명주기</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-1-Transient"><span class="toc-text">2.2.1 Transient</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-2-Scoped"><span class="toc-text">2.2.2 Scoped</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-3-Singleton"><span class="toc-text">2.2.3 Singleton</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-%EC%9E%A5%EC%A0%90"><span class="toc-text">2.3 장점</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-1-%EA%B5%AC%ED%98%84%EC%B2%B4-%EB%B3%80%EA%B2%BD%EC%9D%B4-%EC%89%AC%EC%9B%8C%EC%A7%84%EB%8B%A4"><span class="toc-text">2.3.1 구현체 변경이 쉬워진다</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-2-%EA%B0%9D%EC%B2%B4-%EC%83%9D%EC%84%B1-%EA%B4%80%EB%A6%AC%EB%A5%BC-%ED%95%9C-%EA%B3%B3%EC%97%90%EC%84%9C-%ED%95%9C%EB%8B%A4"><span class="toc-text">2.3.2 객체 생성&#x2F;관리를 한 곳에서 한다</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-%EC%A1%B0%EC%8B%AC%ED%95%B4%EC%95%BC%ED%95%A0%EC%A0%90"><span class="toc-text">2.4 조심해야할점</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-1-%EC%9D%98%EC%A1%B4%EC%84%B1%EC%9D%B4-%EB%84%88%EB%AC%B4-%EB%A7%8E%EC%95%84%EC%A7%88-%EC%88%98-%EC%9E%88%EC%9D%8C"><span class="toc-text">2.4.1 의존성이 너무 많아질 수 있음</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-2-DI-Container-%EC%84%A4%EC%A0%95%EC%9D%84-%EC%9E%98%EB%AA%BB%ED%95%98%EB%A9%B4-%EB%9F%B0%ED%83%80%EC%9E%84-%EB%AC%B8%EC%A0%9C%EA%B0%80-%EC%83%9D%EA%B9%80"><span class="toc-text">2.4.2 DI Container 설정을 잘못하면 런타임 문제가 생김</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+  <script src="https://utteranc.es/client.js" repo="hidelryn/blog-comment" issue-term="title" label="Comment" theme="github-light" crossorigin="anonymous" async>
+    </script>
+  
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/hidelryn/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="mailto:hidelryn@gmail.com" rel="external nofollow noopener noreferrer" target="_blank">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="/atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+  
+    <div class="footer-more">
+      
+        <span style="color: #666;">Copyright © Delryn 2026</span>
+        
+        
+    </div>
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+      
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+    </div>
+  </body>
+</html>

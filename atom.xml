@@ -6,7 +6,7 @@
   <link href="https://hidelryn.github.io/atom.xml" rel="self"/>
   
   <link href="https://hidelryn.github.io/"/>
-  <updated>2026-09-14T12:48:31.178Z</updated>
+  <updated>2026-09-15T05:29:53.367Z</updated>
   <id>https://hidelryn.github.io/</id>
   
   <author>
@@ -17,18 +17,41 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>C# 서버 개발자 전환기 3편</title>
+    <link href="https://hidelryn.github.io/2026/09/15/csharp-server-journey-3/"/>
+    <id>https://hidelryn.github.io/2026/09/15/csharp-server-journey-3/</id>
+    <published>2026-09-15T01:20:38.000Z</published>
+    <updated>2026-09-15T05:29:53.367Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;Interface와-DI&quot;&gt;&lt;a href=&quot;#Interface와-DI&quot; class=&quot;headerlink&quot; title=&quot;Interface와 DI&quot;&gt;&lt;/a&gt;Interface와 DI&lt;/h1&gt;&lt;h2 id=&quot;1-Interface&quot;&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    
+    <category term="CSharp" scheme="https://hidelryn.github.io/tags/CSharp/"/>
+    
+  </entry>
+  
+  <entry>
     <title>C# 서버 개발자 전환기 2편</title>
     <link href="https://hidelryn.github.io/2026/09/14/csharp-server-journey-2/"/>
     <id>https://hidelryn.github.io/2026/09/14/csharp-server-journey-2/</id>
     <published>2026-09-14T11:34:10.000Z</published>
-    <updated>2026-09-14T12:48:31.178Z</updated>
+    <updated>2026-09-15T05:35:17.352Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;h1 id=&quot;C-기본-문법-LINQ&quot;&gt;&lt;a href=&quot;#C-기본-문법-LINQ&quot; class=&quot;headerlink&quot; title=&quot;C# 기본 문법 + LINQ&quot;&gt;&lt;/a&gt;C# 기본 문법 + LINQ&lt;/h1&gt;&lt;p&gt; C#은 파스칼케이스로</summary>
+    <summary type="html">&lt;h1 id=&quot;C-기본-문법-LINQ&quot;&gt;&lt;a href=&quot;#C-기본-문법-LINQ&quot; class=&quot;headerlink&quot; title=&quot;C# 기본 문법 + LINQ&quot;&gt;&lt;/a&gt;C# 기본 문법 + LINQ&lt;/h1&gt;&lt;p&gt;C#에서는 일반적으로 클래스, 메서드,</summary>
         
       
     
@@ -44,7 +67,7 @@
     <link href="https://hidelryn.github.io/2026/09/14/csharp-server-journey-1/"/>
     <id>https://hidelryn.github.io/2026/09/14/csharp-server-journey-1/</id>
     <published>2026-09-14T06:09:05.000Z</published>
-    <updated>2026-09-14T09:01:15.928Z</updated>
+    <updated>2026-09-15T06:02:54.830Z</updated>
     
     
       
@@ -509,31 +532,6 @@
     <category term="ETC" scheme="https://hidelryn.github.io/tags/ETC/"/>
     
     <category term="HomeBrew" scheme="https://hidelryn.github.io/tags/HomeBrew/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Express 사용 안하고 API 서버 만들어보기</title>
-    <link href="https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/"/>
-    <id>https://hidelryn.github.io/2020/12/06/nodejs-none-framework-api-server-study/</id>
-    <published>2020-12-06T12:54:02.000Z</published>
-    <updated>2026-09-14T05:41:24.167Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;페북 그룹에서 Express를 사용 하지 않고 API 서버 만드는 글을 보고 나도 도전 해보았다.&lt;/p&gt;
-&lt;p&gt;DB 연결은 안 하고 기타 라이브러리 없이 기본적인 구조 및 라우팅만 만들어 보기로 했다.&lt;/p&gt;
-&lt;p&gt;구조는 아래와 같이 작성</summary>
-        
-      
-    
-    
-    
-    
-    <category term="Node.js" scheme="https://hidelryn.github.io/tags/Node-js/"/>
     
   </entry>
   
