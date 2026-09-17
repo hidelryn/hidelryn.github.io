@@ -6,7 +6,7 @@
   <link href="https://hidelryn.github.io/atom.xml" rel="self"/>
   
   <link href="https://hidelryn.github.io/"/>
-  <updated>2026-09-15T05:29:53.367Z</updated>
+  <updated>2026-09-17T05:33:02.114Z</updated>
   <id>https://hidelryn.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>C# 서버 개발자 전환기 4편</title>
+    <link href="https://hidelryn.github.io/2026/09/15/csharp-server-journey-4/"/>
+    <id>https://hidelryn.github.io/2026/09/15/csharp-server-journey-4/</id>
+    <published>2026-09-15T09:31:52.000Z</published>
+    <updated>2026-09-17T05:33:02.114Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;LINQ-심화-학습&quot;&gt;&lt;a href=&quot;#LINQ-심화-학습&quot; class=&quot;headerlink&quot; title=&quot;LINQ 심화 학습&quot;&gt;&lt;/a&gt;LINQ 심화 학습&lt;/h1&gt;&lt;figure class=&quot;highlight</summary>
+        
+      
+    
+    
+    
+    
+    <category term="CSharp" scheme="https://hidelryn.github.io/tags/CSharp/"/>
+    
+  </entry>
   
   <entry>
     <title>C# 서버 개발자 전환기 3편</title>
@@ -506,32 +529,6 @@
     <category term="RDB" scheme="https://hidelryn.github.io/tags/RDB/"/>
     
     <category term="Node.js" scheme="https://hidelryn.github.io/tags/Node-js/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>애플 M1 Big Sur OS에서 HomeBrew 실행이 안되는 경우</title>
-    <link href="https://hidelryn.github.io/2021/01/20/etc-apple-m1-homebrew/"/>
-    <id>https://hidelryn.github.io/2021/01/20/etc-apple-m1-homebrew/</id>
-    <published>2021-01-20T13:14:54.000Z</published>
-    <updated>2026-09-14T05:41:24.164Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;HomeBrew 설치 후 아래의 명령어를 입력하고 실행을 하면 동작이 됨.&lt;/p&gt;
-&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span</summary>
-        
-      
-    
-    
-    
-    
-    <category term="ETC" scheme="https://hidelryn.github.io/tags/ETC/"/>
-    
-    <category term="HomeBrew" scheme="https://hidelryn.github.io/tags/HomeBrew/"/>
     
   </entry>
   
